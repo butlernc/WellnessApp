@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="btnFitnessGoalsDefaultString">Fitness Goals and Logging</string>
+	<string name="btnNutritionGoalsDefaultString">Nutrition Goals and Logging</string>
+	<string name="btnBonusEventsDefaultString">Bonus Events and Activities</string>
+
+    <string name="fitness_goal_title">Fitness Goal</string>
+	
+	<string name="action_drawerList">Test</string>
+	
+	<string-array name="drawerListTitles">
+        <item>Challenge Information</item>
+        <item>Point Breakdown</item>
+        <item>Prizes</item>
+        <item>Recipes</item>
+        <item>Coupons</item>
+        <item>Bonus Events</item>
+        <item>Suggested Workout</item>
+        <item>Campus Health and Fitness Resources</item>
+        <item>Review Your Progress</item>
+        <item>Sponsors</item>
+    </string-array>
+    
+	<string name="drawer_opened">Drawer Opened</string>
+	<string name="drawer_closed">Drawer Closed</string>
+    
+</resources>
