@@ -26,7 +26,7 @@ public class LoginHelper {
     }
 
     /**
-     *
+     *TEST PUSH FROM ANDROID STUDIO
      * Used to log a user into the system
      *
      * @param email
