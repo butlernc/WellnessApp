@@ -4,6 +4,7 @@ package com.uwec.wellnessappbackend;
  * Created by Noah Butler on 12/2/2014.
  */
 
+
 public class UserBean {
 
     private String first_name;
@@ -13,10 +14,6 @@ public class UserBean {
     private String password;
 
     private int total_score;
-
-    public void saveUser() {
-
-    }
 
     public String getFirst_name() {
         return first_name;

@@ -10,9 +10,9 @@
       <configuration>
         <option name="HTTP_ADDRESS" value="localhost" />
         <option name="HTTP_PORT" value="8080" />
-        <option name="WAR_DIR" value="C:\Users\Hetzerbr\AndroidStudioProjects\WellnessApp\WellnessAppBackend\build\exploded-app" />
-        <option name="WEB_APP_DIR" value="C:\Users\Hetzerbr\AndroidStudioProjects\WellnessApp\WellnessAppBackend\src\main\webapp" />
-        <option name="APPENGINE_SDKROOT" value="C:\Users\Hetzerbr\.gradle\appengine-sdk\appengine-java-sdk-1.9.11" />
+        <option name="WAR_DIR" value="C:\Users\butlernc\AndroidStudioProjects\WellnessApp\WellnessAppBackend\build\exploded-app" />
+        <option name="WEB_APP_DIR" value="C:\Users\butlernc\AndroidStudioProjects\WellnessApp\WellnessAppBackend\src\main\webapp" />
+        <option name="APPENGINE_SDKROOT" value="C:\Users\butlernc\.gradle\appengine-sdk\appengine-java-sdk-1.9.11" />
       </configuration>
     </facet>
     <facet type="java-gradle" name="Java-Gradle">
@@ -32,8 +32,8 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/endpointsSrc/resources" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/functionalTest/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/functionalTest/resources" type="java-test-resource" />
       <excludeFolder url="file://$MODULE_DIR$/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
     </content>
