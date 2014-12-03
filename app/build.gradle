@@ -21,6 +21,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(path: ':WellnessAppBackend', configuration: 'endpoints')
     compile 'com.android.support:support-v4:21.0.2'
-    compile project(path: ':WellnessAppBackend', configuration: 'android-endpoints')
+    compile 'com.google.android.gms:play-services:6.1.71'
 }

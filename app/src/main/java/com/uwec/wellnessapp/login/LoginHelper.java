@@ -51,6 +51,10 @@ public class LoginHelper {
         return false;
     }
 
+    /**
+     * Used to start the Login Activity
+     * @param current activity
+     */
     public static void startLoginActivity(Activity current) {
         Intent intent = new Intent(current, LoginActivity.class);
         current.startActivity(intent);

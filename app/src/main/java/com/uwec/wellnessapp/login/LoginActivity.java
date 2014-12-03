@@ -22,6 +22,8 @@ public class LoginActivity extends Activity {
     Button email_sign_in_button;
     Button email_register_button;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

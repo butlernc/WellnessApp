@@ -29,4 +29,8 @@ public class MyEndpoint {
         return response;
     }
 
+    public UserBean getUserFromEmail(@Named("email") String email) {
+        return null;
+    }
+
 }
