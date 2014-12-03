@@ -16,6 +16,13 @@ public class UserBean {
 
     private int total_score;
 
+    public UserBean(UserBean userBean) {
+        this.first_name = userBean.getFirst_name();
+        this.last_name = userBean.getLast_name();
+        this.email = userBean.getEmail();
+        this.password = userBean.getPassword();
+    }
+
     public String getFirst_name() {
         return first_name;
     }
