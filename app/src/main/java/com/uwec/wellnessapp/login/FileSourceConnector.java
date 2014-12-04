@@ -23,7 +23,7 @@ public class FileSourceConnector extends AsyncTask<String, String, String>{
     private static final String FTP_HOSTNAME = "wellnessappftp.eu.pn";
     private static final String FTP_USERNAME = "1769350_uwecwellnessapp";
     private static final String FTP_PASSWORD = "android4us";
-    private static final String FTP_WORKING_DIR = "/home/www/userdata";
+    private static final String FTP_WORKING_DIR = "/userdata/";
 
     private String currentDirectory;
 
