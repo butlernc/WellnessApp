@@ -3,6 +3,7 @@ package com.uwec.wellnessapp.login;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,14 +36,20 @@ public class LoginActivity extends Activity {
         email_sign_in_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d("LOGIN", "clicked login button");
                 email_input = (EditText) findViewById(R.id.login_input_email);
                 password_input = (EditText) findViewById(R.id.login_input_password);
-                if(LoginHelper.login(email_input.getText(), password_input.getText())) {
+                boolean checksOut = LoginHelper.login(email_input.getText().toString(), password_input.getText().toString());
+
+                /*
+                if(checksOut) {
                     Intent intent = new Intent(email_sign_in_button.getContext(), MainNavActivity.class);
                     startActivity(intent);
                 }else{
                     Toast.makeText(email_sign_in_button.getContext(), "Incorrect Email or Password", Toast.LENGTH_SHORT).show();
                 }
+                */
+
             }
         });
 

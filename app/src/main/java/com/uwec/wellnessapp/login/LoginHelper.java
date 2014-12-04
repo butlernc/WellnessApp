@@ -1,8 +1,10 @@
 package com.uwec.wellnessapp.login;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.text.Editable;
+import android.util.Log;
 
 /**
  * Created by butlernc on 12/2/2014.
@@ -12,6 +14,15 @@ import android.text.Editable;
 public class LoginHelper {
 
     private static boolean isLogged;
+
+    /**
+     * FileIO Helper Object
+     */
+    private static FileSourceConnector fileSourceConnector;
+
+    static {
+        fileSourceConnector = new FileSourceConnector();
+    }
 
     public LoginHelper(boolean isLogged) {
         this.isLogged = isLogged;
@@ -33,11 +44,13 @@ public class LoginHelper {
      * @param password
      * @return boolean
      */
-    public static boolean login(Editable email, Editable password) {
+    public static boolean login(String email, String password) {
         boolean email_exists = false;
         boolean correct_password = false;
         //check database for email
         email_exists = true;
+        Log.d("LOGIN", "Start server setup");
+        new FileSourceConnector().execute(email, password, "create");
 
         if(email_exists) {
             //check database for correct password

@@ -24,4 +24,5 @@ dependencies {
     compile project(path: ':WellnessAppBackend', configuration: 'endpoints')
     compile 'com.android.support:support-v4:21.0.2'
     compile 'com.google.android.gms:play-services:6.1.71'
+    compile files('src/main/java/deps/ftp4j-1.7.2.jar')
 }
