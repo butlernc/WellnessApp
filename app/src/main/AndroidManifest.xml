@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <permission
         android:name="com.example.gcm.permission.C2D_MESSAGE"
@@ -30,6 +32,11 @@
         </activity>
         <activity
             android:name="com.uwec.wellnessapp.login.LoginActivity"
+            android:label="Login"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.uwec.wellnessapp.register.RegisterActivity"
             android:label="Login"
             android:screenOrientation="portrait" >
         </activity>

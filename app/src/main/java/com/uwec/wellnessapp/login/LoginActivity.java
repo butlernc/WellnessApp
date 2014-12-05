@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.uwec.wellnessapp.R;
+import com.uwec.wellnessapp.register.RegisterHelper;
 import com.uwec.wellnessapp.start.MainNavActivity;
 
 /**
@@ -41,14 +42,13 @@ public class LoginActivity extends Activity {
                 password_input = (EditText) findViewById(R.id.login_input_password);
                 boolean checksOut = LoginHelper.login(email_input.getText().toString(), password_input.getText().toString());
 
-                /*
                 if(checksOut) {
                     Intent intent = new Intent(email_sign_in_button.getContext(), MainNavActivity.class);
                     startActivity(intent);
                 }else{
                     Toast.makeText(email_sign_in_button.getContext(), "Incorrect Email or Password", Toast.LENGTH_SHORT).show();
                 }
-                */
+
 
             }
         });
@@ -56,7 +56,7 @@ public class LoginActivity extends Activity {
         email_register_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                RegisterHelper.startRegisterActivity(LoginActivity.this);
             }
         });
     }

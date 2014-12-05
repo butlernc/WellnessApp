@@ -1,10 +1,10 @@
 package com.uwec.wellnessapp.login;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.text.Editable;
 import android.util.Log;
+
+import com.uwec.wellnessapp.utils.FileSourceConnector;
 
 /**
  * Created by butlernc on 12/2/2014.
@@ -45,23 +45,10 @@ public class LoginHelper {
      * @return boolean
      */
     public static boolean login(String email, String password) {
-        boolean email_exists = false;
-        boolean correct_password = false;
-        //check database for email
-        email_exists = true;
         Log.d("LOGIN", "Start server setup");
-        new FileSourceConnector().execute(email, password, "create");
+        new FileSourceConnector().execute(email, password, "read", "no");
 
-        if(email_exists) {
-            //check database for correct password
-            correct_password = true;
-        }
-
-        if(correct_password) {
-            setLogged(true);
-            return true;
-        }
-        return false;
+        return isLogged;
     }
 
     /**
