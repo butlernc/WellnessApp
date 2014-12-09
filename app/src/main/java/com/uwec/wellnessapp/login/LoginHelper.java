@@ -15,29 +15,11 @@ public class LoginHelper {
 
     private static boolean isLogged;
 
-    /**
-     * FileIO Helper Object
-     */
-    private static FileSourceConnector fileSourceConnector;
+    public static boolean isLogged() {return isLogged;}
 
-    static {
-        fileSourceConnector = new FileSourceConnector();
-    }
-
-    public LoginHelper(boolean isLogged) {
-        this.isLogged = isLogged;
-    }
-
-    public static boolean isLogged() {
-        return isLogged;
-    }
-
-    public static void setLogged(boolean set) {
-        isLogged = set;
-    }
+    public static void setLogged(boolean set) {isLogged = set;}
 
     /**
-     *TEST PUSH FROM ANDROID STUDIO
      * Used to log a user into the system
      *
      * @param email
@@ -46,9 +28,15 @@ public class LoginHelper {
      */
     public static boolean login(String email, String password) {
         Log.d("LOGIN", "Start server setup");
-        new FileSourceConnector().execute(email, password, "read", "no");
 
-        return isLogged;
+        //create a FileSourceConnector, used to read and write to the server.
+        FileSourceConnector fileSourceConnector = new FileSourceConnector();
+        fileSourceConnector.execute(email, password, "readUser");
+
+        //wait until async task is over with because I can't do network operations on the
+        //UI thread, so I have to use an async task.
+        while(!fileSourceConnector.isDone()) {}
+        return true;
     }
 
     /**

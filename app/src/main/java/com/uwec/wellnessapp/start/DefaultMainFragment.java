@@ -98,7 +98,7 @@ public class DefaultMainFragment extends Fragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		((MainNavActivity) activity).onSectionAttached(getArguments().getInt(ARG_SECTION_NUMBER));
+		//((MainNavActivity) activity).onSectionAttached(getArguments().getInt(ARG_SECTION_NUMBER));
 		
 	}
 

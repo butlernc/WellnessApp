@@ -12,6 +12,9 @@ import android.widget.Toast;
 
 import com.uwec.wellnessapp.R;
 import com.uwec.wellnessapp.login.LoginHelper;
+import com.uwec.wellnessapp.utils.FileSourceConnector;
+
+import java.io.File;
 
 
 public class MainNavActivity extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -79,7 +82,13 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
             // decide what to show in the action bar.
             getMenuInflater().inflate(R.menu.main_nav, menu);
             MenuItem sign_IO_button = menu.getItem(0);
-            sign_IO_button.setTitle((LoginHelper.isLogged())? R.string.sign_out:R.string.sign_in);
+            //set the option menu text for the sign in/out button
+            String welcome = "Welcome, " + FileSourceConnector.userData.getFirst_name();
+            if(LoginHelper.isLogged()) {
+                sign_IO_button.setTitle(welcome);
+            }else{
+                sign_IO_button.setTitle(R.string.sign_in);
+            }
             restoreActionBar();
             return true;
         }
@@ -93,17 +102,8 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.sign_IO) {
-            MenuItem sign_IO_button = item;
-            if (!LoginHelper.isLogged()) {
-                Toast.makeText(this, "Clicked to Sign in", Toast.LENGTH_SHORT).show();
-                LoginHelper.startLoginActivity(this);
-                sign_IO_button.setTitle(R.string.sign_out);
-            } else {
-                Toast.makeText(this, "Clicked to Sign Out", Toast.LENGTH_SHORT).show();
-                LoginHelper.setLogged(false);
-                sign_IO_button.setTitle(R.string.sign_in);
-            }
-
+            //user clicked to sign out
+            LoginHelper.startLoginActivity(this);
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -40,9 +40,10 @@ public class LoginActivity extends Activity {
                 Log.d("LOGIN", "clicked login button");
                 email_input = (EditText) findViewById(R.id.login_input_email);
                 password_input = (EditText) findViewById(R.id.login_input_password);
-                boolean checksOut = LoginHelper.login(email_input.getText().toString(), password_input.getText().toString());
+                LoginHelper.setLogged(LoginHelper.login(email_input.getText().toString(), password_input.getText().toString()));
 
-                if(checksOut) {
+                if(LoginHelper.isLogged()) {
+                    Toast.makeText(email_sign_in_button.getContext(), "Successfully logged in", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(email_sign_in_button.getContext(), MainNavActivity.class);
                     startActivity(intent);
                 }else{

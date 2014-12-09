@@ -9,6 +9,13 @@ import com.uwec.wellnessapp.utils.FileSourceConnector;
 
 /**
  * Created by Noah Butler on 12/5/2014.
+ *
+ * Small wrapper class that will call the will
+ * start an async task that will call the server
+ * and write our new user to it.
+ *
+ * also includes a method that will start our register activity
+ * easily.
  */
 public class RegisterHelper {
 
@@ -32,14 +39,15 @@ public class RegisterHelper {
 
         FileSourceConnector.userData = userData;
 
+        //create a FileSourceConnector, used to read and write to the server.
         FileSourceConnector fileSourceConnector = new FileSourceConnector();
         fileSourceConnector.execute(userData.getEmail(), userData.getPassword(), "write", "new");
-        while(!fileSourceConnector.isDone()) {
 
-        }
+        //wait until async task is over with because I can't do network operations on the
+        //UI thread, so I have to use an async task.
+        while(!fileSourceConnector.isDone()) {}
         Log.e("DONE", "Made it here");
         return true;
-
     }
 
 
