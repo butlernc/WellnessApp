@@ -1,5 +1,8 @@
 package com.uwec.wellnessapp.data;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * Created by Noah Butler on 12/2/2014.
  * test
@@ -16,14 +19,9 @@ public class UserData {
 
     private int total_score;
 
-    public UserData() {}
+    private HashMap<Integer, List<Integer>> point_breakdown;
 
-    public UserData(UserData userData) {
-        this.first_name = userData.getFirst_name();
-        this.last_name = userData.getLast_name();
-        this.email = userData.getEmail();
-        this.password = userData.getPassword();
-    }
+    public UserData() {}
 
     public String getFirst_name() {
         return first_name;
@@ -63,6 +61,14 @@ public class UserData {
 
     public void setTotal_score(int total_score) {
         this.total_score = total_score;
+    }
+
+    public HashMap<Integer, List<Integer>> getPoint_breakdown() {
+        return point_breakdown;
+    }
+
+    public void setPoint_breakdown(HashMap<Integer, List<Integer>> point_breakdown) {
+        this.point_breakdown = point_breakdown;
     }
 
 }

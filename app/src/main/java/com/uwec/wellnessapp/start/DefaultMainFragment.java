@@ -53,7 +53,6 @@ public class DefaultMainFragment extends Fragment {
 			
 						@Override
 						public void onClick(View v) {
-							// TODO Auto-generated method stub
 							Toast.makeText(getActivity(), "Clicked Fitness Goals", Toast.LENGTH_SHORT).show();
                             getActivity().getFragmentManager().beginTransaction().replace(R.id.main_nav_fragment, createFragmentFromButtonClick(0)).commit();
 
@@ -67,7 +66,6 @@ public class DefaultMainFragment extends Fragment {
 			
 						@Override
 						public void onClick(View v) {
-							// TODO Auto-generated method stub
 							Toast.makeText(getActivity(), "Clicked Nutrition Goals", Toast.LENGTH_SHORT).show();
 						}
 					});
@@ -79,7 +77,6 @@ public class DefaultMainFragment extends Fragment {
 			
 						@Override
 						public void onClick(View v) {
-							// TODO Auto-generated method stub
 							Toast.makeText(getActivity(), "Clicked All Bonus Events", Toast.LENGTH_SHORT).show();
 						}
 					});

@@ -45,6 +45,7 @@ public class RegisterHelper {
 
         //wait until async task is over with because I can't do network operations on the
         //UI thread, so I have to use an async task.
+        /* TODO: Show progress */
         while(!fileSourceConnector.isDone()) {}
         Log.e("DONE", "Made it here");
         return true;
