@@ -6,8 +6,12 @@ package com.uwec.wellnessapp.data;
 public class GoalData {
 
     private String week;
+
     private String physical_activity;
+    private int pa_days_per_week;
+
     private String nutrition_goal;
+    private int ng_days_per_week;
 
     private String nutrition_goal_description;
     private String supporting_evidence;
@@ -28,12 +32,28 @@ public class GoalData {
         this.physical_activity = physical_activity;
     }
 
+    public int getPa_days_per_week() {
+        return pa_days_per_week;
+    }
+
+    public void setPa_days_per_week(int pa_days_per_week) {
+        this.pa_days_per_week = pa_days_per_week;
+    }
+
     public String getNutrition_goal() {
         return nutrition_goal;
     }
 
     public void setNutrition_goal(String nutrition_goal) {
         this.nutrition_goal = nutrition_goal;
+    }
+
+    public int getNg_days_per_week() {
+        return ng_days_per_week;
+    }
+
+    public void setNg_days_per_week(int ng_days_per_week) {
+        this.ng_days_per_week = ng_days_per_week;
     }
 
     public String getNutrition_goal_description() {

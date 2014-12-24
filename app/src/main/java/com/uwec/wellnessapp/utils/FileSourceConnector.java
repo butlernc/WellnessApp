@@ -3,11 +3,8 @@ package com.uwec.wellnessapp.utils;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.uwec.wellnessapp.data.GoalData;
-import com.uwec.wellnessapp.data.UserData;
-import com.uwec.wellnessapp.login.LoginHelper;
+import com.uwec.wellnessapp.statics.Statics;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -19,13 +16,10 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.HashMap;
 
 /**
  * Created by butlernc on 12/3/2014.
@@ -45,8 +39,6 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
     private static final String USER_DATA_FILE_NAME = "userfile.txt";
     private static final String GOAL_FILE_NAME = "goal_data.txt";
 
-    public static UserData userData;
-    public static GoalData goalData;
     private static Context currentContext;
 
     private String userDirectory;
@@ -163,7 +155,7 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
         //make json object
         JSONObject jsonObject = new JSONObject();
         if(isUserData) {
-            jsonObject = jsonFileConverter.convertToJSON(FileSourceConnector.userData);
+            jsonObject = jsonFileConverter.convertToJSON(Statics.getGobalUserData());
         }else{
             for(int i = 0; i < keys.length; i++) {
                 jsonObject.put(keys[i], values[i]);
@@ -286,7 +278,7 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
                             //password is correct, get user data
                             JSONObject jsonObject = readFromServer(USER_DATA_FILE_NAME);
                             //set the application's userData object.
-                            FileSourceConnector.userData = jsonFileConverter.convertUserDataJSON(jsonObject);
+                            Statics.setGobalUserData(jsonFileConverter.convertUserDataJSON(jsonObject));
 
                             //got our data, close everything
                             ftpClient.disconnect();
@@ -340,7 +332,7 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
                 }
 
                 JSONObject jsonObject = readFromServer(GOAL_FILE_NAME);
-                FileSourceConnector.goalData = jsonFileConverter.convertGoalDataJSON(jsonObject);
+                Statics.setGobalGoalData(jsonFileConverter.convertGoalDataJSON(jsonObject));
 
             }
         } catch (IOException e) {

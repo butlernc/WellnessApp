@@ -1,11 +1,11 @@
 package com.uwec.wellnessapp.data;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by Noah Butler on 12/2/2014.
- * test
+ * the global UserData object that will be used to store
+ * the user's app data is stored in Statics
  */
 
 
@@ -19,9 +19,7 @@ public class UserData {
 
     private int total_score;
 
-    private HashMap<Integer, List<Integer>> point_breakdown;
-
-    public UserData() {}
+    private ArrayList<WeeklyData> weeklyData;
 
     public String getFirst_name() {
         return first_name;
@@ -63,12 +61,39 @@ public class UserData {
         this.total_score = total_score;
     }
 
-    public HashMap<Integer, List<Integer>> getPoint_breakdown() {
-        return point_breakdown;
+    public ArrayList<WeeklyData> getWeeklyData() {
+        return weeklyData;
     }
 
-    public void setPoint_breakdown(HashMap<Integer, List<Integer>> point_breakdown) {
-        this.point_breakdown = point_breakdown;
+    public void setWeeklyData(ArrayList<WeeklyData> weeklyData) {
+        this.weeklyData = weeklyData;
+    }
+
+    /**
+     * This inner class will be used to store the user's data for each week
+     *
+     */
+
+    protected class WeeklyData {
+
+        private int checkOffAmount;
+        private ArrayList<Boolean> checkOffs;
+
+        private int physicalGoalPoints;
+        private int nutritionGoalPoints;
+
+        public WeeklyData(int checkOffAmount) {
+            this.checkOffAmount = checkOffAmount;
+            checkOffs = new ArrayList<Boolean>();
+            for(int i = 0; i < checkOffAmount; i++) {
+                checkOffs.add(false);
+            }
+        }
+
+        public int getCheckOffAmount() {
+            return checkOffAmount;
+        }
+
     }
 
 }

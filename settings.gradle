@@ -1,1 +1,1 @@
-include ':app', ':WellnessAppBackend'
+include ':app'
