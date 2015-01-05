@@ -155,7 +155,7 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
         //make json object
         JSONObject jsonObject = new JSONObject();
         if(isUserData) {
-            jsonObject = jsonFileConverter.convertToJSON(Statics.getGobalUserData());
+            jsonObject = jsonFileConverter.convertToJSON(Statics.getGlobalUserData());
         }else{
             for(int i = 0; i < keys.length; i++) {
                 jsonObject.put(keys[i], values[i]);
@@ -278,7 +278,7 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
                             //password is correct, get user data
                             JSONObject jsonObject = readFromServer(USER_DATA_FILE_NAME);
                             //set the application's userData object.
-                            Statics.setGobalUserData(jsonFileConverter.convertUserDataJSON(jsonObject));
+                            Statics.setGlobalUserData(jsonFileConverter.convertUserDataJSON(jsonObject));
 
                             //got our data, close everything
                             ftpClient.disconnect();
@@ -332,7 +332,7 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
                 }
 
                 JSONObject jsonObject = readFromServer(GOAL_FILE_NAME);
-                Statics.setGobalGoalData(jsonFileConverter.convertGoalDataJSON(jsonObject));
+                Statics.setGlobalGoalData(jsonFileConverter.convertGoalDataJSON(jsonObject));
 
             }
         } catch (IOException e) {

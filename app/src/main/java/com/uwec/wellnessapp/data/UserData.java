@@ -19,6 +19,7 @@ public class UserData {
 
     private int total_score;
 
+    /* this will hold all of the data for each week */
     private ArrayList<WeeklyData> weeklyData;
 
     public String getFirst_name() {
@@ -74,26 +75,73 @@ public class UserData {
      *
      */
 
-    protected class WeeklyData {
+    public class WeeklyData {
 
-        private int checkOffAmount;
-        private ArrayList<Boolean> checkOffs;
+        private int physicalGoalCheckOffAmount;
+        private int nutritionalGoalCheckOffAmount;
+        private ArrayList<Boolean> physicalGoalCheckOffs;
+        private ArrayList<Boolean> nutritionGoalCheckOffs;
 
         private int physicalGoalPoints;
         private int nutritionGoalPoints;
 
-        public WeeklyData(int checkOffAmount) {
-            this.checkOffAmount = checkOffAmount;
-            checkOffs = new ArrayList<Boolean>();
-            for(int i = 0; i < checkOffAmount; i++) {
-                checkOffs.add(false);
+        public WeeklyData(int physicalGoalCheckOffAmount, int nutritionalGoalCheckOffAmount) {
+            /* assign the correct amount of check offs for the given goal for the week */
+            this.nutritionalGoalCheckOffAmount = nutritionalGoalCheckOffAmount;
+            this.physicalGoalCheckOffAmount    = physicalGoalCheckOffAmount;
+
+            /* holds whether they completed the check offs or not */
+            physicalGoalCheckOffs  = new ArrayList<Boolean>();
+            nutritionGoalCheckOffs = new ArrayList<Boolean>();
+
+            /* when the weekly data object is created, default all check offs to completed as false */
+            for(int i = 0; i < physicalGoalCheckOffAmount; i++) {
+                physicalGoalCheckOffs.add(false);
+            }
+
+            for(int i = 0; i < nutritionalGoalCheckOffAmount; i++) {
+                nutritionGoalCheckOffs.add(false);
             }
         }
 
-        public int getCheckOffAmount() {
-            return checkOffAmount;
+        public int getPhysicalGoalCheckOffAmount() {
+            return physicalGoalCheckOffAmount;
         }
 
-    }
+        public void setPhysicalGoalCheckOffAmount(int physicalGoalCheckOffAmount) {
+            this.physicalGoalCheckOffAmount = physicalGoalCheckOffAmount;
+        }
 
+        public int getNutritionalGoalCheckOffAmount() {
+            return nutritionalGoalCheckOffAmount;
+        }
+
+        public void setNutritionalGoalCheckOffAmount(int nutritionalGoalCheckOffAmount) {
+            this.nutritionalGoalCheckOffAmount = nutritionalGoalCheckOffAmount;
+        }
+
+        public ArrayList<Boolean> getPhysicalGoalCheckOffs() {
+            return physicalGoalCheckOffs;
+        }
+
+        public ArrayList<Boolean> getNutritionGoalCheckOffs() {
+            return nutritionGoalCheckOffs;
+        }
+
+        public int getPhysicalGoalPoints() {
+            return physicalGoalPoints;
+        }
+
+        public void setPhysicalGoalPoints(int physicalGoalPoints) {
+            this.physicalGoalPoints = physicalGoalPoints;
+        }
+
+        public int getNutritionGoalPoints() {
+            return nutritionGoalPoints;
+        }
+
+        public void setNutritionGoalPoints(int nutritionGoalPoints) {
+            this.nutritionGoalPoints = nutritionGoalPoints;
+        }
+    }
 }
