@@ -23,27 +23,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/btnFitnessGoalsDefaultString"
+            android:textColor="#FFFFFF"
             android:id="@+id/btnFitnessGoals"
-            android:background="#33B5E5"
-            android:layout_marginBottom="3dp"
-            android:layout_weight="0.33"
+            android:background="@drawable/buttondefault"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="0.10"
             android:layout_gravity="top" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
+            android:layout_marginBottom="10dp"
             android:text="@string/btnNutritionGoalsDefaultString"
+            android:textColor="#FFFFFF"
             android:id="@+id/btnNutritionGoals"
-            android:background="#FFBB33"
-            android:layout_weight="0.33" />
+            android:background="@drawable/buttondefault"
+            android:layout_weight="0.10" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/btnBonusEventsDefaultString"
+            android:textColor="#FFFFFF"
             android:id="@+id/btnBonusEvents"
-            android:background="#FF4444"
-            android:layout_weight="0.33" />
+            android:background="@drawable/buttondefault"
+            android:layout_weight="0.10" />
     </LinearLayout>
 </RelativeLayout>
