@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.uwec.wellnessapp.R;
 import com.uwec.wellnessapp.login.LoginHelper;
+import com.uwec.wellnessapp.statics.Statics;
 import com.uwec.wellnessapp.utils.FileSourceConnector;
 
 import java.io.File;
@@ -83,7 +84,7 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
             getMenuInflater().inflate(R.menu.main_nav, menu);
             MenuItem sign_IO_button = menu.getItem(0);
             //set the option menu text for the sign in/out button
-            String welcome = "Welcome, " + FileSourceConnector.userData.getFirst_name();
+            String welcome = "Welcome, " + Statics.getGlobalUserData().getFirst_name();
             if(LoginHelper.isLogged()) {
                 sign_IO_button.setTitle(welcome);
             }else{
@@ -103,7 +104,8 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
         int id = item.getItemId();
         if (id == R.id.sign_IO) {
             //user clicked to sign out
-            LoginHelper.startLoginActivity(this);
+            String[] extras = {"!load"};
+            LoginHelper.startLoginActivity(this, extras);
             return true;
         }
         return super.onOptionsItemSelected(item);

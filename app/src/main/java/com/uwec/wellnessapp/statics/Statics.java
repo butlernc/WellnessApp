@@ -1,6 +1,7 @@
 package com.uwec.wellnessapp.statics;
 
-import com.uwec.wellnessapp.data.GoalData;
+import com.uwec.wellnessapp.data.SessionData;
+import com.uwec.wellnessapp.data.WeekData;
 import com.uwec.wellnessapp.data.UserData;
 
 /**
@@ -11,7 +12,9 @@ import com.uwec.wellnessapp.data.UserData;
 public class Statics {
 
     private static UserData globalUserData;
-    private static GoalData globalGoalData;
+    //TODO: rename to WeekData
+    private static WeekData globalWeekData;
+    private static SessionData sessionData = new SessionData();
 
     public static UserData getGlobalUserData() {
         return globalUserData;
@@ -21,11 +24,17 @@ public class Statics {
         Statics.globalUserData = globalUserData;
     }
 
-    public static GoalData getGlobalGoalData() {
-        return globalGoalData;
+    public static WeekData getGlobalWeekData() {
+        return globalWeekData;
     }
 
-    public static void setGlobalGoalData(GoalData globalGoalData) {
-        Statics.globalGoalData = globalGoalData;
+    public static void setGlobalWeekData(WeekData globalWeekData) {
+        Statics.globalWeekData = globalWeekData;
+    }
+
+    public static SessionData getSessionData() { return sessionData; }
+
+    public static void setSessionData(SessionData sessionData) {
+        Statics.sessionData = sessionData;
     }
 }

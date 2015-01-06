@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.uwec.wellnessapp.data.UserData;
+import com.uwec.wellnessapp.statics.Statics;
 import com.uwec.wellnessapp.utils.FileSourceConnector;
 
 /**
@@ -37,7 +38,7 @@ public class RegisterHelper {
         userData.setPassword(input[3]);
         userData.setTotal_score(0);
 
-        FileSourceConnector.userData = userData;
+        Statics.setGlobalUserData(userData);
 
         //create a FileSourceConnector, used to read and write to the server.
         FileSourceConnector fileSourceConnector = new FileSourceConnector();
