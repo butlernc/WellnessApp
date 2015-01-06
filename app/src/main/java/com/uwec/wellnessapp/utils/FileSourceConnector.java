@@ -43,7 +43,7 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
 
     private String userDirectory;
     private JsonFileConverter jsonFileConverter;
-    private String RETURN_STR;
+    private String RETURN_STR = "";
     private boolean isDone;
 
 
@@ -121,6 +121,7 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
      */
     public JSONObject readFromServer(String filename) throws IOException, JSONException {
         //retrieve data file
+        Log.d("F", "Filename: " + filename);
         BufferedReader dataReader = new BufferedReader(new InputStreamReader(ftpClient.retrieveFileStream(filename)));
 
         //helper objects
@@ -201,18 +202,6 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
                 Log.e("DIR", "Directory changed: " + String.valueOf(worked));
                 Log.d("DIR", "Directory: " + userDirectory);
 
-                //store password on server
-                //create params to create our temp file
-                String[] pass_keys = {"password"};
-                String[] pass_values = {strings[1]};
-
-                //create the password temp file
-                File passwordSourceFile = createJSONTempFile(PASSWORD_FILE_NAME , pass_keys, pass_values, false);
-
-                //save our temp file to the server
-                boolean saved = ftpClient.storeFile(PASSWORD_FILE_NAME, new FileInputStream(passwordSourceFile));
-                Log.d("SAVED", String.valueOf(saved));
-
                 //create the user data temp file
                 File userDataSourceFile = createJSONTempFile(USER_DATA_FILE_NAME, null, null, true);
                 //save our temp file to the server
@@ -243,7 +232,7 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
      * strings[2]: "readUser"
      */
     private void readUser(String[] strings) {
-        ftpClient.setConnectTimeout(10 * 1000);
+        ftpClient.setConnectTimeout(100 * 1000);
 
         try {
             //try connecting to the FTP Server
@@ -262,44 +251,55 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
                     if(file.getName().contentEquals(strings[0])) {
                         //get the user's directory name
                         userDirectory = file.getName();
-                        Log.d("FTPFILE", "" + userDirectory);
+                        Log.d("FTPFILE", "User Directory: " + userDirectory);
+
+                        Log.d("directory", "Directory: " + ftpClient.printWorkingDirectory());
+
+                        /** testing  */
+                        for(FTPFile testfile : ftpClient.listFiles()) {
+                            Log.d("Files", "Filename: " + testfile.getName());
+                        }
 
                         //change to the given user directory
                         boolean changed = ftpClient.changeWorkingDirectory(userDirectory);
+                        Log.d("directory", "Directory: " + ftpClient.printWorkingDirectory());
+
+                        /** testing  */
+                        for(FTPFile testfile : ftpClient.listFiles()) {
+                            Log.d("Files", "Filename: " + testfile.getName());
+                        }
+
                         Log.d("Changed", String.valueOf(changed));
 
                         //get password that is saved on the server
-                        JSONObject jsonPassword = readFromServer(PASSWORD_FILE_NAME);
-                        String expected = jsonPassword.getString("password");
+                        JSONObject jsonObject = readFromServer(USER_DATA_FILE_NAME);
+                        String expected = jsonObject.getString("password");
                         Log.d("EXPECTED", expected); Log.d("ACTUAL", strings[1]);
-
                         //check password with entered password
-                        if(expected == strings[1]) {
+                        if(expected.compareTo(strings[1]) == 0) {
                             //password is correct, get user data
-                            JSONObject jsonObject = readFromServer(USER_DATA_FILE_NAME);
                             //set the application's userData object.
                             Statics.setGlobalUserData(jsonFileConverter.convertUserDataJSON(jsonObject));
 
-                            //got our data, close everything
-                            ftpClient.disconnect();
+                            Log.d("LOGGED", "The user has passed login");
+                            RETURN_STR = "GOOD";
                             isDone(true);
-
                         }else{
                             //return that the user entered in the wrong password
-                            ftpClient.disconnect();
-                            /* TODO: make check for this in login helper */
+                            Log.d("LOGGED", "The user has entered the wrong password");
                             RETURN_STR = "NCP";
+                            isDone(true);
                         }
                     }
                 }
-                Log.d("DIR", "Directory: " + ftpClient.printWorkingDirectory());
-                Log.e("Size", String.valueOf(mFileArray.length));
             }
+            ftpClient.disconnect();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
     }
 
     /**
@@ -332,7 +332,7 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
                 }
 
                 JSONObject jsonObject = readFromServer(GOAL_FILE_NAME);
-                Statics.setGlobalGoalData(jsonFileConverter.convertGoalDataJSON(jsonObject));
+                Statics.setGlobalWeekData(jsonFileConverter.convertGoalDataJSON(jsonObject));
 
             }
         } catch (IOException e) {
@@ -340,5 +340,9 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getRETURN_STR() {
+        return RETURN_STR;
     }
 }

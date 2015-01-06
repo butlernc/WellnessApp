@@ -5,25 +5,25 @@ package com.uwec.wellnessapp.data;
  *
  * Used to save the current week's data.
  */
-public class GoalData {
+public class WeekData {
 
     private String week;
 
-    /* name of the current week's physical activity */
+    /** name of the current week's physical activity */
     private String physical_activity;
-    /* int used to keep track of physical activity check offs there are */
-    /* this will set the physicalGoalCheckOffAmount in the WeeklyData object in UserData */
+    /** int used to keep track of physical activity check offs there are
+      * this will set the physicalGoalCheckOffAmount in the WeeklyData object in UserData */
     private int pa_days_per_week;
 
     /* name of the current week's nutrition goal */
     private String nutrition_goal;
-    /* int used to keep track of nutrition goal check offs there are for the current week */
-    /* this will set the nutritionalGoalCheckOffAmount in the WeeklyData object in UserData */
+    /** int used to keep track of nutrition goal check offs there are for the current week
+      * this will set the nutritionalGoalCheckOffAmount in the WeeklyData object in UserData */
     private int ng_days_per_week;
 
-    /* detailed desc of the current week's nutrition goal */
+    /** detailed desc of the current week's nutrition goal */
     private String nutrition_goal_description;
-    /* saves the desc of the current week's supporting_evidence */
+    /** saves the desc of the current week's supporting_evidence */
     private String supporting_evidence;
 
     public String getWeek() {

@@ -1,9 +1,12 @@
 package com.uwec.wellnessapp.login;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
+import com.uwec.wellnessapp.statics.Statics;
 import com.uwec.wellnessapp.utils.FileSourceConnector;
 
 /**
@@ -26,9 +29,8 @@ public class LoginHelper {
      * @param password
      * @return boolean
      */
-    public static boolean login(String email, String password) {
+    public static boolean login(Context context, String email, String password, boolean rememberMe) {
         Log.d("LOGIN", "Start server setup");
-
         //create a FileSourceConnector, used to read and write to the server.
         FileSourceConnector fileSourceConnector = new FileSourceConnector();
         fileSourceConnector.execute(email, password, "readUser");
@@ -38,15 +40,24 @@ public class LoginHelper {
 
         /* TODO: Show progress */
         while(!fileSourceConnector.isDone()) {}
-        return true;
+        if(fileSourceConnector.getRETURN_STR().contains("GOOD")) {
+            if(rememberMe) {
+                Statics.getSessionData().setUsername(email);
+                Statics.getSessionData().setPassword(password);
+            }
+            Statics.getSessionData().saveLoginSession(context, rememberMe);
+            return true;
+        }
+        return false;
     }
 
     /**
      * Used to start the Login Activity
      * @param current activity
      */
-    public static void startLoginActivity(Activity current) {
+    public static void startLoginActivity(Activity current, String[] extras) {
         Intent intent = new Intent(current, LoginActivity.class);
+        intent.putExtra("extras", extras);
         current.startActivity(intent);
     }
 }

@@ -2,13 +2,11 @@ package com.uwec.wellnessapp.utils;
 
 import android.util.Log;
 
-import com.uwec.wellnessapp.data.GoalData;
+import com.uwec.wellnessapp.data.WeekData;
 import com.uwec.wellnessapp.data.UserData;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 /**
  * Created by Noah Butler on 12/5/2014.
@@ -28,22 +26,23 @@ public class JsonFileConverter {
         userData.setLast_name(jsonObject.getString(json_value_names[2]));
         userData.setPassword(jsonObject.getString(json_value_names[3]));
         userData.setTotal_score(jsonObject.getInt(json_value_names[4]));
-        userData.setWeeklyData((ArrayList<UserData.WeeklyData>)jsonObject.get(json_value_names[5]));
+        //TODO: enable weeklyData in the userObject
+        //userData.setWeeklyData((ArrayList<UserData.WeeklyData>)jsonObject.get(json_value_names[5]));
 
         return userData;
     }
 
-    public GoalData convertGoalDataJSON(JSONObject jsonObject) throws JSONException {
-        GoalData goalData = new GoalData();
-        goalData.setWeek(jsonObject.getString(goal_data_json_value_names[0]));
-        goalData.setPhysical_activity(jsonObject.getString(goal_data_json_value_names[1]));
-        goalData.setPa_days_per_week(jsonObject.getInt(goal_data_json_value_names[2]));
-        goalData.setNutrition_goal(jsonObject.getString(goal_data_json_value_names[3]));
-        goalData.setNg_days_per_week(jsonObject.getInt(goal_data_json_value_names[4]));
-        goalData.setNutrition_goal_description(jsonObject.getString(goal_data_json_value_names[5]));
-        goalData.setSupporting_evidence(jsonObject.getString(goal_data_json_value_names[6]));
+    public WeekData convertGoalDataJSON(JSONObject jsonObject) throws JSONException {
+        WeekData weekData = new WeekData();
+        weekData.setWeek(jsonObject.getString(goal_data_json_value_names[0]));
+        weekData.setPhysical_activity(jsonObject.getString(goal_data_json_value_names[1]));
+        weekData.setPa_days_per_week(jsonObject.getInt(goal_data_json_value_names[2]));
+        weekData.setNutrition_goal(jsonObject.getString(goal_data_json_value_names[3]));
+        weekData.setNg_days_per_week(jsonObject.getInt(goal_data_json_value_names[4]));
+        weekData.setNutrition_goal_description(jsonObject.getString(goal_data_json_value_names[5]));
+        weekData.setSupporting_evidence(jsonObject.getString(goal_data_json_value_names[6]));
 
-        return goalData;
+        return weekData;
     }
 
     public JSONObject convertToJSON(UserData userData) throws JSONException {
