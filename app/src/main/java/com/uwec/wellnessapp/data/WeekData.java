@@ -11,11 +11,13 @@ public class WeekData {
 
     /** name of the current week's physical activity */
     private String physical_activity;
+    /** used to store the desc of the physical activity */
+    private String physical_activity_description;
     /** int used to keep track of physical activity check offs there are
       * this will set the physicalGoalCheckOffAmount in the WeeklyData object in UserData */
     private int pa_days_per_week;
 
-    /* name of the current week's nutrition goal */
+    /** name of the current week's nutrition goal */
     private String nutrition_goal;
     /** int used to keep track of nutrition goal check offs there are for the current week
       * this will set the nutritionalGoalCheckOffAmount in the WeeklyData object in UserData */
@@ -40,6 +42,12 @@ public class WeekData {
 
     public void setPhysical_activity(String physical_activity) {
         this.physical_activity = physical_activity;
+    }
+
+    public String getPhysical_activity_description() {return physical_activity_description; }
+
+    public void setPhysical_activity_description(String physical_activity_description) {
+        this.physical_activity_description = physical_activity_description;
     }
 
     public int getPa_days_per_week() {

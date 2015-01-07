@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.uwec.wellnessapp.login.LoginActivity;
+import com.uwec.wellnessapp.scripts.PushStaticData;
 import com.uwec.wellnessapp.statics.Statics;
 
 import org.apache.commons.net.ftp.FTP;
@@ -20,11 +22,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.util.concurrent.Executor;
 
 /**
  * Created by butlernc on 12/3/2014.
  */
-public class FileSourceConnector extends AsyncTask<String, String, String> {
+public class FileSourceConnector {
 
     /** link to FTP site variables */
     private FTPClient ftpClient;
@@ -37,7 +40,10 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
 
     private static final String PASSWORD_FILE_NAME = "password.txt";
     private static final String USER_DATA_FILE_NAME = "userfile.txt";
-    private static final String GOAL_FILE_NAME = "goal_data.txt";
+
+    private static final String WEEK_FILE_NAME_TRUNC = "week_data_";
+    private static final String WEEK_DATA_DIRECTORY = "weekData";
+    private static final String WEEK_DATA_FILE_NAME = "new_week_info.txt";
 
     private static Context currentContext;
 
@@ -46,27 +52,50 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
     private String RETURN_STR = "";
     private boolean isDone;
 
-
-    /** called before the connecting to the FTP Server. */
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
+    public Runnable queue(final String... strings) {
+        Runnable runnable = null;
         Log.d("FILESOURCE", "creating file source connector object");
         ftpClient = new FTPClient();
         jsonFileConverter = new JsonFileConverter();
         isDone(false);
-    }
 
-    @Override
-    protected String doInBackground(String... strings) {
-        if(strings[2] == "readUser") {
-            readUser(strings);
-        }else if(strings[2] == "writeUser") {
-            writeUser(strings);
-        }else if(strings[2] == "readGoal") {
-            readGoal(strings);
+        if(strings[0] == "readUser") {
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    readUser(strings);
+                }
+            };
+        }else if(strings[0] == "writeUser") {
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    writeUser(strings);
+                }
+            };
+        }else if(strings[0] == "readWeekData") {
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    readWeekData(strings);
+                }
+            };
+        }else if(strings[0].contentEquals("readWeekStartData")) {
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    readWeekStartData(strings);
+                }
+            };
+        }else if(strings[0].contentEquals("writeWeekData")) {
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    writeWeekData(strings);
+                }
+            };
         }
-        return RETURN_STR;
+        return runnable;
     }
 
     /** needed to get the current context so that we can read and write temp files to the phone */
@@ -96,7 +125,6 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
     private boolean connectToFTP() throws IOException {
         ftpClient.connect(InetAddress.getByName(FTP_HOSTNAME));
         boolean status = ftpClient.login(FTP_USERNAME, FTP_PASSWORD);
-        Log.e("isFTPConnected", String.valueOf(status));
         return status;
     }
 
@@ -119,7 +147,7 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
      * @throws IOException
      * @throws JSONException
      */
-    public JSONObject readFromServer(String filename) throws IOException, JSONException {
+    private JSONObject readFromServer(String filename) throws IOException, JSONException {
         //retrieve data file
         Log.d("F", "Filename: " + filename);
         BufferedReader dataReader = new BufferedReader(new InputStreamReader(ftpClient.retrieveFileStream(filename)));
@@ -145,26 +173,25 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
      * will be transferred to the FTP server
      *
      * @param filename
-     * @param keys
-     * @param values
+     * @param inputData
      * @param isUserData
      * @return
      * @throws JSONException
      * @throws IOException
      */
-    public File createJSONTempFile(String filename, String[] keys, String[] values, boolean isUserData) throws JSONException, IOException{
+    public File createTempFile(String filename, String inputData, boolean isUserData) throws JSONException, IOException{
         //make json object
         JSONObject jsonObject = new JSONObject();
+        String rawData = "";
         if(isUserData) {
             jsonObject = jsonFileConverter.convertToJSON(Statics.getGlobalUserData());
+            rawData = jsonObject.toString();
         }else{
-            for(int i = 0; i < keys.length; i++) {
-                jsonObject.put(keys[i], values[i]);
-            }
+            rawData = inputData;
         }
 
         FileOutputStream tempFile = currentContext.openFileOutput(filename, Context.MODE_PRIVATE);
-        tempFile.write(jsonObject.toString().getBytes());
+        tempFile.write(rawData.getBytes());
         tempFile.close();
 
         return new File(currentContext.getFilesDir(), filename);
@@ -182,7 +209,7 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
     private void writeUser(String[] strings) {
 
         //get the what the user directory name should be
-        userDirectory = strings[0];
+        userDirectory = strings[1];
         ftpClient.setConnectTimeout(10 * 1000);
 
         try {
@@ -196,14 +223,12 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
                 if(strings[3] == "new") {
                     ftpClient.makeDirectory(userDirectory);
                     ftpClient.changeWorkingDirectory(userDirectory);
-                }else{
+                }else {
                     ftpClient.changeWorkingDirectory(userDirectory);
                 }
-                Log.e("DIR", "Directory changed: " + String.valueOf(worked));
-                Log.d("DIR", "Directory: " + userDirectory);
 
                 //create the user data temp file
-                File userDataSourceFile = createJSONTempFile(USER_DATA_FILE_NAME, null, null, true);
+                File userDataSourceFile = createTempFile(USER_DATA_FILE_NAME, null, true);
                 //save our temp file to the server
                 ftpClient.storeFile(USER_DATA_FILE_NAME, new FileInputStream(userDataSourceFile));
 
@@ -248,45 +273,27 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
 
                 //check for user directory
                 for(FTPFile file : mFileArray) {
-                    if(file.getName().contentEquals(strings[0])) {
+                    if(file.getName().contentEquals(strings[1])) {
                         //get the user's directory name
                         userDirectory = file.getName();
-                        Log.d("FTPFILE", "User Directory: " + userDirectory);
-
-                        Log.d("directory", "Directory: " + ftpClient.printWorkingDirectory());
-
-                        /** testing  */
-                        for(FTPFile testfile : ftpClient.listFiles()) {
-                            Log.d("Files", "Filename: " + testfile.getName());
-                        }
 
                         //change to the given user directory
                         boolean changed = ftpClient.changeWorkingDirectory(userDirectory);
-                        Log.d("directory", "Directory: " + ftpClient.printWorkingDirectory());
-
-                        /** testing  */
-                        for(FTPFile testfile : ftpClient.listFiles()) {
-                            Log.d("Files", "Filename: " + testfile.getName());
-                        }
-
-                        Log.d("Changed", String.valueOf(changed));
 
                         //get password that is saved on the server
                         JSONObject jsonObject = readFromServer(USER_DATA_FILE_NAME);
                         String expected = jsonObject.getString("password");
-                        Log.d("EXPECTED", expected); Log.d("ACTUAL", strings[1]);
+
                         //check password with entered password
-                        if(expected.compareTo(strings[1]) == 0) {
+                        if(expected.compareTo(strings[2]) == 0) {
                             //password is correct, get user data
                             //set the application's userData object.
                             Statics.setGlobalUserData(jsonFileConverter.convertUserDataJSON(jsonObject));
 
-                            Log.d("LOGGED", "The user has passed login");
                             RETURN_STR = "GOOD";
                             isDone(true);
                         }else{
                             //return that the user entered in the wrong password
-                            Log.d("LOGGED", "The user has entered the wrong password");
                             RETURN_STR = "NCP";
                             isDone(true);
                         }
@@ -305,11 +312,10 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
     /**
      * Used to read files from the goal directory
      * @param strings
-     * strings[0]: goal directory
-     * strings[1]: current week #
+     * strings[0]: current week #
      *
      */
-    private void readGoal(String[] strings) {
+    private void readWeekData(String[] strings) {
         ftpClient.setConnectTimeout(10 * 1000);
 
         try {
@@ -320,21 +326,86 @@ public class FileSourceConnector extends AsyncTask<String, String, String> {
             if (FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {
                 //set transfer config params
                 boolean worked = setTransferSettings();
-                ftpClient.changeWorkingDirectory("goals");
-                //get all files and directories in the current directory
-                FTPFile[] mFileArray = ftpClient.listFiles();
+                ftpClient.changeWorkingDirectory(WEEK_DATA_DIRECTORY);
 
-                //check for user directory
-                for (FTPFile file : mFileArray) {
-                    if(file.getName() == strings[0]) {
-                        ftpClient.changeWorkingDirectory(file.getName());
-                    }
-                }
-
-                JSONObject jsonObject = readFromServer(GOAL_FILE_NAME);
-                Statics.setGlobalWeekData(jsonFileConverter.convertGoalDataJSON(jsonObject));
+                String fullFileName = WEEK_FILE_NAME_TRUNC + strings[1] + ".txt";
+                JSONObject jsonObject = readFromServer(fullFileName);
+                Statics.setGlobalWeekData(jsonFileConverter.convertWeekDataJSON(jsonObject));
 
             }
+
+            isDone(true);
+
+            ftpClient.disconnect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Reads the file that saves the weeks' start dates.
+     *
+     * @param strings
+     */
+    private void readWeekStartData(String[] strings) {
+        ftpClient.setConnectTimeout(10 * 1000);
+
+        try {
+            //try connecting to the FTP Server
+            connectToFTP();
+
+            //check if logged in correctly
+            if (FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {
+                //set transfer config params
+                boolean worked = setTransferSettings();
+                ftpClient.changeWorkingDirectory(WEEK_DATA_DIRECTORY);
+
+                JSONObject jsonObject = readFromServer(WEEK_DATA_FILE_NAME);
+                RETURN_STR = jsonObject.toString();
+
+                isDone(true);
+
+            }
+            ftpClient.disconnect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Used to write all of the week data to the server.
+     * @param strings
+     */
+    private void writeWeekData(String[] strings) {
+        ftpClient.setConnectTimeout(10 * 1000);
+
+        try {
+            connectToFTP();
+
+            if(FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {
+                boolean worked  = setTransferSettings();
+                if(strings[1].contentEquals("new")) {
+                    ftpClient.makeDirectory(WEEK_DATA_DIRECTORY);
+                }
+
+                ftpClient.changeWorkingDirectory(WEEK_DATA_DIRECTORY);
+
+                /* call methods that create our strings of data for our files */
+                String rawData = PushStaticData.weekStartDays();
+                File file = createTempFile(WEEK_DATA_FILE_NAME, rawData, false);
+                //ftpClient.storeFile(WEEK_DATA_FILE_NAME, new FileInputStream(file));
+
+                //String weekRawData = PushStaticData.weeklyData(1);
+                //File file1 = createTempFile("week_data_1.txt", weekRawData, false);
+                //ftpClient.storeFile("week_data_1.txt", new FileInputStream(file1));
+
+                isDone(true);
+            }
+            ftpClient.disconnect();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {

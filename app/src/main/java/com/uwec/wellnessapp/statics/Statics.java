@@ -3,6 +3,9 @@ package com.uwec.wellnessapp.statics;
 import com.uwec.wellnessapp.data.SessionData;
 import com.uwec.wellnessapp.data.WeekData;
 import com.uwec.wellnessapp.data.UserData;
+import com.uwec.wellnessapp.utils.SingleExecutor;
+
+import java.util.concurrent.Executor;
 
 /**
  * Created by Noah Butler on 12/23/2014.
@@ -12,9 +15,12 @@ import com.uwec.wellnessapp.data.UserData;
 public class Statics {
 
     private static UserData globalUserData;
-    //TODO: rename to WeekData
     private static WeekData globalWeekData;
     private static SessionData sessionData = new SessionData();
+
+    private static SingleExecutor singleExecutor = new SingleExecutor();
+
+    public static String[] weeks = {"WEEK_ONE", "WEEK_TWO", "WEEK_THREE", "WEEK_FOUR", "WEEK_FIVE"};
 
     public static UserData getGlobalUserData() {
         return globalUserData;
@@ -34,7 +40,7 @@ public class Statics {
 
     public static SessionData getSessionData() { return sessionData; }
 
-    public static void setSessionData(SessionData sessionData) {
-        Statics.sessionData = sessionData;
+    public static SingleExecutor getSingleExecutor() {
+        return singleExecutor;
     }
 }

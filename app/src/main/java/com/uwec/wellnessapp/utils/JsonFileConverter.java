@@ -17,7 +17,7 @@ import org.json.JSONObject;
 public class JsonFileConverter {
 
     private static String json_value_names[] = {"email", "first_name", "last_name", "password", "total_score", "weekly_data"};
-    private static String goal_data_json_value_names[] = {"week", "physical_activity", "pa_days_per_week", "nutrition_goal", "ng_days_per_week", "nutrition_goal_description", "supporting_evidence"};
+    private static String week_data_json_value_names[] = {"week", "physical_activity", "physical_activity_description", "pa_days_per_week", "nutrition_goal", "nutrition_goal_description", "ng_days_per_week", "supporting_evidence"};
 
     public UserData convertUserDataJSON(JSONObject jsonObject) throws JSONException {
         UserData userData = new UserData();
@@ -32,15 +32,16 @@ public class JsonFileConverter {
         return userData;
     }
 
-    public WeekData convertGoalDataJSON(JSONObject jsonObject) throws JSONException {
+    public WeekData convertWeekDataJSON(JSONObject jsonObject) throws JSONException {
         WeekData weekData = new WeekData();
-        weekData.setWeek(jsonObject.getString(goal_data_json_value_names[0]));
-        weekData.setPhysical_activity(jsonObject.getString(goal_data_json_value_names[1]));
-        weekData.setPa_days_per_week(jsonObject.getInt(goal_data_json_value_names[2]));
-        weekData.setNutrition_goal(jsonObject.getString(goal_data_json_value_names[3]));
-        weekData.setNg_days_per_week(jsonObject.getInt(goal_data_json_value_names[4]));
-        weekData.setNutrition_goal_description(jsonObject.getString(goal_data_json_value_names[5]));
-        weekData.setSupporting_evidence(jsonObject.getString(goal_data_json_value_names[6]));
+        weekData.setWeek(jsonObject.getString(week_data_json_value_names[0]));
+        weekData.setPhysical_activity(jsonObject.getString(week_data_json_value_names[1]));
+        weekData.setPhysical_activity_description(jsonObject.getString(week_data_json_value_names[2]));
+        weekData.setPa_days_per_week(jsonObject.getInt(week_data_json_value_names[3]));
+        weekData.setNutrition_goal(jsonObject.getString(week_data_json_value_names[4]));
+        weekData.setNutrition_goal_description(jsonObject.getString(week_data_json_value_names[5]));
+        weekData.setNg_days_per_week(jsonObject.getInt(week_data_json_value_names[6]));
+        weekData.setSupporting_evidence(jsonObject.getString(week_data_json_value_names[7]));
 
         return weekData;
     }

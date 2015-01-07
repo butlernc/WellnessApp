@@ -33,19 +33,16 @@ public class LoginHelper {
         Log.d("LOGIN", "Start server setup");
         //create a FileSourceConnector, used to read and write to the server.
         FileSourceConnector fileSourceConnector = new FileSourceConnector();
-        fileSourceConnector.execute(email, password, "readUser");
-
-        //wait until async task is over with because I can't do network operations on the
-        //UI thread, so I have to use an async task.
+        Statics.getSingleExecutor().push(fileSourceConnector.queue("readUser", email, password));
 
         /* TODO: Show progress */
-        while(!fileSourceConnector.isDone()) {}
         if(fileSourceConnector.getRETURN_STR().contains("GOOD")) {
             if(rememberMe) {
                 Statics.getSessionData().setUsername(email);
                 Statics.getSessionData().setPassword(password);
             }
             Statics.getSessionData().saveLoginSession(context, rememberMe);
+            Statics.getSingleExecutor().runTask();
             return true;
         }
         return false;
