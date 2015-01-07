@@ -10,18 +10,24 @@ import java.util.concurrent.Executor;
  */
 public class SingleExecutor {
 
-     Stack<Runnable> tasks = new Stack<Runnable>();
+    Stack<Runnable> tasks = new Stack<Runnable>();
 
+    private static boolean finished;
 
     public void push(Runnable runnable) {
         tasks.push(runnable);
     }
 
-    public synchronized boolean runTask() {
+    public synchronized void runTask() {
         try {
+            finished = false;
             new Thread(tasks.pop()).start();
         } finally {
-            return true;
+            finished = true;
         }
+    }
+
+    public boolean isFinished() {
+        return finished;
     }
 }
