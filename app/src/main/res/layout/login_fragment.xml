@@ -9,7 +9,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.wellnessapp.login.LoginActivity" >
+    tools:context="com.wellnessapp.login.LoginActivity"
+    android:background="#22468a" >
     <!-- Ben gittest -->
     <!-- Login progress -->
     <EditText
@@ -19,7 +20,10 @@
         android:hint="@string/prompt_email"
         android:inputType="textEmailAddress"
         android:maxLines="1"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFF"
+        android:textSize="25dp"/>
 
     <EditText
         android:id="@+id/login_input_password"
@@ -30,7 +34,10 @@
         android:imeOptions="actionUnspecified"
         android:inputType="textPassword"
         android:maxLines="1"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFF"
+        android:textSize="25dp"/>
 
     <Button
         android:id="@+id/email_sign_in_button"
@@ -39,7 +46,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/action_sign_in"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:background="#edac1a"
+        android:textColor="#22468a"
+        android:textSize="25dp"/>
 
     <Button
         android:id="@+id/email_register_button"
@@ -48,12 +58,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/action_register"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:background="#edac1a"
+        android:textColor="#22468a"
+        android:textSize="25dp"/>
 
     <CheckBox
+        android:layout_marginTop="30dp"
+        android:button="@drawable/checkbox_selector"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/remember_me"
         android:id="@+id/remember_me_check_box"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:textSize="25dp"
+        android:textColor="#FFF" />
 </LinearLayout>
