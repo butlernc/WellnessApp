@@ -67,7 +67,7 @@
             android:text="@string/btnFitnessGoalsDefaultString"
             android:textColor="#FFFFFF"
             android:id="@+id/btnFitnessGoals"
-            android:background="@drawable/Fitness_button_default"
+            android:background="@drawable/fitness_button_default"
             android:layout_marginBottom="10dp"
             android:layout_weight="0.10"
             android:layout_gravity="top"
