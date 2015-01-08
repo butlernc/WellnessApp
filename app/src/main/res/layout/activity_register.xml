@@ -23,6 +23,7 @@
         android:textSize="25dp"
         android:singleLine="true"
 
+
         />
 
     <EditText
@@ -63,7 +64,8 @@
         android:textColorHint="#FFF"
         android:textSize="25dp"
         android:singleLine="true"
-        android:password="true" />
+        android:password="true"
+        />
 
     <Button
         android:id="@+id/register_register_button"
