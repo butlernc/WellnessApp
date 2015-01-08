@@ -31,13 +31,15 @@ public class LoginFragment extends Fragment {
 
     CheckBox rememberMe;
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        final View rootView = inflater.inflate(R.layout.login_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.login_fragment, container, false);
 
         email_sign_in_button = (Button) rootView.findViewById(R.id.email_sign_in_button);
         email_register_button = (Button) rootView.findViewById(R.id.email_register_button);
+
+        email_input = (EditText) rootView.findViewById(R.id.login_input_email);
+        password_input = (EditText) rootView.findViewById(R.id.login_input_password);
 
         rememberMe = (CheckBox) rootView.findViewById(R.id.remember_me_check_box);
 
@@ -45,13 +47,11 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Log.d("LOGIN", "clicked login button");
-                email_input = (EditText) view.findViewById(R.id.login_input_email);
-                password_input = (EditText) view.findViewById(R.id.login_input_password);
 
                 //run login and set the user as logged in if successful
                 Log.d("RememberMe", "Status: " + String.valueOf(rememberMe.isChecked()));
                 Statics.sessionData.setupSession();
-                Statics.loginHelper.login(getActivity(), email_input.getText().toString(), password_input.getText().toString(), rememberMe.isChecked());
+                Statics.loginHelper.login(getActivity(), email_input.getText().toString(), password_input.getText().toString(), rememberMe.isChecked(), true);
             }
 
         });
@@ -64,5 +64,9 @@ public class LoginFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
     }
 }

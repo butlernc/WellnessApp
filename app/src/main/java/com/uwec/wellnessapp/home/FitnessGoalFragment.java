@@ -29,6 +29,7 @@ public class FitnessGoalFragment extends Fragment {
         getActivity().getActionBar().setTitle(R.string.fitness_goal_title);
 
         TextView fitness_goal_week = (TextView)rootView.findViewById(R.id.fitness_goal_week);
+        fitness_goal_week.setText("Test 1");
         fitness_goal_week.setText(Statics.globalWeekData.getWeek());
         //TODO: make buttons green if day completed/checked off
         //TODO: make buttons blue if day needs to be completed/checked off

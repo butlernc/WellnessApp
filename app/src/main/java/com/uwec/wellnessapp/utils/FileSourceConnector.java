@@ -286,10 +286,10 @@ public class FileSourceConnector {
 
                         //check password with entered password
                         if(expected.compareTo(strings[2]) == 0) {
+                            Statics.messenger.sendMessage("Successful Login");
                             //password is correct, get user data
                             //set the application's userData object.
                             Statics.globalUserData = jsonFileConverter.convertUserDataJSON(jsonObject);
-
                             RETURN_STR = "GOOD";
                             isDone(true);
                         }else{

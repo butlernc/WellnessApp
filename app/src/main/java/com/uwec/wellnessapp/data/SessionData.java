@@ -136,7 +136,7 @@ public class SessionData {
 
                 }
 
-                Statics.messenger.sendMessage("Loaded Cached Data");
+                Statics.messenger.sendMessage("loading session...");
             }
         };
 
@@ -144,7 +144,7 @@ public class SessionData {
     }
 
     /**
-     * Starts an asyncTask (FileSourceConnector) that loads the correct WeekData
+     * Starts an Thread (FileSourceConnector) that loads the correct WeekData
      * and then populates the WeekData object in the app
      *
      * Will be called when the app is in start up (loginActivity)
@@ -173,34 +173,39 @@ public class SessionData {
                         int startOfWeek = startWeekDataJSON.getInt(Statics.weeks[0]);
                         int nextStartOfWeek = startWeekDataJSON.getInt(Statics.weeks[1]);
 
+                        for(int i = 0; i < Statics.weeks.length; i++) {
+                            Log.d("Week", "Week start dates: Week " + i + ": " + startWeekDataJSON.getInt(Statics.weeks[i]));
+                        }
+
                         //if(currentSessionDate.get(Calendar.MONTH) == startWeekDataJSON.getInt("MONTH_ONE")) {
                         /* for testing purposes */
                         if(currentSessionDate.get(Calendar.MONTH) == 0) {
                             int index = 2;
-
+                            weekNumber = 1;
                             while(!(currentDay >= startOfWeek && currentDay < nextStartOfWeek)) {
                                 startOfWeek = nextStartOfWeek;
                                 nextStartOfWeek = startWeekDataJSON.getInt(Statics.weeks[index]);
                                 index++;
+                                weekNumber++;
                             }
-
-                            weekNumber  = startOfWeek;
                             monthNumber = currentSessionDate.get(Calendar.MONTH);
                         }else{
 
                             int index = 2;
+                            weekNumber = 1;
                             while(nextStartOfWeek > startOfWeek) {
                                 startOfWeek = nextStartOfWeek;
                                 nextStartOfWeek = startWeekDataJSON.getInt(Statics.weeks[index]);
                                 index++;
+                                weekNumber++;
                             }
                             while(!(currentDay >= startOfWeek && currentDay < nextStartOfWeek)) {
                                 startOfWeek = nextStartOfWeek;
                                 nextStartOfWeek = startWeekDataJSON.getInt(Statics.weeks[index]);
                                 index++;
+                                weekNumber++;
                             }
 
-                            weekNumber  = startOfWeek;
                             monthNumber = currentSessionDate.get(Calendar.MONTH);
                         }
                     }
@@ -217,7 +222,7 @@ public class SessionData {
                 Log.d("DATE", "monthNumber: " + monthNumber);
                 loadedWeekData = true;
 
-                Statics.messenger.sendMessage("Loaded Weekly Data...");
+                Statics.messenger.sendMessage("loaded weekly data...");
             }
         };
 

@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.uwec.wellnessapp.R;
 import com.uwec.wellnessapp.login.LoginHelper;
@@ -131,7 +130,6 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
                 break;
         }
 
-        Toast.makeText(this, "Fragment has been created", Toast.LENGTH_SHORT).show();
         newFragment.setArguments(args);
         return newFragment;
     }
