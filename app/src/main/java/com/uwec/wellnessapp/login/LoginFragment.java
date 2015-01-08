@@ -50,7 +50,6 @@ public class LoginFragment extends Fragment {
 
                 //run login and set the user as logged in if successful
                 Log.d("RememberMe", "Status: " + String.valueOf(rememberMe.isChecked()));
-                Statics.sessionData.setupSession();
                 Statics.loginHelper.login(getActivity(), email_input.getText().toString(), password_input.getText().toString(), rememberMe.isChecked(), true);
             }
 

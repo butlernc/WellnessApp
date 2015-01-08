@@ -39,21 +39,22 @@ public class LoadingFragment extends Fragment {
 
             Log.d("Session", "SessionData is loading");
 
-        /* load the app's data here */
-            //TODO: might do a check for this loading correctly
+            /* load the app's data here */
             Statics.sessionData.loadLastSession(getActivity().getBaseContext());
-            while (!Statics.messenger.messageSent) {
-            }
+            while (!Statics.messenger.messageSent) {}
+            Statics.sessionData.setupSession();
+            Statics.sessionData.loadWeekData();
+            while (!Statics.messenger.messageSent) {}
             Log.d("THREAD", "loading last session data finished");
             Log.d("THREAD", "ShouldLoad: " + String.valueOf(shouldLoad) + " rememberMe: " + String.valueOf(Statics.sessionData.rememberedMe()));
 
-        /* auto login */
-            if (Statics.sessionData.rememberedMe() && shouldLoad) {
+            /* auto login */
+            if (!Statics.sessionData.rememberedMe() && shouldLoad) {
                 Log.d("Session", "Using remember me username and password");
-                Statics.sessionData.setupSession();
+
                 Statics.loginHelper.login(getActivity(), Statics.sessionData.getUsername(), Statics.sessionData.getPassword(), true, false);
             } else {
-            /* use default login page now */
+                /* use default login page now */
                 Fragment loginFragment = new LoginFragment();
                 getActivity().getFragmentManager().beginTransaction().replace(R.id.main_login_area, loginFragment).commit();
                 Log.d("TEST", "Using default login fragment");

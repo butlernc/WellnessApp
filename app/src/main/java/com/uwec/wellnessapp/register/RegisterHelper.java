@@ -37,6 +37,7 @@ public class RegisterHelper {
         userData.setEmail(input[2]);
         userData.setPassword(input[3]);
         userData.setTotal_score(0);
+        userData.createWeeklyDataObject();
 
         Statics.globalUserData = userData;
 

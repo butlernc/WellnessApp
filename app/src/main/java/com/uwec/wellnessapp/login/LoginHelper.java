@@ -65,8 +65,6 @@ public class LoginHelper {
                     while(!Statics.messenger.messageSent){}
 
                     setLogged(true);
-                    Statics.sessionData.loadWeekData();
-                    while(!Statics.messenger.messageSent){}
 
                     /* logged in successfully, switch to main activity */
                     //Toast.makeText(activtiy.getBaseContext(), "Successfully Logged In!", Toast.LENGTH_LONG).show();

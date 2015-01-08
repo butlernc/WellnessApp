@@ -92,7 +92,7 @@ public class SessionData {
                     e.printStackTrace();
                 }
 
-                Statics.messenger.sendMessage("New Session Created.");
+                Statics.messenger.sendMessage("new session created...");
             }
         };
 
@@ -125,10 +125,10 @@ public class SessionData {
                     lastSessionMonth = data.getInt("month");
                     lastSessionDay = data.getInt("day");
 
-                    if (Integer.parseInt("" + data.get("rememberMe")) == 1) {
+                    if (data.getInt("rememberMe") == 1) {
                         shouldRememberMe(true);
-                        setUsername("" + data.get("username"));
-                        setPassword("" + data.get("password"));
+                        setUsername(data.getString("username"));
+                        setPassword(data.getString("password"));
                     }
 
                 } catch (Exception e) {
@@ -136,7 +136,7 @@ public class SessionData {
 
                 }
 
-                Statics.messenger.sendMessage("loading session...");
+                Statics.messenger.sendMessage("loaded old session data...");
             }
         };
 
@@ -168,10 +168,10 @@ public class SessionData {
                 try {
                     startWeekDataJSON = new JSONObject(startWeekData);
 
-                    if(startWeekDataJSON != null) {
+                    int startOfWeek = startWeekDataJSON.getInt(Statics.weeks[0]);
+                    int nextStartOfWeek = startWeekDataJSON.getInt(Statics.weeks[1]);
 
-                        int startOfWeek = startWeekDataJSON.getInt(Statics.weeks[0]);
-                        int nextStartOfWeek = startWeekDataJSON.getInt(Statics.weeks[1]);
+                    if(startWeekDataJSON != null) {
 
                         for(int i = 0; i < Statics.weeks.length; i++) {
                             Log.d("Week", "Week start dates: Week " + i + ": " + startWeekDataJSON.getInt(Statics.weeks[i]));
@@ -210,23 +210,31 @@ public class SessionData {
                         }
                     }
 
+                    FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
+                /* TODO: fix week selection */
+                    Statics.singleExecutor.runTask(loadWeekDataConnector.queue("readWeekData", "" + 1));
+                    while(!loadWeekDataConnector.isDone()){}
+                    Log.d("DATE", "weekNumber: " + weekNumber);
+                    Log.d("DATE", "monthNumber: " + monthNumber);
+                    loadedWeekData = true;
+
+                    Statics.messenger.sendMessage("loaded weekly data...");
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-                FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
-                /* TODO: fix week selection */
-                Statics.singleExecutor.runTask(loadWeekDataConnector.queue("readWeekData", "" + 1));
-                while(!loadWeekDataConnector.isDone()){}
-                Log.d("DATE", "weekNumber: " + weekNumber);
-                Log.d("DATE", "monthNumber: " + monthNumber);
-                loadedWeekData = true;
-
-                Statics.messenger.sendMessage("loaded weekly data...");
             }
         };
 
         Statics.singleExecutor.runTask(runnable);
+    }
+
+    public void createUserWeeklyData(int currentDay, int lastSessionDay, int startOfWeek) {
+        if(lastSessionDay < startOfWeek && lastSessionMonth == currentSessionDate.get(Calendar.MONTH)) {
+            Statics.globalUserData.createWeeklyDataObject();
+        }else if(Statics.globalUserData.getWeeklyData().isEmpty()) {
+            Statics.globalUserData.createWeeklyDataObject();
+        }
     }
 
     public boolean rememberedMe() {
