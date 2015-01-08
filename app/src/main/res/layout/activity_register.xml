@@ -20,7 +20,9 @@
         android:maxLines="1"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFF"
-        android:singleLine="true" />
+        android:singleLine="true"
+
+        />
 
     <EditText
         android:id="@+id/first_name_register"
@@ -56,7 +58,8 @@
         android:maxLines="1"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFF"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:password="true" />
 
     <Button
         android:id="@+id/register_register_button"
