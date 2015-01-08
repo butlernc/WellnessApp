@@ -13,7 +13,7 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.4" />
+        android:layout_weight="0.22" />
 
     <LinearLayout
         android:id="@+id/linearLayout1"
@@ -70,7 +70,9 @@
             android:background="@drawable/fitness_button_default"
             android:layout_marginBottom="10dp"
             android:layout_weight="0.10"
-            android:layout_gravity="top" />
+            android:layout_gravity="top"
+            android:gravity="center|right"
+            android:paddingRight="36dp"/>
 
         <Button
             android:layout_width="match_parent"
@@ -79,8 +81,10 @@
             android:text="@string/btnNutritionGoalsDefaultString"
             android:textColor="#FFFFFF"
             android:id="@+id/btnNutritionGoals"
-            android:background="@drawable/nutrtion_button_default"
-            android:layout_weight="0.10" />
+            android:background="@drawable/nutrition_button_default"
+            android:layout_weight="0.10"
+            android:gravity="center|right"
+            android:paddingRight="20dp"/>
 
         <Button
             android:layout_width="match_parent"
@@ -89,7 +93,9 @@
             android:textColor="#FFFFFF"
             android:id="@+id/btnBonusEvents"
             android:background="@drawable/bonus_button_default"
-            android:layout_weight="0.10" />
+            android:layout_weight="0.10"
+            android:gravity="center|right"
+            android:paddingRight="26dp" />
 
 
 

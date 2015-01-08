@@ -20,7 +20,9 @@
         android:maxLines="1"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFF"
+        android:textSize="25dp"
         android:singleLine="true"
+
 
         />
 
@@ -33,6 +35,7 @@
         android:maxLines="1"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFF"
+        android:textSize="25dp"
         android:singleLine="true" />
 
     <EditText
@@ -44,6 +47,7 @@
         android:maxLines="1"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFF"
+        android:textSize="25dp"
         android:singleLine="true" />
 
     <EditText
@@ -58,8 +62,10 @@
         android:maxLines="1"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFF"
+        android:textSize="25dp"
         android:singleLine="true"
-        android:password="true" />
+        android:password="true"
+        />
 
     <Button
         android:id="@+id/register_register_button"
