@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.uwec.wellnessapp.R;
 import com.uwec.wellnessapp.start.MainNavActivity;
 import com.uwec.wellnessapp.statics.Statics;
 import com.uwec.wellnessapp.utils.FileSourceConnector;
@@ -31,7 +32,17 @@ public class LoginHelper {
      * @param password
      * @return boolean
      */
-    public void login(final Activity activtiy, final String email, final String password, final boolean rememberMe) {
+    public void login(final Activity activtiy, final String email, final String password, final boolean rememberMe, boolean showLoading) {
+
+        if(showLoading) {
+            /* make sure the loading fragment is showing */
+            Statics.loadingFragment = new LoadingFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt("filler", 1);
+            Statics.loadingFragment.setArguments(bundle);
+            activtiy.getFragmentManager().beginTransaction().replace(R.id.main_login_area, Statics.loadingFragment).commit();
+            activtiy.getFragmentManager().executePendingTransactions();
+        }
 
         Runnable runnable = new Runnable() {
 
@@ -54,9 +65,6 @@ public class LoginHelper {
                     while(!Statics.messenger.messageSent){}
 
                     setLogged(true);
-                    Statics.messenger.sendMessage("Logged You In...");
-                    Statics.sessionData.loadWeekData();
-                    while(!Statics.messenger.messageSent){}
 
                     /* logged in successfully, switch to main activity */
                     //Toast.makeText(activtiy.getBaseContext(), "Successfully Logged In!", Toast.LENGTH_LONG).show();

@@ -30,7 +30,6 @@ import org.w3c.dom.Text;
 public class LoginActivity extends Activity {
 
     private boolean shouldLoad;
-    private LoadingFragment loadingFragment;
     /** text view from the loading fragment */
     private TextView loadingText;
 
@@ -38,9 +37,12 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        Statics.loginHelper = new LoginHelper();
+
         /* show loading fragment first */
-        loadingFragment = new LoadingFragment();
-        getFragmentManager().beginTransaction().replace(R.id.main_login_area, loadingFragment).commit();
+        Statics.loadingFragment = new LoadingFragment();
+        getFragmentManager().beginTransaction().replace(R.id.main_login_area, Statics.loadingFragment).commit();
         getFragmentManager().executePendingTransactions();
 
         Log.d("TEST", "Loading fragment should be shown");
@@ -50,19 +52,9 @@ public class LoginActivity extends Activity {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                loadingText = loadingFragment.getLoadingText();
+                loadingText = Statics.loadingFragment.getLoadingText();
                 loadingText.setText(msg.getData().getString("message"));
             }
         };
-
-        /* use default login page now */
-        //Fragment loginFragment = new LoginFragment();
-        //getFragmentManager().beginTransaction().replace(R.id.main_login_area, loginFragment).commit();
-        //Log.d("TEST", "Using default login fragment");
-
-    }
-
-    public void onResume() {
-        super.onResume();
     }
 }

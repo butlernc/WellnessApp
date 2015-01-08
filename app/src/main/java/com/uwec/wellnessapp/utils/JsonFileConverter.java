@@ -8,6 +8,8 @@ import com.uwec.wellnessapp.data.UserData;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 /**
  * Created by Noah Butler on 12/5/2014.
  *
@@ -26,8 +28,7 @@ public class JsonFileConverter {
         userData.setLast_name(jsonObject.getString(json_value_names[2]));
         userData.setPassword(jsonObject.getString(json_value_names[3]));
         userData.setTotal_score(jsonObject.getInt(json_value_names[4]));
-        //TODO: enable weeklyData in the userObject
-        //userData.setWeeklyData((ArrayList<UserData.WeeklyData>)jsonObject.get(json_value_names[5]));
+        userData.setWeeklyData((ArrayList<UserData.WeeklyData>) jsonObject.get(json_value_names[5]));
 
         return userData;
     }

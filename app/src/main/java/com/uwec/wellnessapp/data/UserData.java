@@ -1,5 +1,7 @@
 package com.uwec.wellnessapp.data;
 
+import com.uwec.wellnessapp.statics.Statics;
+
 import java.util.ArrayList;
 
 /**
@@ -21,6 +23,14 @@ public class UserData {
 
     /* this will hold all of the data for each week */
     private ArrayList<WeeklyData> weeklyData;
+
+    public void createWeeklyDataObject() {
+        WeeklyData newWeeklyData = new WeeklyData(Statics.globalWeekData.getPa_days_per_week(), Statics.globalWeekData.getNg_days_per_week());
+        if(weeklyData == null) {
+            weeklyData = new ArrayList<>();
+        }
+        weeklyData.add(newWeeklyData);
+    }
 
     public String getFirst_name() {
         return first_name;

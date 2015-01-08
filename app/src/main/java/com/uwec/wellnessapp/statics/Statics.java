@@ -5,6 +5,7 @@ import android.os.Handler;
 import com.uwec.wellnessapp.data.SessionData;
 import com.uwec.wellnessapp.data.WeekData;
 import com.uwec.wellnessapp.data.UserData;
+import com.uwec.wellnessapp.login.LoadingFragment;
 import com.uwec.wellnessapp.login.LoginHelper;
 import com.uwec.wellnessapp.utils.Messenger;
 import com.uwec.wellnessapp.utils.SingleExecutor;
@@ -22,7 +23,8 @@ public class Statics {
     public static WeekData globalWeekData;
     public static SessionData sessionData = new SessionData();
 
-    public static LoginHelper loginHelper = new LoginHelper();
+    public static LoginHelper loginHelper;
+    public static LoadingFragment loadingFragment;
 
     public static Handler handler;
     public static Messenger messenger = new Messenger();

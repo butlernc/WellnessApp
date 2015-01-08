@@ -25,29 +25,40 @@ public class LoadingFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.loading_fragment, container, false);
         loadingText = (TextView)rootView.findViewById(R.id.welcome_text);
 
-        /* make sure we aren't trying to log out */
-        shouldLoad = true;
-        if (getActivity().getIntent().getStringArrayExtra("extras") != null) {
-            Log.d("Session", "Don't auto login this time");
+
+        if(getArguments() == null) {
+
+            /* make sure we aren't trying to log out */
+            shouldLoad = true;
+            if (getActivity().getIntent().getStringArrayExtra("extras") != null) {
+                Log.d("Session", "Don't auto login this time");
             /* any activity will send a message to the login screen that the user is trying to logout
             it should not try to auto log back in. */
-            shouldLoad = false;
-        }
+                shouldLoad = false;
+            }
 
-        Log.d("Session", "SessionData is loading");
+            Log.d("Session", "SessionData is loading");
 
-        /* load the app's data here */
-        //TODO: might do a check for this loading correctly
-        Statics.sessionData.loadLastSession(getActivity().getBaseContext());
-        while(!Statics.messenger.messageSent){}
-        Log.d("THREAD", "loading last session data finished");
-        Log.d("THREAD", "ShouldLoad: " + String.valueOf(shouldLoad) + " rememberMe: " + String.valueOf(Statics.sessionData.rememberedMe()));
-
-        /* auto login */
-        if (Statics.sessionData.rememberedMe() && shouldLoad) {
-            Log.d("Session", "Using remember me username and password");
+            /* load the app's data here */
+            Statics.sessionData.loadLastSession(getActivity().getBaseContext());
+            while (!Statics.messenger.messageSent) {}
             Statics.sessionData.setupSession();
-            Statics.loginHelper.login(getActivity(), Statics.sessionData.getUsername(), Statics.sessionData.getPassword(), true);
+            Statics.sessionData.loadWeekData();
+            while (!Statics.messenger.messageSent) {}
+            Log.d("THREAD", "loading last session data finished");
+            Log.d("THREAD", "ShouldLoad: " + String.valueOf(shouldLoad) + " rememberMe: " + String.valueOf(Statics.sessionData.rememberedMe()));
+
+            /* auto login */
+            if (!Statics.sessionData.rememberedMe() && shouldLoad) {
+                Log.d("Session", "Using remember me username and password");
+
+                Statics.loginHelper.login(getActivity(), Statics.sessionData.getUsername(), Statics.sessionData.getPassword(), true, false);
+            } else {
+                /* use default login page now */
+                Fragment loginFragment = new LoginFragment();
+                getActivity().getFragmentManager().beginTransaction().replace(R.id.main_login_area, loginFragment).commit();
+                Log.d("TEST", "Using default login fragment");
+            }
         }
 
         return rootView;
