@@ -184,7 +184,7 @@ public class FileSourceConnector {
         JSONObject jsonObject = new JSONObject();
         String rawData = "";
         if(isUserData) {
-            jsonObject = jsonFileConverter.convertToJSON(Statics.getGlobalUserData());
+            jsonObject = jsonFileConverter.convertToJSON(Statics.globalUserData);
             rawData = jsonObject.toString();
         }else{
             rawData = inputData;
@@ -288,7 +288,7 @@ public class FileSourceConnector {
                         if(expected.compareTo(strings[2]) == 0) {
                             //password is correct, get user data
                             //set the application's userData object.
-                            Statics.setGlobalUserData(jsonFileConverter.convertUserDataJSON(jsonObject));
+                            Statics.globalUserData = jsonFileConverter.convertUserDataJSON(jsonObject);
 
                             RETURN_STR = "GOOD";
                             isDone(true);
@@ -330,7 +330,7 @@ public class FileSourceConnector {
 
                 String fullFileName = WEEK_FILE_NAME_TRUNC + strings[1] + ".txt";
                 JSONObject jsonObject = readFromServer(fullFileName);
-                Statics.setGlobalWeekData(jsonFileConverter.convertWeekDataJSON(jsonObject));
+                Statics.globalWeekData = jsonFileConverter.convertWeekDataJSON(jsonObject);
 
             }
 

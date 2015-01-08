@@ -3,21 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/main_login_area"
-    tools:context=".LoginActivity"
-    android:background="#22468a">
+    tools:context=".LoginActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Welcome!"
-        android:id="@+id/loading_text"
-        android:layout_gravity="center"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:textColor="#FFF"
-        android:textStyle="bold"
-        android:textSize="50dp"
-        />
 </RelativeLayout>

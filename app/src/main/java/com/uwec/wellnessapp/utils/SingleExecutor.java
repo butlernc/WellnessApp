@@ -1,5 +1,7 @@
 package com.uwec.wellnessapp.utils;
 
+import com.uwec.wellnessapp.statics.Statics;
+
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.Stack;
@@ -10,24 +12,8 @@ import java.util.concurrent.Executor;
  */
 public class SingleExecutor {
 
-    Stack<Runnable> tasks = new Stack<Runnable>();
-
-    private static boolean finished;
-
-    public void push(Runnable runnable) {
-        tasks.push(runnable);
-    }
-
-    public synchronized void runTask() {
-        try {
-            finished = false;
-            new Thread(tasks.pop()).start();
-        } finally {
-            finished = true;
-        }
-    }
-
-    public boolean isFinished() {
-        return finished;
+    public synchronized void runTask(Runnable runnable) {
+        Statics.messenger.messageSent = false;
+        new Thread(runnable).start();
     }
 }

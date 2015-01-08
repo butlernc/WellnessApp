@@ -1,6 +1,8 @@
 package com.uwec.wellnessapp.data;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.uwec.wellnessapp.statics.Statics;
@@ -53,72 +55,92 @@ public class SessionData {
     }
 
     /** used to save login date */
-    public void saveLoginSession(Context context, boolean rememberMe) {
-        JSONObject data = new JSONObject();
-        try {
-            data.put("year", currentSessionDate.get(Calendar.YEAR));
-            data.put("month", currentSessionDate.get(Calendar.MONTH));
-            data.put("day", currentSessionDate.get(Calendar.DAY_OF_MONTH));
-            if(rememberMe) {
-                data.put("username", getUsername());
-                data.put("password", getPassword());
-                data.put("rememberMe", 1);
-                Log.d("Save", "Login data will be saved for next login");
-            }else{
-                data.put("rememberMe", 0);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    public void saveLoginSession(final Context context, final boolean rememberMe) {
 
-        String rawData = data.toString();
-        FileOutputStream outputStream;
-        try{
-            outputStream = context.openFileOutput(SESSION_FILE_NAME, Context.MODE_PRIVATE);
-            outputStream.write(rawData.getBytes());
-            outputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Runnable runnable = new Runnable() {
+
+            @Override
+            public void run() {
+                JSONObject data = new JSONObject();
+                try {
+                    data.put("year", currentSessionDate.get(Calendar.YEAR));
+                    data.put("month", currentSessionDate.get(Calendar.MONTH));
+                    data.put("day", currentSessionDate.get(Calendar.DAY_OF_MONTH));
+
+                    if(rememberMe) {
+                        data.put("username", getUsername());
+                        data.put("password", getPassword());
+                        data.put("rememberMe", 1);
+                        Log.d("Save", "Login data will be saved for next login");
+
+                    }else{
+                        data.put("rememberMe", 0);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                String rawData = data.toString();
+                FileOutputStream outputStream;
+
+                try{
+                    outputStream = context.openFileOutput(SESSION_FILE_NAME, Context.MODE_PRIVATE);
+                    outputStream.write(rawData.getBytes());
+                    outputStream.close();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                Statics.messenger.sendMessage("New Session Created.");
+            }
+        };
+
+        Statics.singleExecutor.runTask(runnable);
     }
 
     /** used to load last login date */
-    public boolean loadLastSession(Context context) {
-        String rawData = "";
-        StringBuilder sb = new StringBuilder();
+    public void loadLastSession(final Context context) {
 
-        JSONObject data;
-        InputStream inputStream;
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
 
-        try{
-            inputStream = context.openFileInput(SESSION_FILE_NAME);
-            BufferedReader dataReader = new BufferedReader(new InputStreamReader(inputStream));
+                String rawData = "";
+                StringBuilder sb = new StringBuilder();
 
-            while((rawData = dataReader.readLine()) != null) {
-                sb.append(rawData);
+                JSONObject data;
+                InputStream inputStream;
+
+                try {
+                    inputStream = context.openFileInput(SESSION_FILE_NAME);
+                    BufferedReader dataReader = new BufferedReader(new InputStreamReader(inputStream));
+
+                    while ((rawData = dataReader.readLine()) != null) {
+                        sb.append(rawData);
+                    }
+
+                    data = new JSONObject(sb.toString());
+
+                    lastSessionMonth = data.getInt("month");
+                    lastSessionDay = data.getInt("day");
+
+                    if (Integer.parseInt("" + data.get("rememberMe")) == 1) {
+                        shouldRememberMe(true);
+                        setUsername("" + data.get("username"));
+                        setPassword("" + data.get("password"));
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                }
+
+                Statics.messenger.sendMessage("Loaded Cached Data");
             }
+        };
 
-            data = new JSONObject(sb.toString());
-
-            lastSessionMonth = data.getInt("month");
-            lastSessionDay   = data.getInt("day");
-
-            if(Integer.parseInt(""+data.get("rememberMe")) == 1) {
-                shouldRememberMe(true);
-                setUsername("" + data.get("username"));
-                setPassword("" + data.get("password"));
-            }
-
-            Log.d("Session", "Data: Year: " + data.get("year"));
-            Log.d("Session", "Data: Month: " + data.get("month"));
-            Log.d("Session", "Data: Day Of Month: " + data.get("day"));
-            Log.d("Session", "Data: Username: " + data.get("username"));
-            Log.d("Session", "Data: rememberMe: " + data.get("rememberMe"));
-            return true;
-        }catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        Statics.singleExecutor.runTask(runnable);
     }
 
     /**
@@ -129,68 +151,77 @@ public class SessionData {
      * Session data should already be loaded
      */
     public void loadWeekData() {
-        Log.d("WEEKDATA", "loading weekly data");
-        FileSourceConnector fileSourceConnector = new FileSourceConnector();
-        JSONObject startWeekDataJSON = null;
-        String startWeekData = "";
 
-        Statics.getSingleExecutor().push(fileSourceConnector.queue("readWeekStartData"));
-        /* wait */
-        while(!fileSourceConnector.isDone()) {}
-        startWeekData = fileSourceConnector.getRETURN_STR();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Log.d("WEEKDATA", "loading weekly data");
+                FileSourceConnector fileSourceConnector = new FileSourceConnector();
+                JSONObject startWeekDataJSON = null;
+                String startWeekData = "";
 
-        try {
-            startWeekDataJSON = new JSONObject(startWeekData);
+                Statics.singleExecutor.runTask(fileSourceConnector.queue("readWeekStartData"));
+                /* wait */
+                while(!fileSourceConnector.isDone()) {}
+                startWeekData = fileSourceConnector.getRETURN_STR();
 
-            if(startWeekDataJSON != null) {
+                try {
+                    startWeekDataJSON = new JSONObject(startWeekData);
 
-                int startOfWeek = startWeekDataJSON.getInt(Statics.weeks[0]);
-                int nextStartOfWeek = startWeekDataJSON.getInt(Statics.weeks[1]);
+                    if(startWeekDataJSON != null) {
 
-                //if(currentSessionDate.get(Calendar.MONTH) == startWeekDataJSON.getInt("MONTH_ONE")) {
-                /* for testing purposes */
-                if(currentSessionDate.get(Calendar.MONTH) == 0) {
-                    int index = 2;
+                        int startOfWeek = startWeekDataJSON.getInt(Statics.weeks[0]);
+                        int nextStartOfWeek = startWeekDataJSON.getInt(Statics.weeks[1]);
 
-                    while(!(currentDay >= startOfWeek && currentDay < nextStartOfWeek)) {
-                        startOfWeek = nextStartOfWeek;
-                        nextStartOfWeek = startWeekDataJSON.getInt(Statics.weeks[index]);
-                        index++;
+                        //if(currentSessionDate.get(Calendar.MONTH) == startWeekDataJSON.getInt("MONTH_ONE")) {
+                        /* for testing purposes */
+                        if(currentSessionDate.get(Calendar.MONTH) == 0) {
+                            int index = 2;
+
+                            while(!(currentDay >= startOfWeek && currentDay < nextStartOfWeek)) {
+                                startOfWeek = nextStartOfWeek;
+                                nextStartOfWeek = startWeekDataJSON.getInt(Statics.weeks[index]);
+                                index++;
+                            }
+
+                            weekNumber  = startOfWeek;
+                            monthNumber = currentSessionDate.get(Calendar.MONTH);
+                        }else{
+
+                            int index = 2;
+                            while(nextStartOfWeek > startOfWeek) {
+                                startOfWeek = nextStartOfWeek;
+                                nextStartOfWeek = startWeekDataJSON.getInt(Statics.weeks[index]);
+                                index++;
+                            }
+                            while(!(currentDay >= startOfWeek && currentDay < nextStartOfWeek)) {
+                                startOfWeek = nextStartOfWeek;
+                                nextStartOfWeek = startWeekDataJSON.getInt(Statics.weeks[index]);
+                                index++;
+                            }
+
+                            weekNumber  = startOfWeek;
+                            monthNumber = currentSessionDate.get(Calendar.MONTH);
+                        }
                     }
 
-                    weekNumber  = startOfWeek;
-                    monthNumber = currentSessionDate.get(Calendar.MONTH);
-                }else{
-
-                    int index = 2;
-                    while(nextStartOfWeek > startOfWeek) {
-                        startOfWeek = nextStartOfWeek;
-                        nextStartOfWeek = startWeekDataJSON.getInt(Statics.weeks[index]);
-                        index++;
-                    }
-                    while(!(currentDay >= startOfWeek && currentDay < nextStartOfWeek)) {
-                        startOfWeek = nextStartOfWeek;
-                        nextStartOfWeek = startWeekDataJSON.getInt(Statics.weeks[index]);
-                        index++;
-                    }
-
-                    weekNumber  = startOfWeek;
-                    monthNumber = currentSessionDate.get(Calendar.MONTH);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+
+                FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
+                /* TODO: fix week selection */
+                Statics.singleExecutor.runTask(loadWeekDataConnector.queue("readWeekData", "" + 1));
+                while(!loadWeekDataConnector.isDone()){}
+                Log.d("DATE", "weekNumber: " + weekNumber);
+                Log.d("DATE", "monthNumber: " + monthNumber);
+                loadedWeekData = true;
+
+                Statics.messenger.sendMessage("Loaded Weekly Data...");
             }
+        };
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
-        Statics.getSingleExecutor().push(loadWeekDataConnector.queue("readWeekData", "" + weekNumber));
-        /* wait for task to finish */
-        while(!loadWeekDataConnector.isDone()){}
-
-        Log.d("DATE", "weekNumber: " + weekNumber);
-        Log.d("DATE", "monthNumber: " + monthNumber);
-        loadedWeekData = true;
+        Statics.singleExecutor.runTask(runnable);
     }
 
     public boolean rememberedMe() {

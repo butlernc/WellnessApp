@@ -84,7 +84,7 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
             getMenuInflater().inflate(R.menu.main_nav, menu);
             MenuItem sign_IO_button = menu.getItem(0);
             //set the option menu text for the sign in/out button
-            String welcome = "Welcome, " + Statics.getGlobalUserData().getFirst_name();
+            String welcome = "Welcome, " + Statics.globalUserData.getFirst_name();
             if(LoginHelper.isLogged()) {
                 sign_IO_button.setTitle(welcome);
             }else{
