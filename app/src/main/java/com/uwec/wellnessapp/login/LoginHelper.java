@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.uwec.wellnessapp.start.MainNavActivity;
 import com.uwec.wellnessapp.statics.Statics;
 import com.uwec.wellnessapp.utils.FileSourceConnector;
 
@@ -29,23 +31,47 @@ public class LoginHelper {
      * @param password
      * @return boolean
      */
-    public static boolean login(Context context, String email, String password, boolean rememberMe) {
-        Log.d("LOGIN", "Start server setup");
-        //create a FileSourceConnector, used to read and write to the server.
-        FileSourceConnector fileSourceConnector = new FileSourceConnector();
-        Statics.getSingleExecutor().push(fileSourceConnector.queue("readUser", email, password));
+    public void login(final Activity activtiy, final String email, final String password, final boolean rememberMe) {
 
-        /* TODO: Show progress */
-        if(fileSourceConnector.getRETURN_STR().contains("GOOD")) {
-            if(rememberMe) {
-                Statics.getSessionData().setUsername(email);
-                Statics.getSessionData().setPassword(password);
+        Runnable runnable = new Runnable() {
+
+            @Override
+            public void run() {
+                Log.d("LOGIN", "Start server setup");
+                //create a FileSourceConnector, used to read and write to the server.
+                FileSourceConnector fileSourceConnector = new FileSourceConnector();
+                Statics.singleExecutor.runTask(fileSourceConnector.queue("readUser", email, password));
+                while(!fileSourceConnector.isDone()) {}
+                /* TODO: Show progress */
+                if (fileSourceConnector.getRETURN_STR().contentEquals("GOOD")) {
+                    Log.d("login", "logging you in");
+                    if (rememberMe) {
+                        Statics.sessionData.setUsername(email);
+                        Statics.sessionData.setPassword(password);
+                    }
+
+                    Statics.sessionData.saveLoginSession(activtiy.getBaseContext(), rememberMe);
+                    while(!Statics.messenger.messageSent){}
+
+                    setLogged(true);
+                    Statics.messenger.sendMessage("Logged You In...");
+                    Statics.sessionData.loadWeekData();
+                    while(!Statics.messenger.messageSent){}
+
+                    /* logged in successfully, switch to main activity */
+                    //Toast.makeText(activtiy.getBaseContext(), "Successfully Logged In!", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(activtiy.getBaseContext(), MainNavActivity.class);
+                    activtiy.startActivity(intent);
+
+                } else if (fileSourceConnector.getRETURN_STR().contentEquals("NCP")) {
+                    //TODO: incorrect password
+                    setLogged(false);
+                }
             }
-            Statics.getSessionData().saveLoginSession(context, rememberMe);
-            Statics.getSingleExecutor().runTask();
-            return true;
-        }
-        return false;
+        };
+
+        Statics.singleExecutor.runTask(runnable);
+
     }
 
     /**

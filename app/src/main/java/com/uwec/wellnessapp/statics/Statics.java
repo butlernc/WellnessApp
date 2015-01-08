@@ -1,8 +1,12 @@
 package com.uwec.wellnessapp.statics;
 
+import android.os.Handler;
+
 import com.uwec.wellnessapp.data.SessionData;
 import com.uwec.wellnessapp.data.WeekData;
 import com.uwec.wellnessapp.data.UserData;
+import com.uwec.wellnessapp.login.LoginHelper;
+import com.uwec.wellnessapp.utils.Messenger;
 import com.uwec.wellnessapp.utils.SingleExecutor;
 
 import java.util.concurrent.Executor;
@@ -14,33 +18,15 @@ import java.util.concurrent.Executor;
  */
 public class Statics {
 
-    private static UserData globalUserData;
-    private static WeekData globalWeekData;
-    private static SessionData sessionData = new SessionData();
+    public static UserData globalUserData;
+    public static WeekData globalWeekData;
+    public static SessionData sessionData = new SessionData();
 
-    private static SingleExecutor singleExecutor = new SingleExecutor();
+    public static LoginHelper loginHelper = new LoginHelper();
+
+    public static Handler handler;
+    public static Messenger messenger = new Messenger();
+    public static SingleExecutor singleExecutor = new SingleExecutor();
 
     public static String[] weeks = {"WEEK_ONE", "WEEK_TWO", "WEEK_THREE", "WEEK_FOUR", "WEEK_FIVE"};
-
-    public static UserData getGlobalUserData() {
-        return globalUserData;
-    }
-
-    public static void setGlobalUserData(UserData globalUserData) {
-        Statics.globalUserData = globalUserData;
-    }
-
-    public static WeekData getGlobalWeekData() {
-        return globalWeekData;
-    }
-
-    public static void setGlobalWeekData(WeekData globalWeekData) {
-        Statics.globalWeekData = globalWeekData;
-    }
-
-    public static SessionData getSessionData() { return sessionData; }
-
-    public static SingleExecutor getSingleExecutor() {
-        return singleExecutor;
-    }
 }

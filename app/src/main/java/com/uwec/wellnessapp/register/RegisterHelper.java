@@ -38,11 +38,11 @@ public class RegisterHelper {
         userData.setPassword(input[3]);
         userData.setTotal_score(0);
 
-        Statics.setGlobalUserData(userData);
+        Statics.globalUserData = userData;
 
         //create a FileSourceConnector, used to read and write to the server.
         FileSourceConnector fileSourceConnector = new FileSourceConnector();
-        fileSourceConnector.execute(userData.getEmail(), userData.getPassword(), "write", "new");
+        Statics.singleExecutor.runTask(fileSourceConnector.queue(userData.getEmail(), userData.getPassword(), "write", "new"));
 
         //wait until async task is over with because I can't do network operations on the
         //UI thread, so I have to use an async task.
