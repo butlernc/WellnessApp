@@ -49,7 +49,8 @@
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp">
 
         <Button
             android:layout_width="0dp"
@@ -88,7 +89,8 @@
         </Button>
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="button 4"
             android:textColor="#22468a"
@@ -99,7 +101,8 @@
         </Button>
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="button 5"
             android:textColor="#22468a"
@@ -113,7 +116,7 @@
         </LinearLayout>
     </HorizontalScrollView>
     <ScrollView
-        android:layout_marginTop="5dp"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/scrollView">
@@ -121,7 +124,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:paddingBottom="10dp">
 
 
 
@@ -132,7 +136,7 @@
         android:textColor="#fff"
         android:textSize="20dp"
         android:gravity="top"
-        android:paddingTop="20dp"/>
+        android:paddingTop="5dp"/>
 
 
     </LinearLayout>
