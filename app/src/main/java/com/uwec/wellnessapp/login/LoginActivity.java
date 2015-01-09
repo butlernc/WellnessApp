@@ -39,6 +39,7 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
 
         Statics.loginHelper = new LoginHelper();
+        Statics.registerHelper = new RegisterHelper();
 
         /* show loading fragment first */
         Statics.loadingFragment = new LoadingFragment();

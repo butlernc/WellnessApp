@@ -49,7 +49,7 @@ public class LoadingFragment extends Fragment {
             Log.d("THREAD", "ShouldLoad: " + String.valueOf(shouldLoad) + " rememberMe: " + String.valueOf(Statics.sessionData.rememberedMe()));
 
             /* auto login */
-            if (!Statics.sessionData.rememberedMe() && shouldLoad) {
+            if (Statics.sessionData.rememberedMe() && shouldLoad) {
                 Log.d("Session", "Using remember me username and password");
 
                 Statics.loginHelper.login(getActivity(), Statics.sessionData.getUsername(), Statics.sessionData.getPassword(), true, false);

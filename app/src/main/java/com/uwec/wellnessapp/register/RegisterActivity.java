@@ -12,6 +12,7 @@ import com.uwec.wellnessapp.R;
 import com.uwec.wellnessapp.login.LoginActivity;
 import com.uwec.wellnessapp.login.LoginHelper;
 import com.uwec.wellnessapp.start.MainNavActivity;
+import com.uwec.wellnessapp.statics.Statics;
 import com.uwec.wellnessapp.utils.FileSourceConnector;
 
 /**
@@ -42,13 +43,7 @@ public class RegisterActivity extends Activity{
                 EditText password = (EditText) findViewById(R.id.password_register);
                 params[3] = (password.getText().toString());
                 FileSourceConnector.setContext(RegisterActivity.this);
-                boolean status = RegisterHelper.register(params);
-
-                if(status) {
-                    Toast.makeText(RegisterActivity.this, "Account creation successful!", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                }
+                Statics.registerHelper.register(RegisterActivity.this, params);
             }
         });
 

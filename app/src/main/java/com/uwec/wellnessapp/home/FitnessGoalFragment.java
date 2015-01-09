@@ -37,8 +37,8 @@ public class FitnessGoalFragment extends Fragment {
         /* create a buttons for the amount of days they have to do an activity  */
         ArrayList<Button> buttons = new ArrayList<Button>();
         for(int i = 0; i < Statics.globalWeekData.getPa_days_per_week(); i++) {
-            //buttons.add(new Button(rootView.getContext()));
-            //buttons.get(i).setText("Test");
+            buttons.add(new Button(rootView.getContext()));
+
         }
 
         return rootView;

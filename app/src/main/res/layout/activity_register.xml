@@ -9,6 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="#22468a"
+    android:id="@+id/main_register_area"
     tools:context="com.wellnessapp.login.RegisterActivity" >
             
     <EditText

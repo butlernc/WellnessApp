@@ -27,7 +27,7 @@
         </activity>
         <activity
             android:name="com.uwec.wellnessapp.login.LoginActivity"
-            android:label="Login"
+            android:label="Step It Up"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

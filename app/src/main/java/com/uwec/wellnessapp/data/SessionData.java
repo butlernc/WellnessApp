@@ -231,9 +231,9 @@ public class SessionData {
 
     public void createUserWeeklyData(int currentDay, int lastSessionDay, int startOfWeek) {
         if(lastSessionDay < startOfWeek && lastSessionMonth == currentSessionDate.get(Calendar.MONTH)) {
-            Statics.globalUserData.createWeeklyDataObject();
+            //TODO: make new user weekly data object
         }else if(Statics.globalUserData.getWeeklyData().isEmpty()) {
-            Statics.globalUserData.createWeeklyDataObject();
+
         }
     }
 

@@ -94,6 +94,13 @@ public class FileSourceConnector {
                     writeWeekData(strings);
                 }
             };
+        }else {
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("D", "Not a recognized task");
+                }
+            };
         }
         return runnable;
     }
@@ -123,6 +130,7 @@ public class FileSourceConnector {
      * @throws IOException
      */
     private boolean connectToFTP() throws IOException {
+        isDone(false);
         ftpClient.connect(InetAddress.getByName(FTP_HOSTNAME));
         boolean status = ftpClient.login(FTP_USERNAME, FTP_PASSWORD);
         return status;
@@ -235,11 +243,15 @@ public class FileSourceConnector {
                 //close connection
                 ftpClient.disconnect();
 
+                Statics.messenger.sendMessage("created new user...");
+                RETURN_STR = "GOOD";
                 isDone(true);
             }
         } catch (IOException e) {
+            RETURN_STR = "NOGOOD";
             e.printStackTrace();
         } catch (JSONException e) {
+            RETURN_STR = "NOGOOD";
             e.printStackTrace();
         }
     }
