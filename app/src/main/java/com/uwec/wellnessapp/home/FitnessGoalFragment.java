@@ -28,9 +28,7 @@ public class FitnessGoalFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fitness_goal_fragment, container, false);
         getActivity().getActionBar().setTitle(R.string.fitness_goal_title);
 
-        TextView fitness_goal_week = (TextView)rootView.findViewById(R.id.fitness_goal_week);
-        fitness_goal_week.setText("Test 1");
-        fitness_goal_week.setText(Statics.globalWeekData.getWeek());
+        TextView total_point_display = (TextView)rootView.findViewById(R.id.total_point_display);
         //TODO: make buttons green if day completed/checked off
         //TODO: make buttons blue if day needs to be completed/checked off
         //TODO: learn how to add buttons to a view
@@ -38,9 +36,8 @@ public class FitnessGoalFragment extends Fragment {
         ArrayList<Button> buttons = new ArrayList<Button>();
         for(int i = 0; i < Statics.globalWeekData.getPa_days_per_week(); i++) {
             buttons.add(new Button(rootView.getContext()));
-
         }
-
+        total_point_display.setText("" + Statics.globalUserData.getTotal_score());
         return rootView;
     }
 
