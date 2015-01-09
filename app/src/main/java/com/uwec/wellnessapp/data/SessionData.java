@@ -229,12 +229,23 @@ public class SessionData {
         Statics.singleExecutor.runTask(runnable);
     }
 
-    public void createUserWeeklyData(int currentDay, int lastSessionDay, int startOfWeek) {
-        if(lastSessionDay < startOfWeek && lastSessionMonth == currentSessionDate.get(Calendar.MONTH)) {
-            //TODO: make new user weekly data object
-        }else if(Statics.globalUserData.getWeeklyData().isEmpty()) {
+    public void loadWeekDataList() {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
 
-        }
+
+
+                FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
+                for(int i = 0; i < Statics.weeks.length; i++) {
+                    Statics.singleExecutor.runTask(loadWeekDataConnector.queue("readWeekData", "" + i));
+                    while(!loadWeekDataConnector.isDone()) {}
+                    Statics.messenger.sendMessage("loaded all weekly data...");
+                }
+            }
+        };
+
+
     }
 
     public boolean rememberedMe() {

@@ -28,7 +28,7 @@ public class FitnessGoalFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fitness_goal_fragment, container, false);
         getActivity().getActionBar().setTitle(R.string.fitness_goal_title);
 
-        TextView total_point_display = (TextView)rootView.findViewById(R.id.total_point_display);
+        TextView total_point_display = (TextView)rootView.findViewById(R.id.totalpointstextview);
         //TODO: make buttons green if day completed/checked off
         //TODO: make buttons blue if day needs to be completed/checked off
         //TODO: learn how to add buttons to a view

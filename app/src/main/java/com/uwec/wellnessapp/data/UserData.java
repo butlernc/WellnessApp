@@ -24,6 +24,10 @@ public class UserData {
     /* this will hold all of the data for each week */
     private ArrayList<WeeklyUserData> weeklyData = new ArrayList<>();
 
+    public void createWeeklyUserData(int index) {
+
+    }
+
     public String getFirst_name() {
         return first_name;
     }

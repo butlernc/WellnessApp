@@ -11,6 +11,7 @@ import com.uwec.wellnessapp.register.RegisterHelper;
 import com.uwec.wellnessapp.utils.Messenger;
 import com.uwec.wellnessapp.utils.SingleExecutor;
 
+import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
 /**
@@ -21,7 +22,7 @@ import java.util.concurrent.Executor;
 public class Statics {
 
     public static UserData globalUserData;
-    public static WeekData globalWeekData;
+    public static ArrayList<WeekData> globalWeekDataList;
     public static SessionData sessionData = new SessionData();
 
     public static LoginHelper loginHelper;
@@ -32,5 +33,5 @@ public class Statics {
     public static Messenger messenger = new Messenger();
     public static SingleExecutor singleExecutor = new SingleExecutor();
 
-    public static String[] weeks = {"WEEK_ONE", "WEEK_TWO", "WEEK_THREE", "WEEK_FOUR", "WEEK_FIVE"};
+    public static String[] weeks = {"WEEK_ONE", "WEEK_TWO", "WEEK_THREE", "WEEK_FOUR", "WEEK_FIVE", "WEEK_SIX"};
 }

@@ -34,7 +34,6 @@ public class FileSourceConnector {
 
     private static final String FTP_HOSTNAME = "f13-preview.freehostingeu.com";
     private static final String FTP_USERNAME = "1769350_uwecwellnessapp";
-    private static final String FTP_ACCOUNT = "1769350";
     private static final String FTP_PASSWORD = "android4us";
     private static final String FTP_PATH = "wellnessappftp.eu.pn";
 
@@ -342,7 +341,7 @@ public class FileSourceConnector {
 
                 String fullFileName = WEEK_FILE_NAME_TRUNC + strings[1] + ".txt";
                 JSONObject jsonObject = readFromServer(fullFileName);
-                Statics.globalWeekData = jsonFileConverter.convertWeekDataJSON(jsonObject);
+                Statics.globalWeekDataList.add(jsonFileConverter.convertWeekDataJSON(jsonObject));
 
             }
 

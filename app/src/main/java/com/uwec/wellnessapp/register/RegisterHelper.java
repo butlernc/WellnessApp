@@ -41,7 +41,10 @@ public class RegisterHelper {
         userData.setEmail(input[2]);
         userData.setPassword(input[3]);
         userData.setTotal_score(0);
-        userData.getWeeklyData().add(new WeeklyUserData());
+
+        for(int i = 0; i < Statics.weeks.length; i++) {
+            userData.createWeeklyUserData(i);
+        }
 
         Statics.globalUserData = userData;
         activity.getFragmentManager().beginTransaction().replace(R.id.main_register_area, Statics.loadingFragment);
