@@ -13,6 +13,8 @@ import com.uwec.wellnessapp.R;
 import com.uwec.wellnessapp.start.MainNavActivity;
 import com.uwec.wellnessapp.statics.Statics;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 /**
@@ -22,22 +24,25 @@ public class FitnessGoalFragment extends Fragment {
 
     private static final String ARG_BUTTON_NUMBER = "button_number";
     View rootView = null;
+    TextView paDescTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fitness_goal_fragment, container, false);
         getActivity().getActionBar().setTitle(R.string.fitness_goal_title);
 
-        TextView total_point_display = (TextView)rootView.findViewById(R.id.totalpointstextview);
+        paDescTextView = (TextView) rootView.findViewById(R.id.physical_activity_desc);
+        paDescTextView.setText(Statics.globalWeekDataList.get(Statics.globalUserData.getWeekNum()).getPhysical_activity_description());
+
         //TODO: make buttons green if day completed/checked off
         //TODO: make buttons blue if day needs to be completed/checked off
         //TODO: learn how to add buttons to a view
         /* create a buttons for the amount of days they have to do an activity  */
         ArrayList<Button> buttons = new ArrayList<Button>();
-        for(int i = 0; i < Statics.globalWeekData.getPa_days_per_week(); i++) {
+        for(int i = 0; i < Statics.globalWeekDataList.get(Statics.globalUserData.getWeekNum()).getPa_days_per_week(); i++) {
             buttons.add(new Button(rootView.getContext()));
         }
-        total_point_display.setText("" + Statics.globalUserData.getTotal_score());
+
         return rootView;
     }
 

@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
 /**
@@ -341,6 +342,7 @@ public class FileSourceConnector {
 
                 String fullFileName = WEEK_FILE_NAME_TRUNC + strings[1] + ".txt";
                 JSONObject jsonObject = readFromServer(fullFileName);
+                Statics.globalWeekDataList = new ArrayList<>();
                 Statics.globalWeekDataList.add(jsonFileConverter.convertWeekDataJSON(jsonObject));
 
             }

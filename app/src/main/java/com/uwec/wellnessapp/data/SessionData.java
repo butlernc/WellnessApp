@@ -234,8 +234,6 @@ public class SessionData {
             @Override
             public void run() {
 
-
-
                 FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
                 for(int i = 0; i < Statics.weeks.length; i++) {
                     Statics.singleExecutor.runTask(loadWeekDataConnector.queue("readWeekData", "" + i));

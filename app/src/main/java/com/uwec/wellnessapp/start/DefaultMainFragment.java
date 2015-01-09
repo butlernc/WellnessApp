@@ -7,10 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.uwec.wellnessapp.R;
 import com.uwec.wellnessapp.home.FitnessGoalFragment;
+import com.uwec.wellnessapp.statics.Statics;
 
 /**
  * The Main Activity.
@@ -27,9 +29,11 @@ public class DefaultMainFragment extends Fragment {
 	CharSequence menuTitle;
 	
 	/** Main Fragment Buttons */
-	Button btnFitnessGoals;
-	Button btnNutritionGoals;
-	Button btnAllBonusEvents;
+	private Button btnFitnessGoals;
+	private Button btnNutritionGoals;
+	private Button btnAllBonusEvents;
+
+    private TextView total_point_display;
 	
 	private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String ARG_BUTTON_NUMBER = "button_number";
@@ -40,47 +44,49 @@ public class DefaultMainFragment extends Fragment {
 		
 		View rootView = inflater.inflate(R.layout.activity_main_fragment_default, container, false);
 		
-		// create button objects
-				btnFitnessGoals = (Button) rootView.findViewById(R.id.btnFitnessGoals);
-				btnNutritionGoals = (Button) rootView.findViewById(R.id.btnNutritionGoals);
-				btnAllBonusEvents = (Button) rootView.findViewById(R.id.btnBonusEvents);
+        // create button objects
+        btnFitnessGoals = (Button) rootView.findViewById(R.id.btnFitnessGoals);
+        btnNutritionGoals = (Button) rootView.findViewById(R.id.btnNutritionGoals);
+        btnAllBonusEvents = (Button) rootView.findViewById(R.id.btnBonusEvents);
+
+        total_point_display = (TextView) rootView.findViewById(R.id.totalpointstextview);
+        total_point_display.setText("" + Statics.globalUserData.getTotal_score());
 				
-				 //Set the list's click listener
+        //Set the list's click listener
+        /** Click Listener for Fitness Goals Button */
+        if(btnFitnessGoals != null) {
+            btnFitnessGoals.setOnClickListener(new View.OnClickListener() {
 
-				/** Click Listener for Fitness Goals Button */
-				if(btnFitnessGoals != null) {
-					btnFitnessGoals.setOnClickListener(new View.OnClickListener() {
-			
-						@Override
-						public void onClick(View v) {
-							Toast.makeText(getActivity(), "Clicked Fitness Goals", Toast.LENGTH_SHORT).show();
-                            getActivity().getFragmentManager().beginTransaction().replace(R.id.main_nav_fragment, createFragmentFromButtonClick(0)).commit();
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getActivity(), "Clicked Fitness Goals", Toast.LENGTH_SHORT).show();
+                    getActivity().getFragmentManager().beginTransaction().replace(R.id.main_nav_fragment, createFragmentFromButtonClick(0)).commit();
 
-						}
-					});
-				}
+                }
+            });
+        }
 
-				/** Click Listener for Nutrition Goals Button */
-				if(btnNutritionGoals != null) {
-					btnNutritionGoals.setOnClickListener(new View.OnClickListener() {
-			
-						@Override
-						public void onClick(View v) {
-							Toast.makeText(getActivity(), "Clicked Nutrition Goals", Toast.LENGTH_SHORT).show();
-						}
-					});
-				}
-				
-				/** Click Listener for All Bonus Events Button */
-				if(btnAllBonusEvents != null) {
-					btnAllBonusEvents.setOnClickListener(new View.OnClickListener() {
-			
-						@Override
-						public void onClick(View v) {
-							Toast.makeText(getActivity(), "Clicked All Bonus Events", Toast.LENGTH_SHORT).show();
-						}
-					});
-				}
+        /** Click Listener for Nutrition Goals Button */
+        if(btnNutritionGoals != null) {
+            btnNutritionGoals.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getActivity(), "Clicked Nutrition Goals", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        /** Click Listener for All Bonus Events Button */
+        if(btnAllBonusEvents != null) {
+            btnAllBonusEvents.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getActivity(), "Clicked All Bonus Events", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 		
 		return rootView;
 

@@ -87,11 +87,45 @@
             android:textColor="#fff"
             android:textStyle="bold"
             android:background="@drawable/click_button_red"
-            android:layout_marginRight="5dp" >
+            android:layout_marginRight="20dp" >
 
         </Button>
 
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="button 1"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:background="@drawable/click_button_red"
+            android:layout_marginRight="20dp">
 
+        </Button>
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="button 1"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:background="@drawable/click_button_red"
+            android:layout_marginRight="20dp">
+
+        </Button>
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="button 1"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:background="@drawable/click_button_red"
+            android:layout_marginRight="20dp">
+
+        </Button>
 
         </LinearLayout>
     </HorizontalScrollView>
@@ -100,7 +134,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/goaltextview"
+        android:id="@+id/goal_text_view"
         android:textSize="25dp"
         android:textColor="#009900"
         android:textStyle="bold"
@@ -131,6 +165,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/physical_activity_desc"
         android:text="Test"
         android:textColor="#fff"
         android:textSize="20dp"
