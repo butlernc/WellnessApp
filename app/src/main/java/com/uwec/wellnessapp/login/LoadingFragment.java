@@ -41,6 +41,7 @@ public class LoadingFragment extends Fragment {
 
             /* load the app's data here */
             Statics.sessionData.loadLastSession(getActivity().getBaseContext());
+            //TODO: learn how to lock properly
             while (!Statics.messenger.messageSent) {}
             Statics.sessionData.setupSession();
             Statics.sessionData.loadWeekData();
