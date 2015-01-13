@@ -94,4 +94,20 @@ public class WeekData {
     public void setSupporting_evidence(String supporting_evidence) {
         this.supporting_evidence = supporting_evidence;
     }
+
+    public ArrayList<String> getPa_strings() {
+        return pa_strings;
+    }
+
+    public void setPa_strings(ArrayList<String> pa_strings) {
+        this.pa_strings = pa_strings;
+    }
+
+    public ArrayList<String> getNg_strings() {
+        return ng_strings;
+    }
+
+    public void setNg_strings(ArrayList<String> ng_strings) {
+        this.ng_strings = ng_strings;
+    }
 }

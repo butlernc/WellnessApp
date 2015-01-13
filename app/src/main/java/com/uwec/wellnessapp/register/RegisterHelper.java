@@ -43,7 +43,7 @@ public class RegisterHelper {
         userData.setTotal_score(0);
 
         for(int i = 0; i < Statics.weeks.length; i++) {
-            userData.createWeeklyUserData(i);
+            userData.getWeeklyData().add(new WeeklyUserData(i));
         }
 
         Statics.globalUserData = userData;

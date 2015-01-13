@@ -144,7 +144,7 @@ public class SessionData {
     }
 
     /**
-     * Starts an Thread (FileSourceConnector) that loads the correct WeekData
+     * Starts a Thread (FileSourceConnector) that loads the correct WeekData
      * and then populates the WeekData object in the app
      *
      * Will be called when the app is in start up (loginActivity)
@@ -211,7 +211,7 @@ public class SessionData {
                     }
 
                     FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
-                /* TODO: fix week selection */
+                /* TODO: fix week selection and this entire method lol */
                     Statics.singleExecutor.runTask(loadWeekDataConnector.queue("readWeekData", "" + 1));
                     while(!loadWeekDataConnector.isDone()){}
                     Log.d("DATE", "weekNumber: " + weekNumber);
@@ -236,7 +236,7 @@ public class SessionData {
 
                 FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
                 for(int i = 0; i < Statics.weeks.length; i++) {
-                    Statics.singleExecutor.runTask(loadWeekDataConnector.queue("readWeekData", "" + i));
+                    Statics.singleExecutor.runTask(loadWeekDataConnector.queue("readWeekData", "" + (i + 1)));
                     while(!loadWeekDataConnector.isDone()) {}
                     Statics.messenger.sendMessage("loaded all weekly data...");
                 }

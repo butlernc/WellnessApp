@@ -9,6 +9,7 @@ import com.uwec.wellnessapp.data.WeeklyUserData;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -20,10 +21,10 @@ import java.util.ArrayList;
 public class JsonFileConverter {
 
     private static String json_value_names[] = {"email", "first_name", "last_name", "password", "total_score", "weekly_data"};
-    private static String week_data_json_value_names[] = {"week", "physical_activity", "physical_activity_description", "pa_days_per_week", "nutrition_goal", "nutrition_goal_description", "ng_days_per_week", "supporting_evidence"};
+    private static String week_data_json_value_names[] = {"week", "physical_activity", "physical_activity_description", "pa_days_per_week", "pa_strings", "nutrition_goal", "nutrition_goal_description", "ng_days_per_week", "ng_strings", "supporting_evidence"};
     private static String weeklyData_json_value_names[] = {"pa_points", "ng_points", "pa_amount", "ng_amount", "pa_checkOff", "pa_checkOffArray", "ng_checkOff", "ng_checkOffArray"};
 
-    public UserData convertUserDataJSON(JSONObject jsonObject) throws JSONException {
+    public UserData convertJSONToUser(JSONObject jsonObject) throws JSONException {
         UserData userData = new UserData();
         userData.setEmail(jsonObject.getString(json_value_names[0]));
         userData.setFirst_name(jsonObject.getString(json_value_names[1]));
@@ -41,15 +42,31 @@ public class JsonFileConverter {
         weekData.setPhysical_activity(jsonObject.getString(week_data_json_value_names[1]));
         weekData.setPhysical_activity_description(jsonObject.getString(week_data_json_value_names[2]));
         weekData.setPa_days_per_week(jsonObject.getInt(week_data_json_value_names[3]));
-        weekData.setNutrition_goal(jsonObject.getString(week_data_json_value_names[4]));
-        weekData.setNutrition_goal_description(jsonObject.getString(week_data_json_value_names[5]));
-        weekData.setNg_days_per_week(jsonObject.getInt(week_data_json_value_names[6]));
-        weekData.setSupporting_evidence(jsonObject.getString(week_data_json_value_names[7]));
+
+        JSONObject pa_button_strings_json = jsonObject.getJSONObject(week_data_json_value_names[4]);
+        ArrayList<String> pa_button_strings = new ArrayList<>();
+        for(int i = 0; i < weekData.getPa_days_per_week(); i++) {
+            pa_button_strings.add(pa_button_strings_json.getString("" + i));
+        }
+        weekData.setPa_strings(pa_button_strings);
+
+        weekData.setNutrition_goal(jsonObject.getString(week_data_json_value_names[5]));
+        weekData.setNutrition_goal_description(jsonObject.getString(week_data_json_value_names[6]));
+        weekData.setNg_days_per_week(jsonObject.getInt(week_data_json_value_names[7]));
+
+        JSONObject ng_button_strings_json = jsonObject.getJSONObject(week_data_json_value_names[8]);
+        ArrayList<String> ng_button_strings = new ArrayList<>();
+        for(int i = 0; i < weekData.getNg_days_per_week(); i++) {
+            ng_button_strings.add(ng_button_strings_json.getString("" + i));
+        }
+        weekData.setNg_strings(ng_button_strings);
+
+        weekData.setSupporting_evidence(jsonObject.getString(week_data_json_value_names[9]));
 
         return weekData;
     }
 
-    public JSONObject convertToJSON(UserData userData) throws JSONException {
+    public JSONObject convertUserToJSON(UserData userData) throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(json_value_names[0], userData.getEmail());
         jsonObject.put(json_value_names[1], userData.getFirst_name());
@@ -72,7 +89,7 @@ public class JsonFileConverter {
             subJsonObject.put(weeklyData_json_value_names[0], single_weeklyData.getPhysicalGoalPoints());
             subJsonObject.put(weeklyData_json_value_names[1], single_weeklyData.getNutritionGoalPoints());
             subJsonObject.put(weeklyData_json_value_names[2], single_weeklyData.getPhysicalGoalCheckOffAmount());
-            subJsonObject.put(weeklyData_json_value_names[3], single_weeklyData.getNutritionalGoalCheckOffAmount());
+            subJsonObject.put(weeklyData_json_value_names[3], single_weeklyData.getNutritionGoalCheckOffAmount());
 
             JSONObject pa_checkOffs_jsonObject = new JSONObject();
             for(int j = 0; j < single_weeklyData.getPhysicalGoalCheckOffs().size(); j++) {
@@ -104,7 +121,7 @@ public class JsonFileConverter {
             weeklyUserData.setPhysicalGoalPoints(subJsonObject.getInt(weeklyData_json_value_names[0]));
             weeklyUserData.setNutritionGoalPoints(subJsonObject.getInt(weeklyData_json_value_names[1]));
             weeklyUserData.setPhysicalGoalCheckOffAmount(subJsonObject.getInt(weeklyData_json_value_names[2]));
-            weeklyUserData.setNutritionalGoalCheckOffAmount(subJsonObject.getInt(weeklyData_json_value_names[3]));
+            weeklyUserData.setNutritionGoalCheckOffAmount(subJsonObject.getInt(weeklyData_json_value_names[3]));
 
             JSONObject pa_checkOffs_jsonObject = subJsonObject.getJSONObject(weeklyData_json_value_names[5]);
             ArrayList<Boolean> physicalGoalCheckOffs = new ArrayList<>();
