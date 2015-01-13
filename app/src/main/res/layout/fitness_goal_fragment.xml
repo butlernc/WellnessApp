@@ -24,7 +24,7 @@
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Physical Activity Week 1"
+        android:text="Week 1: Physical Activity"
         android:id="@+id/textView3"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
@@ -34,6 +34,18 @@
         android:textStyle="bold">
 
     </TextView>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/goal_text_view"
+        android:textSize="20dp"
+        android:textColor="#EDAC1A"
+        android:textStyle="bold"
+        android:text="Goal: 3 days of 30 mins cardio"
+        android:layout_marginBottom="15dp">
+        </TextView>
 
 
 
@@ -49,11 +61,15 @@
         android:paddingBottom="10dp"
         android:layout_gravity="center_horizontal">
 
+
+
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="10dp">
+
+
 
         <Button
             android:layout_width="fill_parent"
@@ -130,23 +146,14 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/goal_text_view"
-        android:textSize="25dp"
-        android:textColor="#009900"
-        android:textStyle="bold"
-        android:text="Goal: 3 days of 30 mins cardio"
-        android:layout_marginBottom="10dp">
+
 
 
         <!-- reference for multiple colors:
         http://stackoverflow.com/questions/9288597/text-view-with-multiple-text-colors-android -->
 
 
-    </TextView>
+
 
     <ScrollView
 
