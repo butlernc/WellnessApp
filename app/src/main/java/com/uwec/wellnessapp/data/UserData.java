@@ -21,6 +21,8 @@ public class UserData {
 
     private int total_score;
 
+    private int weekly_score;
+
     private int weekNum;
 
     public int getWeekNum() {
@@ -65,6 +67,10 @@ public class UserData {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public int getWeekly_score() {return weekly_score;}
+
+    public void setWeekly_score(int weekly_score) {this.weekly_score = weekly_score;}
 
     public int getTotal_score() {
         return total_score;

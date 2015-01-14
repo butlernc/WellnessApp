@@ -58,7 +58,7 @@
                 android:textSize="70dp"
                 android:textStyle="bold"
                 android:gravity="center_horizontal"
-                android:id="@+id/weeklypointstextview">
+                android:id="@+id/weekly_points_textview">
 
                 </TextView>
 
@@ -100,7 +100,7 @@
                 android:textSize="70dp"
                 android:textStyle="bold"
                 android:gravity="center_horizontal"
-                android:id="@+id/totalpointstextview">
+                android:id="@+id/total_points_textview">
 
             </TextView>
 
@@ -159,7 +159,7 @@
             android:text="@string/btnFitnessGoalsDefaultString"
             android:textColor="#FFFFFF"
             android:id="@+id/btnFitnessGoals"
-            android:background="@drawable/fitness_button_default"
+            android:background="@drawable/fitness_dashboard_button_selector"
             android:layout_marginBottom="10dp"
             android:layout_weight="0.10"
             android:layout_gravity="top"
@@ -173,7 +173,7 @@
             android:text="@string/btnNutritionGoalsDefaultString"
             android:textColor="#FFFFFF"
             android:id="@+id/btnNutritionGoals"
-            android:background="@drawable/nutrition_button_default"
+            android:background="@drawable/nutrition_dashboard_button_selector"
             android:layout_weight="0.10"
             android:gravity="center|right"
             android:paddingRight="20dp"/>
@@ -184,7 +184,7 @@
             android:text="@string/btnBonusEventsDefaultString"
             android:textColor="#FFFFFF"
             android:id="@+id/btnBonusEvents"
-            android:background="@drawable/bonus_button_default"
+            android:background="@drawable/bonus_dashboard_button_selector"
             android:layout_weight="0.10"
             android:gravity="center|right"
             android:paddingRight="26dp" />
