@@ -1,0 +1,151 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    android:background="#22468a"
+    android:weightSum="1">
+
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.12" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout_fitness_nutrition"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp">
+
+        <LinearLayout
+            android:layout_width="164dp"
+            android:layout_height="184dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:background="@drawable/box2"
+            android:gravity="top|center_horizontal"
+            android:layout_marginRight="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Fitness"
+                android:textColor="#edac1a"
+                android:textSize="35dp"
+                android:textStyle="bold"
+                android:gravity="top|center_horizontal"
+                android:id="@+id/fitness_points_label"
+                android:layout_gravity="left"
+                android:layout_marginRight="10dp"
+                android:layout_weight="0.5"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/box2">
+
+            </TextView>
+
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:text="100"
+                android:textColor="#fff"
+                android:textSize="70dp"
+                android:textStyle="bold"
+                android:gravity="center_horizontal"
+                android:id="@+id/fitness_points_textview">
+
+            </TextView>
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="164dp"
+            android:layout_height="184dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:background="@drawable/box2"
+            android:gravity="top|center_horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nutrition"
+                android:textColor="#edac1a"
+                android:textSize="35dp"
+                android:textStyle="bold"
+                android:gravity="top|center_horizontal"
+                android:id="@+id/nutrition_points_label"
+                android:layout_gravity="left"
+                android:layout_marginRight="10dp"
+                android:layout_weight="0.5"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/box2">
+
+            </TextView>
+
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:text="400"
+                android:textColor="#fff"
+                android:textSize="70dp"
+                android:textStyle="bold"
+                android:gravity="center_horizontal"
+                android:id="@+id/nutrition_points_textview">
+
+            </TextView>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fitness Breakdown"
+            android:textColor="#FFFFFF"
+            android:id="@+id/btnFitnessGoals"
+            android:background="@drawable/fitness_log_button_default"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="0.10"
+            android:layout_gravity="top"
+            android:gravity="center|right"
+            android:paddingRight="36dp"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:text="Nutrition Breakdown"
+            android:textColor="#FFFFFF"
+            android:id="@+id/btnNutritionGoals"
+            android:background="@drawable/nutrition_log_button_default"
+            android:layout_weight="0.10"
+            android:gravity="center|right"
+            android:paddingRight="20dp"/>
+
+
+
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
