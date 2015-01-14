@@ -58,7 +58,7 @@
                 android:textSize="70dp"
                 android:textStyle="bold"
                 android:gravity="center_horizontal"
-                android:id="@+id/weeklypointstextview">
+                android:id="@+id/weekly_points_textview">
 
                 </TextView>
 
@@ -100,7 +100,7 @@
                 android:textSize="70dp"
                 android:textStyle="bold"
                 android:gravity="center_horizontal"
-                android:id="@+id/totalpointstextview">
+                android:id="@+id/total_points_textview">
 
             </TextView>
 

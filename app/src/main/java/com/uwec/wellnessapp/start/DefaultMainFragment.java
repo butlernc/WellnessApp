@@ -34,6 +34,7 @@ public class DefaultMainFragment extends Fragment {
 	private Button btnAllBonusEvents;
 
     private TextView total_point_display;
+    private TextView weekly_point_display;
 	
 	private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String ARG_BUTTON_NUMBER = "button_number";
@@ -49,8 +50,11 @@ public class DefaultMainFragment extends Fragment {
         btnNutritionGoals = (Button) rootView.findViewById(R.id.btnNutritionGoals);
         btnAllBonusEvents = (Button) rootView.findViewById(R.id.btnBonusEvents);
 
-        total_point_display = (TextView) rootView.findViewById(R.id.totalpointstextview);
+        total_point_display = (TextView) rootView.findViewById(R.id.total_points_textview);
         total_point_display.setText("" + Statics.globalUserData.getTotal_score());
+        weekly_point_display = (TextView) rootView.findViewById(R.id.weekly_points_textview);
+        weekly_point_display.setText("" + Statics.globalUserData.getWeekly_score());
+
 				
         //Set the list's click listener
         /** Click Listener for Fitness Goals Button */
