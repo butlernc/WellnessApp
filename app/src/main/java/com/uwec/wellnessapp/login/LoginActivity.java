@@ -52,7 +52,7 @@ public class LoginActivity extends Activity {
         /* show loading fragment first */
         Statics.loadingFragment = new LoadingFragment();
         getFragmentManager().beginTransaction().replace(R.id.main_login_area, new LoadingFragment()).commit();
-
+        getFragmentManager().executePendingTransactions();
         Log.d("TEST", "Loading fragment should be shown");
 
         /* used as a callback from threads that are doing work */
