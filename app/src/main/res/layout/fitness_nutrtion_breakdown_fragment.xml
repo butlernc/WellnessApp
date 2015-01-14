@@ -120,7 +120,7 @@
             android:text="Fitness Breakdown"
             android:textColor="#FFFFFF"
             android:id="@+id/btnFitnessGoals"
-            android:background="@drawable/fitness_log_button_default"
+            android:background="@drawable/fitness_log_button_default2"
             android:layout_marginBottom="10dp"
             android:layout_weight="0.10"
             android:layout_gravity="top"
@@ -135,7 +135,7 @@
             android:text="Nutrition Breakdown"
             android:textColor="#FFFFFF"
             android:id="@+id/btnNutritionGoals"
-            android:background="@drawable/nutrition_log_button_default"
+            android:background="@drawable/nutrition_log_button_default2"
             android:layout_weight="0.10"
             android:gravity="center|right"
             android:paddingRight="20dp"/>
