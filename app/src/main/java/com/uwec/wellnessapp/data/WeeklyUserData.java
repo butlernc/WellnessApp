@@ -1,5 +1,7 @@
 package com.uwec.wellnessapp.data;
 
+import com.uwec.wellnessapp.statics.Statics;
+
 import java.util.ArrayList;
 
 /**
@@ -8,29 +10,36 @@ import java.util.ArrayList;
 public class WeeklyUserData {
 
     private int physicalGoalCheckOffAmount;
-    private int nutritionalGoalCheckOffAmount;
+    private int nutritionGoalCheckOffAmount;
     private ArrayList<Boolean> physicalGoalCheckOffs;
     private ArrayList<Boolean> nutritionGoalCheckOffs;
 
     private int physicalGoalPoints;
     private int nutritionGoalPoints;
 
-    public WeeklyUserData() {
-            /* assign the correct amount of check offs for the given goal for the week */
+    public WeeklyUserData(int week) {
 
-            /* holds whether they completed the check offs or not */
-        physicalGoalCheckOffs  = new ArrayList<Boolean>();
-        nutritionGoalCheckOffs = new ArrayList<Boolean>();
+        /* assign the correct amount of check offs for the given goal for the week */
+        physicalGoalCheckOffAmount  = Statics.globalWeekDataList.get(week).getPa_days_per_week();
+        nutritionGoalCheckOffAmount = Statics.globalWeekDataList.get(week).getNg_days_per_week();
+        /* zero points initially */
+        physicalGoalPoints  = 0;
+        nutritionGoalPoints = 0;
+        /* holds whether they completed the check offs or not */
+        physicalGoalCheckOffs  = new ArrayList<>();
+        nutritionGoalCheckOffs = new ArrayList<>();
 
             /* when the weekly data object is created, default all check offs to completed as false */
         for(int i = 0; i < physicalGoalCheckOffAmount; i++) {
             physicalGoalCheckOffs.add(false);
         }
 
-        for(int i = 0; i < nutritionalGoalCheckOffAmount; i++) {
+        for(int i = 0; i < nutritionGoalCheckOffAmount; i++) {
             nutritionGoalCheckOffs.add(false);
         }
     }
+
+    public WeeklyUserData() {}
 
     public int getPhysicalGoalCheckOffAmount() {
         return physicalGoalCheckOffAmount;
@@ -40,12 +49,12 @@ public class WeeklyUserData {
         this.physicalGoalCheckOffAmount = physicalGoalCheckOffAmount;
     }
 
-    public int getNutritionalGoalCheckOffAmount() {
-        return nutritionalGoalCheckOffAmount;
+    public int getNutritionGoalCheckOffAmount() {
+        return nutritionGoalCheckOffAmount;
     }
 
-    public void setNutritionalGoalCheckOffAmount(int nutritionalGoalCheckOffAmount) {
-        this.nutritionalGoalCheckOffAmount = nutritionalGoalCheckOffAmount;
+    public void setNutritionGoalCheckOffAmount(int nutritionGoalCheckOffAmount) {
+        this.nutritionGoalCheckOffAmount = nutritionGoalCheckOffAmount;
     }
 
     public ArrayList<Boolean> getPhysicalGoalCheckOffs() {

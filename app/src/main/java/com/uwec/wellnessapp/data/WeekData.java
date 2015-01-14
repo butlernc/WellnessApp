@@ -1,5 +1,8 @@
 package com.uwec.wellnessapp.data;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * Created by butlernc on 12/9/2014.
  *
@@ -16,12 +19,14 @@ public class WeekData {
     /** int used to keep track of physical activity check offs there are
       * this will set the physicalGoalCheckOffAmount in the WeeklyData object in UserData */
     private int pa_days_per_week;
+    private ArrayList<String> pa_strings;
 
     /** name of the current week's nutrition goal */
     private String nutrition_goal;
     /** int used to keep track of nutrition goal check offs there are for the current week
       * this will set the nutritionalGoalCheckOffAmount in the WeeklyData object in UserData */
     private int ng_days_per_week;
+    private ArrayList<String> ng_strings;
 
     /** detailed desc of the current week's nutrition goal */
     private String nutrition_goal_description;
@@ -88,5 +93,21 @@ public class WeekData {
 
     public void setSupporting_evidence(String supporting_evidence) {
         this.supporting_evidence = supporting_evidence;
+    }
+
+    public ArrayList<String> getPa_strings() {
+        return pa_strings;
+    }
+
+    public void setPa_strings(ArrayList<String> pa_strings) {
+        this.pa_strings = pa_strings;
+    }
+
+    public ArrayList<String> getNg_strings() {
+        return ng_strings;
+    }
+
+    public void setNg_strings(ArrayList<String> ng_strings) {
+        this.ng_strings = ng_strings;
     }
 }

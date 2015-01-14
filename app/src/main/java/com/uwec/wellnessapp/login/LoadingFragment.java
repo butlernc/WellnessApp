@@ -41,9 +41,10 @@ public class LoadingFragment extends Fragment {
 
             /* load the app's data here */
             Statics.sessionData.loadLastSession(getActivity().getBaseContext());
+            //TODO: learn how to lock properly
             while (!Statics.messenger.messageSent) {}
             Statics.sessionData.setupSession();
-            Statics.sessionData.loadWeekData();
+            Statics.sessionData.loadWeekDataList();
             while (!Statics.messenger.messageSent) {}
             Log.d("THREAD", "loading last session data finished");
             Log.d("THREAD", "ShouldLoad: " + String.valueOf(shouldLoad) + " rememberMe: " + String.valueOf(Statics.sessionData.rememberedMe()));
@@ -55,8 +56,7 @@ public class LoadingFragment extends Fragment {
                 Statics.loginHelper.login(getActivity(), Statics.sessionData.getUsername(), Statics.sessionData.getPassword(), true, false);
             } else {
                 /* use default login page now */
-                Fragment loginFragment = new LoginFragment();
-                getActivity().getFragmentManager().beginTransaction().replace(R.id.main_login_area, loginFragment).commit();
+                getActivity().getFragmentManager().beginTransaction().replace(R.id.main_login_area, new LoginFragment()).commit();
                 Log.d("TEST", "Using default login fragment");
             }
         }

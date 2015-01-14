@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -72,7 +73,10 @@ public class LoginHelper {
                     activtiy.startActivity(intent);
 
                 } else if (fileSourceConnector.getRETURN_STR().contentEquals("NCP")) {
-                    //TODO: incorrect password
+                    /* logged in unsuccessful, switch to login activity */
+                    Looper.prepare();
+                    Toast.makeText(activtiy.getBaseContext(), "Incorrect username/password", Toast.LENGTH_LONG).show();
+                    activtiy.getFragmentManager().beginTransaction().replace(R.id.main_login_area, new LoginFragment()).commit();
                     setLogged(false);
                 }
             }

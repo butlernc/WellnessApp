@@ -22,7 +22,7 @@ import java.util.concurrent.Executor;
 public class Statics {
 
     public static UserData globalUserData;
-    public static ArrayList<WeekData> globalWeekDataList;
+    public static ArrayList<WeekData> globalWeekDataList = new ArrayList<>();
     public static SessionData sessionData = new SessionData();
 
     public static LoginHelper loginHelper;

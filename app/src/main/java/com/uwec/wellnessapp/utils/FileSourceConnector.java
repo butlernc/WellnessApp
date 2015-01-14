@@ -87,11 +87,11 @@ public class FileSourceConnector {
                     readWeekStartData(strings);
                 }
             };
-        }else if(strings[0].contentEquals("writeWeekData")) {
+        } else if(strings[0].contentEquals("readWeekData")) {
             runnable = new Runnable() {
                 @Override
                 public void run() {
-                    writeWeekData(strings);
+                    readWeekData(strings);
                 }
             };
         }else {
@@ -136,6 +136,11 @@ public class FileSourceConnector {
         return status;
     }
 
+    /**
+     * Used when initializing FTPClient
+     * @return
+     * @throws IOException
+     */
     private boolean setTransferSettings() throws IOException {
         //set transfer settings
         ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
@@ -192,7 +197,7 @@ public class FileSourceConnector {
         JSONObject jsonObject = new JSONObject();
         String rawData = "";
         if(isUserData) {
-            jsonObject = jsonFileConverter.convertToJSON(Statics.globalUserData);
+            jsonObject = jsonFileConverter.convertUserToJSON(Statics.globalUserData);
             rawData = jsonObject.toString();
         }else{
             rawData = inputData;
@@ -301,14 +306,18 @@ public class FileSourceConnector {
                             Statics.messenger.sendMessage("Successful Login");
                             //password is correct, get user data
                             //set the application's userData object.
-                            Statics.globalUserData = jsonFileConverter.convertUserDataJSON(jsonObject);
+                            Statics.globalUserData = jsonFileConverter.convertJSONToUser(jsonObject);
                             RETURN_STR = "GOOD";
                             isDone(true);
-                        }else{
+                        } else {
                             //return that the user entered in the wrong password
                             RETURN_STR = "NCP";
                             isDone(true);
                         }
+                    } else {
+                        //return that the user entered in the wrong password
+                        RETURN_STR = "NCP";
+                        isDone(true);
                     }
                 }
             }
@@ -341,10 +350,11 @@ public class FileSourceConnector {
                 ftpClient.changeWorkingDirectory(WEEK_DATA_DIRECTORY);
 
                 String fullFileName = WEEK_FILE_NAME_TRUNC + strings[1] + ".txt";
+                Log.e("DATA", "" + fullFileName);
                 JSONObject jsonObject = readFromServer(fullFileName);
                 Statics.globalWeekDataList = new ArrayList<>();
                 Statics.globalWeekDataList.add(jsonFileConverter.convertWeekDataJSON(jsonObject));
-
+                Log.e("DATA", "get it");
             }
 
             isDone(true);
@@ -390,42 +400,9 @@ public class FileSourceConnector {
     }
 
     /**
-     * Used to write all of the week data to the server.
-     * @param strings
+     * used as a callback method
+     * @return return_string
      */
-    private void writeWeekData(String[] strings) {
-        ftpClient.setConnectTimeout(10 * 1000);
-
-        try {
-            connectToFTP();
-
-            if(FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {
-                boolean worked  = setTransferSettings();
-                if(strings[1].contentEquals("new")) {
-                    ftpClient.makeDirectory(WEEK_DATA_DIRECTORY);
-                }
-
-                ftpClient.changeWorkingDirectory(WEEK_DATA_DIRECTORY);
-
-                /* call methods that create our strings of data for our files */
-                String rawData = PushStaticData.weekStartDays();
-                File file = createTempFile(WEEK_DATA_FILE_NAME, rawData, false);
-                //ftpClient.storeFile(WEEK_DATA_FILE_NAME, new FileInputStream(file));
-
-                //String weekRawData = PushStaticData.weeklyData(1);
-                //File file1 = createTempFile("week_data_1.txt", weekRawData, false);
-                //ftpClient.storeFile("week_data_1.txt", new FileInputStream(file1));
-
-                isDone(true);
-            }
-            ftpClient.disconnect();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
     public String getRETURN_STR() {
         return RETURN_STR;
     }
