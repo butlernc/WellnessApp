@@ -35,6 +35,18 @@
 
     </TextView>
 
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/goal_text_view"
+        android:textSize="20dp"
+        android:textColor="#EDAC1A"
+        android:textStyle="bold"
+        android:text="Drink 6-8 eight ounce cups of water per day (48-64 ounces total)"
+        android:layout_marginBottom="15dp">
+    </TextView>
+
 
 
     <HorizontalScrollView
@@ -49,70 +61,111 @@
         android:paddingBottom="10dp"
         android:layout_gravity="center_horizontal">
 
+
+
         <LinearLayout
             android:id="@+id/linearLayout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="10dp">
 
-            <Button
-                android:layout_width="fill_parent"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="button 1"
-                android:textColor="#fff"
-                android:textStyle="bold"
-                android:background="@drawable/click_button_red"
-                android:layout_marginRight="20dp">
 
-            </Button>
 
             <Button
-                android:layout_width="fill_parent"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="button 2"
-                android:textColor="#fff"
-                android:textStyle="bold"
-                android:background="@drawable/click_button_red"
-                android:layout_marginRight="20dp">
+                android:id="@+id/angry_btn"
 
-            </Button>
+                android:text="Button"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp"
+                android:textStyle="bold"
+
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:background="@drawable/buttonshape"
+                android:layout_marginRight="15dp"
+                />
 
             <Button
-                android:layout_width="fill_parent"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="button 3"
-                android:textColor="#fff"
+                android:id="@+id/angry_btn"
+
+                android:text="Button"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp"
                 android:textStyle="bold"
-                android:background="@drawable/click_button_red"
-                android:layout_marginRight="5dp" >
 
-            </Button>
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:background="@drawable/buttonshape"
+                android:layout_marginRight="15dp"
+                />
 
+            <Button
+                android:id="@+id/angry_btn"
 
+                android:text="Button"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp"
+                android:textStyle="bold"
+
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:background="@drawable/buttonshape"
+                android:layout_marginRight="15dp"
+                />
+
+            <Button
+                android:id="@+id/angry_btn"
+
+                android:text="Button"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp"
+                android:textStyle="bold"
+
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:background="@drawable/buttonshape"
+                android:layout_marginRight="15dp"
+                />
+
+            <Button
+                android:id="@+id/angry_btn"
+
+                android:text="Button"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp"
+                android:textStyle="bold"
+
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:background="@drawable/buttonshape"
+                android:layout_marginRight="15dp"
+                />
+
+            <Button
+                android:id="@+id/angry_btn"
+
+                android:text="Button"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp"
+                android:textStyle="bold"
+
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:background="@drawable/buttonshape"
+                android:layout_marginRight="15dp"
+                />
 
         </LinearLayout>
     </HorizontalScrollView>
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/goaltextview"
-        android:textSize="25dp"
-        android:textColor="#009900"
-        android:textStyle="bold"
-        android:text="Goal: 3 days of 30 mins cardio"
-        android:layout_marginBottom="10dp">
 
 
-        <!-- reference for multiple colors:
-        http://stackoverflow.com/questions/9288597/text-view-with-multiple-text-colors-android -->
+
+    <!-- reference for multiple colors:
+    http://stackoverflow.com/questions/9288597/text-view-with-multiple-text-colors-android -->
 
 
-    </TextView>
+
 
     <ScrollView
 
@@ -131,6 +184,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/physical_activity_desc"
                 android:text="Test"
                 android:textColor="#fff"
                 android:textSize="20dp"
