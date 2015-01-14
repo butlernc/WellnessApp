@@ -1,5 +1,6 @@
 package com.uwec.wellnessapp.login;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.uwec.wellnessapp.R;
+import com.uwec.wellnessapp.data.SessionData;
 import com.uwec.wellnessapp.statics.Statics;
 
 /**
@@ -27,7 +29,7 @@ public class LoadingFragment extends Fragment {
 
 
         if(getArguments() == null) {
-
+            Log.e("LOAD", "loading fragment started");
             /* make sure we aren't trying to log out */
             shouldLoad = true;
             if (getActivity().getIntent().getStringArrayExtra("extras") != null) {
@@ -37,15 +39,6 @@ public class LoadingFragment extends Fragment {
                 shouldLoad = false;
             }
 
-            Log.d("Session", "SessionData is loading");
-
-            /* load the app's data here */
-            Statics.sessionData.loadLastSession(getActivity().getBaseContext());
-            //TODO: learn how to lock properly
-            while (!Statics.messenger.messageSent) {}
-            Statics.sessionData.setupSession();
-            Statics.sessionData.loadWeekDataList();
-            while (!Statics.messenger.messageSent) {}
             Log.d("THREAD", "loading last session data finished");
             Log.d("THREAD", "ShouldLoad: " + String.valueOf(shouldLoad) + " rememberMe: " + String.valueOf(Statics.sessionData.rememberedMe()));
 

@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.uwec.wellnessapp.R;
+import com.uwec.wellnessapp.challengeInfo.ChallengeInfoFragment;
 import com.uwec.wellnessapp.login.LoginHelper;
 import com.uwec.wellnessapp.statics.Statics;
 import com.uwec.wellnessapp.utils.FileSourceConnector;
@@ -125,6 +126,12 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
 
         switch(sectionNumber) {
 
+            case 0:
+                newFragment = new DefaultMainFragment();
+                break;
+            case 1:
+                newFragment = new ChallengeInfoFragment();
+                break;
             default:
                 newFragment = new DefaultMainFragment();
                 break;

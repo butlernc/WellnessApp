@@ -50,77 +50,31 @@ public class FileSourceConnector {
     private String userDirectory;
     private JsonFileConverter jsonFileConverter;
     private String RETURN_STR = "";
-    private boolean isDone;
 
-    public Runnable queue(final String... strings) {
-        Runnable runnable = null;
+    public void queue(final String... strings) {
+
         Log.d("FILESOURCE", "creating file source connector object");
         ftpClient = new FTPClient();
         jsonFileConverter = new JsonFileConverter();
-        isDone(false);
 
         if(strings[0] == "readUser") {
-            runnable = new Runnable() {
-                @Override
-                public void run() {
-                    readUser(strings);
-                }
-            };
+            readUser(strings);
         }else if(strings[0] == "writeUser") {
-            runnable = new Runnable() {
-                @Override
-                public void run() {
-                    writeUser(strings);
-                }
-            };
+            writeUser(strings);
         }else if(strings[0] == "readWeekData") {
-            runnable = new Runnable() {
-                @Override
-                public void run() {
-                    readWeekData(strings);
-                }
-            };
+            readWeekData(strings);
         }else if(strings[0].contentEquals("readWeekStartData")) {
-            runnable = new Runnable() {
-                @Override
-                public void run() {
-                    readWeekStartData(strings);
-                }
-            };
+            readWeekStartData(strings);
         } else if(strings[0].contentEquals("readWeekData")) {
-            runnable = new Runnable() {
-                @Override
-                public void run() {
-                    readWeekData(strings);
-                }
-            };
+            readWeekData(strings);
         }else {
-            runnable = new Runnable() {
-                @Override
-                public void run() {
-                    Log.d("D", "Not a recognized task");
-                }
-            };
+            Log.d("D", "Not a recognized task");
         }
-        return runnable;
     }
 
     /** needed to get the current context so that we can read and write temp files to the phone */
     public static void setContext(Context context) {
         currentContext = context;
-    }
-
-    /** check if current read or write from server is finished */
-    public boolean isDone() {
-        return this.isDone;
-    }
-
-    /**
-     * Set if IO to the server is completed
-     * @param isDone
-     */
-    private void isDone(boolean isDone) {
-        this.isDone = isDone;
     }
 
     /**
@@ -130,7 +84,6 @@ public class FileSourceConnector {
      * @throws IOException
      */
     private boolean connectToFTP() throws IOException {
-        isDone(false);
         ftpClient.connect(InetAddress.getByName(FTP_HOSTNAME));
         boolean status = ftpClient.login(FTP_USERNAME, FTP_PASSWORD);
         return status;
@@ -194,7 +147,7 @@ public class FileSourceConnector {
      */
     public File createTempFile(String filename, String inputData, boolean isUserData) throws JSONException, IOException{
         //make json object
-        JSONObject jsonObject = new JSONObject();
+        JSONObject jsonObject;
         String rawData = "";
         if(isUserData) {
             jsonObject = jsonFileConverter.convertUserToJSON(Statics.globalUserData);
@@ -248,9 +201,8 @@ public class FileSourceConnector {
                 //close connection
                 ftpClient.disconnect();
 
-                Statics.messenger.sendMessage("created new user...");
+                Statics.messenger.sendMessage("Created new user...");
                 RETURN_STR = "GOOD";
-                isDone(true);
             }
         } catch (IOException e) {
             RETURN_STR = "NOGOOD";
@@ -303,21 +255,18 @@ public class FileSourceConnector {
 
                         //check password with entered password
                         if(expected.compareTo(strings[2]) == 0) {
-                            Statics.messenger.sendMessage("Successful Login");
+                            Log.e("here", "password is correct");
                             //password is correct, get user data
                             //set the application's userData object.
                             Statics.globalUserData = jsonFileConverter.convertJSONToUser(jsonObject);
                             RETURN_STR = "GOOD";
-                            isDone(true);
                         } else {
                             //return that the user entered in the wrong password
                             RETURN_STR = "NCP";
-                            isDone(true);
                         }
                     } else {
                         //return that the user entered in the wrong password
                         RETURN_STR = "NCP";
-                        isDone(true);
                     }
                 }
             }
@@ -327,7 +276,6 @@ public class FileSourceConnector {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -346,18 +294,15 @@ public class FileSourceConnector {
             //check if logged in correctly
             if (FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {
                 //set transfer config params
-                boolean worked = setTransferSettings();
+                setTransferSettings();
                 ftpClient.changeWorkingDirectory(WEEK_DATA_DIRECTORY);
 
                 String fullFileName = WEEK_FILE_NAME_TRUNC + strings[1] + ".txt";
                 Log.e("DATA", "" + fullFileName);
                 JSONObject jsonObject = readFromServer(fullFileName);
-                Statics.globalWeekDataList = new ArrayList<>();
                 Statics.globalWeekDataList.add(jsonFileConverter.convertWeekDataJSON(jsonObject));
                 Log.e("DATA", "get it");
             }
-
-            isDone(true);
 
             ftpClient.disconnect();
         } catch (IOException e) {
@@ -382,14 +327,11 @@ public class FileSourceConnector {
             //check if logged in correctly
             if (FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {
                 //set transfer config params
-                boolean worked = setTransferSettings();
+                setTransferSettings();
                 ftpClient.changeWorkingDirectory(WEEK_DATA_DIRECTORY);
 
                 JSONObject jsonObject = readFromServer(WEEK_DATA_FILE_NAME);
                 RETURN_STR = jsonObject.toString();
-
-                isDone(true);
-
             }
             ftpClient.disconnect();
         } catch (IOException e) {

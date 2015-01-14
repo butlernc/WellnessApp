@@ -10,6 +10,7 @@
 	<string name="action_drawerList">Test</string>
 	
 	<string-array name="drawerListTitles">
+        <item>Home</item>
         <item>Challenge Information</item>
         <item>Point Breakdown</item>
         <item>Prizes</item>
