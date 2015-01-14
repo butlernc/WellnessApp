@@ -230,19 +230,25 @@ public class SessionData {
     }
 
     public void loadWeekDataList() {
+
+        final FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
+
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
 
-                FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
                 for(int i = 0; i < Statics.weeks.length; i++) {
                     Statics.singleExecutor.runTask(loadWeekDataConnector.queue("readWeekData", "" + (i + 1)));
                     while(!loadWeekDataConnector.isDone()) {}
-                    Statics.messenger.sendMessage("loaded all weekly data...");
+
                 }
+
+                Statics.messenger.sendMessage("loaded all weekly data...");
             }
         };
 
+        loadedWeekData = true;
+        Statics.singleExecutor.runTask(runnable);
 
     }
 
