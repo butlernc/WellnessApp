@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class JsonFileConverter {
 
     private static String json_value_names[] = {"email", "first_name", "last_name", "password", "total_score", "weekly_data"};
-    private static String week_data_json_value_names[] = {"week", "physical_activity", "physical_activity_description", "pa_days_per_week", "pa_strings", "nutrition_goal", "nutrition_goal_description", "ng_days_per_week", "ng_strings", "supporting_evidence"};
+    private static String week_data_json_value_names[] = {"week", "physical_activity", "physical_activity_description", "pa_link_amount", "pa_links", "pa_days_per_week", "pa_strings", "nutrition_goal", "nutrition_goal_description", "ng_link_amount", "ng_links", "ng_days_per_week", "ng_strings", "supporting_evidence"};
     private static String weeklyData_json_value_names[] = {"pa_points", "ng_points", "pa_amount", "ng_amount", "pa_checkOff", "pa_checkOffArray", "ng_checkOff", "ng_checkOffArray"};
 
     public UserData convertJSONToUser(JSONObject jsonObject) throws JSONException {
@@ -41,27 +41,50 @@ public class JsonFileConverter {
         weekData.setWeek(jsonObject.getString(week_data_json_value_names[0]));
         weekData.setPhysical_activity(jsonObject.getString(week_data_json_value_names[1]));
         weekData.setPhysical_activity_description(jsonObject.getString(week_data_json_value_names[2]));
-        weekData.setPa_days_per_week(jsonObject.getInt(week_data_json_value_names[3]));
 
-        JSONObject pa_button_strings_json = jsonObject.getJSONObject(week_data_json_value_names[4]);
+        /* get physical activity links for the current week */
+        weekData.setPa_link_amount(jsonObject.getInt(week_data_json_value_names[3]));
+        JSONObject pa_links_subJSONObject = jsonObject.getJSONObject(week_data_json_value_names[4]);
+        ArrayList<String> temp_pa_links = new ArrayList<>();
+        for(int i = 0; i < weekData.getPa_link_amount(); i++) {
+            temp_pa_links.add(pa_links_subJSONObject.getString("" + i));
+        }
+        weekData.setPa_links(temp_pa_links);
+
+        weekData.setPa_days_per_week(jsonObject.getInt(week_data_json_value_names[5]));
+
+        JSONObject pa_button_strings_json = jsonObject.getJSONObject(week_data_json_value_names[6]);
         ArrayList<String> pa_button_strings = new ArrayList<>();
         for(int i = 0; i < weekData.getPa_days_per_week(); i++) {
             pa_button_strings.add(pa_button_strings_json.getString("" + i));
         }
         weekData.setPa_strings(pa_button_strings);
 
-        weekData.setNutrition_goal(jsonObject.getString(week_data_json_value_names[5]));
-        weekData.setNutrition_goal_description(jsonObject.getString(week_data_json_value_names[6]));
-        weekData.setNg_days_per_week(jsonObject.getInt(week_data_json_value_names[7]));
+        /* set nutrition goal and desc for the current week */
+        weekData.setNutrition_goal(jsonObject.getString(week_data_json_value_names[7]));
+        weekData.setNutrition_goal_description(jsonObject.getString(week_data_json_value_names[8]));
 
-        JSONObject ng_button_strings_json = jsonObject.getJSONObject(week_data_json_value_names[8]);
+        /* get nutrition goal links for the current week */
+        weekData.setNg_link_amount(jsonObject.getInt(week_data_json_value_names[9]));
+        JSONObject ng_links_subJSONObject = jsonObject.getJSONObject(week_data_json_value_names[10]);
+        ArrayList<String> temp_ng_links = new ArrayList<>();
+        for(int i = 0; i < weekData.getNg_link_amount(); i++) {
+            temp_ng_links.add(ng_links_subJSONObject.getString("" + i));
+        }
+        weekData.setNg_links(temp_ng_links);
+
+        /* set the amount of buttons need for the nutrition goal for the current week */
+        weekData.setNg_days_per_week(jsonObject.getInt(week_data_json_value_names[11]));
+
+        /* set the button strings for the nutrition goal */
+        JSONObject ng_button_strings_json = jsonObject.getJSONObject(week_data_json_value_names[12]);
         ArrayList<String> ng_button_strings = new ArrayList<>();
         for(int i = 0; i < weekData.getNg_days_per_week(); i++) {
             ng_button_strings.add(ng_button_strings_json.getString("" + i));
         }
         weekData.setNg_strings(ng_button_strings);
 
-        weekData.setSupporting_evidence(jsonObject.getString(week_data_json_value_names[9]));
+        weekData.setSupporting_evidence(jsonObject.getString(week_data_json_value_names[13]));
 
         return weekData;
     }

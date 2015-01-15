@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.uwec.wellnessapp.R;
 import com.uwec.wellnessapp.home.FitnessGoalFragment;
+import com.uwec.wellnessapp.home.NutritionGoalFragment;
 import com.uwec.wellnessapp.statics.Statics;
 
 /**
@@ -63,7 +64,6 @@ public class DefaultMainFragment extends Fragment {
 
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getActivity(), "Clicked Fitness Goals", Toast.LENGTH_SHORT).show();
                     getActivity().getFragmentManager().beginTransaction().replace(R.id.main_nav_fragment, createFragmentFromButtonClick(0)).commit();
 
                 }
@@ -76,7 +76,7 @@ public class DefaultMainFragment extends Fragment {
 
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getActivity(), "Clicked Nutrition Goals", Toast.LENGTH_SHORT).show();
+                    getActivity().getFragmentManager().beginTransaction().replace(R.id.main_nav_fragment, createFragmentFromButtonClick(1)).commit();
                 }
             });
         }
@@ -119,6 +119,7 @@ public class DefaultMainFragment extends Fragment {
                 fragment = new FitnessGoalFragment();
                 break;
             case 1:
+                fragment = new NutritionGoalFragment();
                 break;
             case 2:
                 break;

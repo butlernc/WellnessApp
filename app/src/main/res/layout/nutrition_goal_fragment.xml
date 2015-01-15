@@ -25,7 +25,7 @@
         android:layout_height="50dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Nutrition Goal Week 1"
-        android:id="@+id/textView3"
+        android:id="@+id/week_display_nutrition"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
@@ -39,7 +39,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/goal_text_view"
+        android:id="@+id/nutrition_goal"
         android:textSize="20dp"
         android:textColor="#EDAC1A"
         android:textStyle="bold"
@@ -170,7 +170,7 @@
     <ScrollView
 
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="260dp"
         android:id="@+id/scrollView">
 
         <LinearLayout
@@ -184,7 +184,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/physical_activity_desc"
+                android:id="@+id/nutrition_goal_desc"
                 android:text="Test"
                 android:textColor="#fff"
                 android:textSize="20dp"
@@ -194,6 +194,15 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Links"
+        android:textColor="#EDAC1A"
+        android:background="#22468a"
+        android:id="@+id/nutrition_goal_links_button"
+        android:layout_gravity="center_horizontal" />
 
 
 </LinearLayout>

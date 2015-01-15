@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ExpandableListView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -17,6 +18,8 @@ import com.uwec.wellnessapp.R;
 import com.uwec.wellnessapp.statics.Statics;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by butlernc on 1/14/2015.
@@ -25,20 +28,50 @@ public class ChallengeInfoFragment extends Fragment {
 
     /* http://stackoverflow.com/questions/7441077/how-could-i-add-a-spinner-in-listview-with-its-listitems-by-using-customadapter */
 
+    ChallengeListAdapter listAdapter;
+    ExpandableListView expListView;
+    List<String> listDataHeader;
+    HashMap<String, List<String>> listDataChild;
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         View rootView = inflater.inflate(R.layout.challenge_info_fragment, container, false);
-        Spinner spinner = (Spinner) rootView.findViewById(R.id.spinner_chunk);
+        getActivity().getActionBar().setTitle("Challenge Info");
 
-        ArrayList<SpinnerOptions> words = new ArrayList<>();
-        for(int i = 0; i < 6; i++) {
-            words.add(new SpinnerOptions("Week" + ": " + (i + 1), i));
-        }
+        /* get the expandable list view */
+        expListView = (ExpandableListView) rootView.findViewById(R.id.challenge_info_expandable_list);
 
-        spinner.setAdapter(new ArrayAdapter<SpinnerOptions>(getActivity().getBaseContext(), R.layout.challenge_info_spinner_row, R.id.challenge_info_spinner_row_name, words));
+        /* prepare the list data */
+        prepareListData();
+
+        /* create and set the list adapter */
+        listAdapter = new ChallengeListAdapter(getActivity().getBaseContext(), getActivity(), listDataHeader, listDataChild);
+        expListView.setAdapter(listAdapter);
 
         return rootView;
+    }
+
+    private void prepareListData() {
+        listDataHeader = new ArrayList<>();
+        listDataChild = new HashMap<>();
+
+        // Adding child data
+        for(int i = 1; i <= 6; i++) {
+            listDataHeader.add("Week " + i);
+        }
+
+        // Adding child data
+        ArrayList<List<String>> childLists = new ArrayList<>();
+        for(int i = 0; i < 6; i++) {
+            childLists.add(new ArrayList<String>());
+            childLists.get(i).add("Physical Activity");
+            childLists.get(i).add("Nutrition Goal");
+        }
+
+        // Header, Child data
+        for(int i = 0; i < 6; i++) {
+            listDataChild.put(listDataHeader.get(i), childLists.get(i));
+        }
     }
 
 }

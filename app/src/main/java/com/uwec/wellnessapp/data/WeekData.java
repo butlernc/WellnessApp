@@ -16,6 +16,8 @@ public class WeekData {
     private String physical_activity;
     /** used to store the desc of the physical activity */
     private String physical_activity_description;
+    private int pa_link_amount;
+    private ArrayList<String> pa_links;
     /** int used to keep track of physical activity check offs there are
       * this will set the physicalGoalCheckOffAmount in the WeeklyData object in UserData */
     private int pa_days_per_week;
@@ -30,6 +32,8 @@ public class WeekData {
 
     /** detailed desc of the current week's nutrition goal */
     private String nutrition_goal_description;
+    private int ng_link_amount;
+    private ArrayList<String> ng_links;
     /** saves the desc of the current week's supporting_evidence */
     private String supporting_evidence;
 
@@ -109,5 +113,37 @@ public class WeekData {
 
     public void setNg_strings(ArrayList<String> ng_strings) {
         this.ng_strings = ng_strings;
+    }
+
+    public ArrayList<String> getPa_links() {
+        return pa_links;
+    }
+
+    public void setPa_links(ArrayList<String> pa_links) {
+        this.pa_links = pa_links;
+    }
+
+    public ArrayList<String> getNg_links() {
+        return ng_links;
+    }
+
+    public void setNg_links(ArrayList<String> ng_links) {
+        this.ng_links = ng_links;
+    }
+
+    public int getPa_link_amount() {
+        return pa_link_amount;
+    }
+
+    public void setPa_link_amount(int pa_link_amount) {
+        this.pa_link_amount = pa_link_amount;
+    }
+
+    public int getNg_link_amount() {
+        return ng_link_amount;
+    }
+
+    public void setNg_link_amount(int ng_link_amount) {
+        this.ng_link_amount = ng_link_amount;
     }
 }

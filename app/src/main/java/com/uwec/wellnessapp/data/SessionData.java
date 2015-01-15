@@ -194,11 +194,11 @@ public class SessionData {
      * Will be called when the app is in start up (loginActivity)
      * Session data should already be loaded
      */
-    public class LoadWeekData extends Thread {
+    public class LoadStartWeekData extends Thread {
 
         public boolean isDone;
 
-        public LoadWeekData() {
+        public LoadStartWeekData() {
             isDone = false;
         }
 
@@ -208,10 +208,9 @@ public class SessionData {
                 Log.d("WEEKDATA", "loading weekly data");
                 FileSourceConnector fileSourceConnector = new FileSourceConnector();
                 JSONObject startWeekDataJSON = null;
-                String startWeekData = "";
                 //TODO: fix
-                //Statics.singleExecutor.runTask(fileSourceConnector.queue("readWeekStartData"));
-                startWeekData = fileSourceConnector.getRETURN_STR();
+                fileSourceConnector.queue("readWeekStartData");
+                String startWeekData = fileSourceConnector.getRETURN_STR();
 
                 try {
                     startWeekDataJSON = new JSONObject(startWeekData);
@@ -258,9 +257,6 @@ public class SessionData {
                         }
                     }
 
-                    FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
-                /* TODO: fix week selection and this entire method lol */
-                    //Statics.singleExecutor.runTask(loadWeekDataConnector.queue("readWeekData", "" + 1));
                     Log.d("DATE", "weekNumber: " + weekNumber);
                     Log.d("DATE", "monthNumber: " + monthNumber);
                     loadedWeekData = true;
@@ -270,11 +266,14 @@ public class SessionData {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }
 
-            notify();
+                notify();
+            }
             isDone = true;
         }
+    }
+    public LoadStartWeekData createLoadStartWeekDataThread() {
+        return new LoadStartWeekData();
     }
 
     public class LoadWeekDataList extends Thread {
@@ -295,6 +294,11 @@ public class SessionData {
                         loadWeekDataConnector.queue("readWeekData", "" + 1);
                     }
                 }).start();
+                try {
+                    wait(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -302,6 +306,11 @@ public class SessionData {
                         loadWeekDataConnector.queue("readWeekData", "" + 2);
                     }
                 }).start();
+                try {
+                    wait(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -309,6 +318,11 @@ public class SessionData {
                         loadWeekDataConnector.queue("readWeekData", "" + 3);
                     }
                 }).start();
+                try {
+                    wait(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -316,6 +330,11 @@ public class SessionData {
                         loadWeekDataConnector.queue("readWeekData", "" + 4);
                     }
                 }).start();
+                try {
+                    wait(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -323,6 +342,11 @@ public class SessionData {
                         loadWeekDataConnector.queue("readWeekData", "" + 5);
                     }
                 }).start();
+                try {
+                    wait(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 new Thread(new Runnable() {
                     @Override
                     public void run() {

@@ -31,6 +31,7 @@ public class LoadingActivity extends Activity{
     SessionData.LoadLastSession lastSessionThread;
     SessionData.SetupSession setupSessionThread;
     SessionData.LoadWeekDataList loadWeekDataListThread;
+    SessionData.LoadStartWeekData loadStartWeekDataThread;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,16 +97,28 @@ public class LoadingActivity extends Activity{
                 }
             }
             Statics.messenger.sendMessage("loading weekly data...");
-
-            /* auto login */
-            if (Statics.sessionData.rememberedMe()) {
-                Log.d("Session", "Using remember me username and password");
-                LoginHelper loginHelper = new LoginHelper(this, Statics.sessionData.getUsername(), Statics.sessionData.getPassword(), true, false);
-                loginHelper.start();
-            } else {
-                /* use default login page now */
-                LoginHelper.startLoginActivity(this, null);
+        }
+        loadStartWeekDataThread = Statics.sessionData.createLoadStartWeekDataThread();
+        loadStartWeekDataThread.start();
+        synchronized (loadStartWeekDataThread) {
+            while(!loadStartWeekDataThread.isDone) {
+                try {
+                    loadStartWeekDataThread.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
+        }
+
+        /* auto login */
+        if (Statics.sessionData.rememberedMe()) {
+            Log.d("Session", "Using remember me username and password");
+            LoginHelper loginHelper = new LoginHelper(this, Statics.sessionData.getUsername(), Statics.sessionData.getPassword(), true, false);
+            loginHelper.start();
+        } else {
+            Log.d("LOAD", "starting login activity");
+                /* use default login page now */
+            LoginHelper.startLoginActivity(this, null);
         }
     }
 }
