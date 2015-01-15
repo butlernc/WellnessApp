@@ -241,9 +241,11 @@ public class FileSourceConnector {
                 FTPFile[] mFileArray = ftpClient.listFiles();
 
                 //check for user directory
+                boolean found = false;
                 for(FTPFile file : mFileArray) {
                     if(file.getName().contentEquals(strings[1])) {
                         //get the user's directory name
+                        found = true;
                         userDirectory = file.getName();
 
                         //change to the given user directory
@@ -256,17 +258,22 @@ public class FileSourceConnector {
                         //check password with entered password
                         if(expected.compareTo(strings[2]) == 0) {
                             Log.e("here", "password is correct");
+                            RETURN_STR = "GOOD";
                             //password is correct, get user data
                             //set the application's userData object.
                             Statics.globalUserData = jsonFileConverter.convertJSONToUser(jsonObject);
-                            RETURN_STR = "GOOD";
+                            Log.d("STR", "RETURN STRING: " + RETURN_STR);
                         } else {
                             //return that the user entered in the wrong password
                             RETURN_STR = "NCP";
+                            Log.d("STR", "should not be here");
                         }
                     } else {
                         //return that the user entered in the wrong password
-                        RETURN_STR = "NCP";
+                        if(!found) {
+                            RETURN_STR = "NCP";
+                            Log.d("STR", "should not be here too");
+                        }
                     }
                 }
             }
@@ -276,6 +283,8 @@ public class FileSourceConnector {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        Log.d("STR", "RETURN STRING: " + RETURN_STR);
     }
 
     /**

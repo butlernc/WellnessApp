@@ -26,8 +26,8 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.uwec.wellnessapp.login.LoginActivity"
-            android:label="Step It Up"
+            android:name="com.uwec.wellnessapp.loading.LoadingActivity"
+            android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,8 +36,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.uwec.wellnessapp.login.LoginActivity"
+            android:label="Step It Up"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name="com.uwec.wellnessapp.register.RegisterActivity"
-            android:label="Login"
+            android:label="Register"
             android:screenOrientation="portrait" >
         </activity>
     </application>

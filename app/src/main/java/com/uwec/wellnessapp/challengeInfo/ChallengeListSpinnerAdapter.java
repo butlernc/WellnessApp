@@ -42,7 +42,7 @@ public class ChallengeListSpinnerAdapter extends ArrayAdapter<String> {
     public View getCustomView(int position, View convertView, ViewGroup parent) {
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View row = inflater.inflate(R.layout.challenge_info_spinner_fragment, parent, false);
+        View row = inflater.inflate(R.layout.challenge_info_spinner_drop_down, parent, false);
         TextView physical_label = (TextView) row.findViewById(R.id.challenge_info_spinner_row_physical);
         TextView nutrition_label = (TextView) row.findViewById(R.id.challenge_info_spinner_row_nutrition);
         physical_label.setText(strings[0]);

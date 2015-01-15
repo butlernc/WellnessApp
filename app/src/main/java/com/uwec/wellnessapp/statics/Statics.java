@@ -5,13 +5,11 @@ import android.os.Handler;
 import com.uwec.wellnessapp.data.SessionData;
 import com.uwec.wellnessapp.data.WeekData;
 import com.uwec.wellnessapp.data.UserData;
-import com.uwec.wellnessapp.login.LoadingFragment;
 import com.uwec.wellnessapp.login.LoginHelper;
 import com.uwec.wellnessapp.register.RegisterHelper;
 import com.uwec.wellnessapp.utils.Messenger;
 
 import java.util.ArrayList;
-import java.util.concurrent.Executor;
 
 /**
  * Created by Noah Butler on 12/23/2014.
@@ -24,9 +22,7 @@ public class Statics {
     public static ArrayList<WeekData> globalWeekDataList = new ArrayList<>();
     public static SessionData sessionData = new SessionData();
 
-    public static LoginHelper loginHelper;
     public static RegisterHelper registerHelper;
-    public static LoadingFragment loadingFragment;
 
     public static Handler handler;
     public static Messenger messenger = new Messenger();

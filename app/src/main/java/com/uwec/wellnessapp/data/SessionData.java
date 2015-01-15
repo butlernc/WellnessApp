@@ -75,9 +75,12 @@ public class SessionData {
         Context context;
         boolean rememberMe;
 
+        public boolean isDone;
+
         public SaveLoginSession(Context context, boolean rememberMe) {
             this.context = context;
             this.rememberMe = rememberMe;
+            isDone = false;
         }
 
         @Override
@@ -116,6 +119,7 @@ public class SessionData {
 
                 Statics.messenger.sendMessage("new session created...");
                 notify();
+                isDone = true;
             }
         }
     }
@@ -284,12 +288,48 @@ public class SessionData {
         @Override
         public void run() {
             synchronized (this) {
-                FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
-
-                for (int i = 0; i < Statics.weeks.length; i++) {
-                    Log.d("thread", "update: " + i);
-                    loadWeekDataConnector.queue("readWeekData", "" + (i + 1));
-                }
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
+                        loadWeekDataConnector.queue("readWeekData", "" + 1);
+                    }
+                }).start();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
+                        loadWeekDataConnector.queue("readWeekData", "" + 2);
+                    }
+                }).start();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
+                        loadWeekDataConnector.queue("readWeekData", "" + 3);
+                    }
+                }).start();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
+                        loadWeekDataConnector.queue("readWeekData", "" + 4);
+                    }
+                }).start();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
+                        loadWeekDataConnector.queue("readWeekData", "" + 5);
+                    }
+                }).start();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
+                        loadWeekDataConnector.queue("readWeekData", "" + 6);
+                    }
+                }).start();
 
                 Statics.messenger.sendMessage("Loaded all weekly data...");
                 notify();

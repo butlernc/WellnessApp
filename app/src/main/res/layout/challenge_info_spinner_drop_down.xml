@@ -4,20 +4,17 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textSize="14sp"
-        android:textColor="#FFFFFF"
-        android:spinnerMode="dialog"
-        android:text="New Text"
-        android:id="@+id/challenge_info_spinner_row_name"
-        android:layout_gravity="center_horizontal" />
-<!--
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
+        android:id="@+id/challenge_info_spinner_row_physical"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
         android:id="@+id/challenge_info_spinner_row_nutrition"
-        android:layout_gravity="center_horizontal" /> -->
+        android:layout_gravity="center_horizontal" />
 </LinearLayout>

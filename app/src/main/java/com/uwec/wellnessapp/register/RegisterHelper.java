@@ -48,8 +48,6 @@ public class RegisterHelper {
         }
 
         Statics.globalUserData = userData;
-        activity.getFragmentManager().beginTransaction().replace(R.id.main_register_area, Statics.loadingFragment);
-        activity.getFragmentManager().executePendingTransactions();
         //create a FileSourceConnector, used to read and write to the server.
         FileSourceConnector fileSourceConnector = new FileSourceConnector();
         //TODO: fix

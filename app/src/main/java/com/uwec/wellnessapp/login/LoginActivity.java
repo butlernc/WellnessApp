@@ -1,112 +1,59 @@
 package com.uwec.wellnessapp.login;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.uwec.wellnessapp.R;
-import com.uwec.wellnessapp.data.SessionData;
 import com.uwec.wellnessapp.register.RegisterHelper;
-import com.uwec.wellnessapp.start.MainNavActivity;
 import com.uwec.wellnessapp.statics.Statics;
-import com.uwec.wellnessapp.utils.FileSourceConnector;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 
 /**
  * Created by butlernc on 12/2/2014.
  */
 public class LoginActivity extends Activity {
 
-    private boolean shouldLoad;
-    /** text view from the loading fragment */
-    private TextView loadingText;
+    Button email_sign_in_button, email_register_button;
+    EditText email_input, password_input;
+    CheckBox rememberMe;
 
-    SessionData.LoadLastSession lastSessionThread;
-    SessionData.SetupSession setupSessionThread;
-    SessionData.LoadWeekDataList loadWeekDataListThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Statics.loginHelper = new LoginHelper();
-        Statics.registerHelper = new RegisterHelper();
-        Statics.globalWeekDataList = new ArrayList<>();
+        email_sign_in_button = (Button) findViewById(R.id.email_sign_in_button);
+        email_register_button = (Button) findViewById(R.id.email_register_button);
 
-        /* show loading fragment first */
-        Statics.loadingFragment = new LoadingFragment();
-        getFragmentManager().beginTransaction().replace(R.id.main_login_area, new LoadingFragment()).commit();
-        getFragmentManager().executePendingTransactions();
-        Log.d("TEST", "Loading fragment should be shown");
+        email_input = (EditText) findViewById(R.id.login_input_email);
+        password_input = (EditText) findViewById(R.id.login_input_password);
 
-        /* used as a callback from threads that are doing work */
-        Statics.handler = new Handler() {
+        rememberMe = (CheckBox) findViewById(R.id.remember_me_check_box);
+
+        email_sign_in_button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                loadingText = Statics.loadingFragment.getLoadingText();
-                loadingText.setText(msg.getData().getString("message"));
-            }
-        };
+            public void onClick(View view) {
+                Log.d("LOGIN", "clicked login button");
 
-        Log.d("Session", "SessionData is loading");
-
-            /* load the app's data here */
-        lastSessionThread = Statics.sessionData.createLoadLastSession(getBaseContext());
-        lastSessionThread.start();
-
-        synchronized (lastSessionThread) {
-            while (!lastSessionThread.isDone) {
-                try {
-                    Statics.messenger.sendMessage("waiting for saved file...");
-                    lastSessionThread.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                //run login and set the user as logged in if successful
+                Log.d("RememberMe", "Status: " + String.valueOf(rememberMe.isChecked()));
+                LoginHelper loginHelper = new LoginHelper(LoginActivity.this, email_input.getText().toString(), password_input.getText().toString(), rememberMe.isChecked(), true);
+                loginHelper.start();
             }
-        }
-        Log.d("thread", "finished last session thread");
-        setupSessionThread = Statics.sessionData.createSetupSession();
-        setupSessionThread.start();
-        synchronized (setupSessionThread) {
-            while(!setupSessionThread.isDone) {
-                try {
-                    Statics.messenger.sendMessage("waiting for creating session...");
-                    setupSessionThread.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        Log.d("thread", "finished session setup thread");
-        loadWeekDataListThread = Statics.sessionData.createLoadWeekDataListThread();
-        loadWeekDataListThread.start();
-        synchronized (loadWeekDataListThread) {
-            while(!loadWeekDataListThread.isDone) {
-                try {
-                    Statics.messenger.sendMessage("loading weekly data...");
-                    loadWeekDataListThread.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
 
+        });
+
+        email_register_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RegisterHelper.startRegisterActivity(LoginActivity.this);
             }
-        }
+        });
+
     }
 }

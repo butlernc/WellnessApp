@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -22,24 +23,20 @@ import java.util.ArrayList;
  */
 public class ChallengeInfoFragment extends Fragment {
 
+    /* http://stackoverflow.com/questions/7441077/how-could-i-add-a-spinner-in-listview-with-its-listitems-by-using-customadapter */
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         View rootView = inflater.inflate(R.layout.challenge_info_fragment, container, false);
-        ListView listView = (ListView) rootView.findViewById(R.id.challenges_list);
+        Spinner spinner = (Spinner) rootView.findViewById(R.id.spinner_chunk);
 
-        ArrayList<Spinner> spinners = new ArrayList<>();
+        ArrayList<SpinnerOptions> words = new ArrayList<>();
         for(int i = 0; i < 6; i++) {
-            spinners.add(new Spinner(getActivity().getBaseContext()));
+            words.add(new SpinnerOptions("Week" + ": " + (i + 1), i));
         }
 
-        listView.setAdapter(new ChallengeListAdapter(getActivity().getBaseContext(), R.id.challenge_info_spinner, spinners));
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getActivity().getBaseContext(), "Test: " + i, Toast.LENGTH_SHORT).show();
-            }
-        });
+        spinner.setAdapter(new ArrayAdapter<SpinnerOptions>(getActivity().getBaseContext(), R.layout.challenge_info_spinner_row, R.id.challenge_info_spinner_row_name, words));
 
         return rootView;
     }
