@@ -295,7 +295,7 @@ public class SessionData {
                     }
                 }).start();
                 try {
-                    wait(500);
+                    wait(300);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -307,7 +307,7 @@ public class SessionData {
                     }
                 }).start();
                 try {
-                    wait(500);
+                    wait(300);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -319,7 +319,7 @@ public class SessionData {
                     }
                 }).start();
                 try {
-                    wait(500);
+                    wait(300);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -331,7 +331,7 @@ public class SessionData {
                     }
                 }).start();
                 try {
-                    wait(500);
+                    wait(300);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -343,7 +343,7 @@ public class SessionData {
                     }
                 }).start();
                 try {
-                    wait(500);
+                    wait(300);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

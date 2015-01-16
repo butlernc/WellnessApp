@@ -39,7 +39,7 @@ public class NutritionGoalFragment extends Fragment {
         nutritionGoal = (TextView) rootView.findViewById(R.id.nutrition_goal);
         nutritionGoal.setText("Goal: " + Statics.globalWeekDataList.get(Statics.sessionData.getWeekNumber() - 1).getNutrition_goal());
 
-        linksButton = (Button) rootView.findViewById(R.id.physical_activity_links_button);
+        linksButton = (Button) rootView.findViewById(R.id.nutrition_goal_links_button);
         linksButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
