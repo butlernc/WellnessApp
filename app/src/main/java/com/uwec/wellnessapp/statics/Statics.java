@@ -5,6 +5,7 @@ import android.os.Handler;
 import com.uwec.wellnessapp.data.SessionData;
 import com.uwec.wellnessapp.data.WeekData;
 import com.uwec.wellnessapp.data.UserData;
+import com.uwec.wellnessapp.data.WeeklyUserData;
 import com.uwec.wellnessapp.login.LoginHelper;
 import com.uwec.wellnessapp.register.RegisterHelper;
 import com.uwec.wellnessapp.utils.Messenger;
@@ -28,4 +29,20 @@ public class Statics {
     public static Messenger messenger = new Messenger();
 
     public static String[] weeks = {"WEEK_ONE", "WEEK_TWO", "WEEK_THREE", "WEEK_FOUR", "WEEK_FIVE", "WEEK_SIX"};
+
+    /**
+     * Returns the correct weekData object for the current week.
+     * @return
+     */
+    public static WeekData getCurrentWeekData() {
+        return globalWeekDataList.get(sessionData.getWeekNumber());
+    }
+
+    /**
+     * Returns the correct user's weekly data for the current week
+     * @return
+     */
+    public static WeeklyUserData getUsersCurrentWeekData() {
+        return globalUserData.getWeeklyData().get(sessionData.getWeekNumber());
+    }
 }

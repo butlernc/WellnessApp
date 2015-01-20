@@ -50,8 +50,8 @@ public class RegisterHelper {
         Statics.globalUserData = userData;
         //create a FileSourceConnector, used to read and write to the server.
         FileSourceConnector fileSourceConnector = new FileSourceConnector();
-        //TODO: fix
-        //Statics.singleExecutor.runTask(fileSourceConnector.queue("writeUser", userData.getEmail(), userData.getPassword(), "new"));
+        //TODO: fix, needs to run off of the UI thread
+        fileSourceConnector.queue("writeUser", userData.getEmail(), "new");
         /* TODO: Show progress */
         Log.e("DONE", "Made it here");
 

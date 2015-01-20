@@ -10,7 +10,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.wellnessapp.login.LoginActivity"
-    android:background="#22468a" >
+    android:background="#22468a"
+    android:weightSum="1">
 
     <!-- <TextView
         android:layout_width="wrap_content"
@@ -65,95 +66,11 @@
 
     <LinearLayout
         android:id="@+id/linear_physical_button"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="10dp">
+        android:paddingBottom="10dp"
+        android:orientation="horizontal">
 
-
-
-        <Button
-            android:id="@+id/angry_btn"
-
-            android:text="Button"
-            android:textColor="#FFFFFF"
-            android:textSize="20dp"
-            android:textStyle="bold"
-
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:background="@drawable/buttonshape"
-            android:layout_marginRight="15dp"
-            />
-
-        <Button
-            android:id="@+id/angry_btn"
-
-            android:text="Button"
-            android:textColor="#FFFFFF"
-            android:textSize="20dp"
-            android:textStyle="bold"
-
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:background="@drawable/buttonshape"
-            android:layout_marginRight="15dp"
-            />
-
-        <Button
-            android:id="@+id/angry_btn"
-
-            android:text="Button"
-            android:textColor="#FFFFFF"
-            android:textSize="20dp"
-            android:textStyle="bold"
-
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:background="@drawable/buttonshape"
-            android:layout_marginRight="15dp"
-            />
-
-        <Button
-            android:id="@+id/angry_btn"
-
-            android:text="Button"
-            android:textColor="#FFFFFF"
-            android:textSize="20dp"
-            android:textStyle="bold"
-
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:background="@drawable/buttonshape"
-            android:layout_marginRight="15dp"
-            />
-
-        <Button
-            android:id="@+id/angry_btn"
-
-            android:text="Button"
-            android:textColor="#FFFFFF"
-            android:textSize="20dp"
-            android:textStyle="bold"
-
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:background="@drawable/buttonshape"
-            android:layout_marginRight="15dp"
-            />
-
-        <Button
-            android:id="@+id/angry_btn"
-
-            android:text="Button"
-            android:textColor="#FFFFFF"
-            android:textSize="20dp"
-            android:textStyle="bold"
-
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:background="@drawable/buttonshape"
-            android:layout_marginRight="15dp"
-            />
 
         </LinearLayout>
     </HorizontalScrollView>
@@ -171,7 +88,8 @@
 
         android:layout_width="match_parent"
         android:layout_height="260dp"
-        android:id="@+id/scrollView">
+        android:id="@+id/scrollView"
+        android:layout_weight="0.42">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -201,8 +119,7 @@
         android:text="Suggested Workout and Links"
         android:textColor="#EDAC1A"
         android:background="#22468a"
-        android:id="@+id/physical_activity_links_button"
-        android:layout_gravity="center_horizontal" />
+        android:id="@+id/physical_activity_links_button" />
 
 
 </LinearLayout>

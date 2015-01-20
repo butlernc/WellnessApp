@@ -93,13 +93,6 @@ public class DefaultMainFragment extends Fragment {
         }
 		
 		return rootView;
-
-		// Start up RegisterActivity right away
-		//Intent intent = new Intent(this, RegisterActivity.class);
-		//startActivity(intent);
-		// Since this is just a wrapper to start the main activity,
-		// finish it after launching RegisterActivity
-		//finish();
 	}
 	
 	@Override

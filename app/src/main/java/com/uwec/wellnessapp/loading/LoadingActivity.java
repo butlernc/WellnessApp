@@ -53,7 +53,19 @@ public class LoadingActivity extends Activity{
 
         loadingText.setText("loading...");
 
+        /* load app data */
         load();
+
+        /* auto login */
+        if (Statics.sessionData.rememberedMe()) {
+            Log.d("Session", "Using remember me username and password");
+            LoginHelper loginHelper = new LoginHelper(this, Statics.sessionData.getUsername(), Statics.sessionData.getPassword(), true, false);
+            loginHelper.start();
+        } else {
+            Log.d("LOAD", "starting login activity");
+                /* use default login page now */
+            LoginHelper.startLoginActivity(this, null);
+        }
     }
 
     private void load() {
@@ -108,17 +120,6 @@ public class LoadingActivity extends Activity{
                     e.printStackTrace();
                 }
             }
-        }
-
-        /* auto login */
-        if (Statics.sessionData.rememberedMe()) {
-            Log.d("Session", "Using remember me username and password");
-            LoginHelper loginHelper = new LoginHelper(this, Statics.sessionData.getUsername(), Statics.sessionData.getPassword(), true, false);
-            loginHelper.start();
-        } else {
-            Log.d("LOAD", "starting login activity");
-                /* use default login page now */
-            LoginHelper.startLoginActivity(this, null);
         }
     }
 }

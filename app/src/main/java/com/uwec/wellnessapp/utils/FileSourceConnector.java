@@ -167,10 +167,9 @@ public class FileSourceConnector {
      * Used to write the user data and user password
      * @param strings
      *
-     * strings[0]: user directory/user email
-     * strings[1]: user password
-     * strings[2]: "writeUser"
-     * strings[3]: "new" if registering, "old" if not
+     * strings[0]: "writeUser"
+     * strings[1]: user email
+     * strings[2]: "new" if registering, "old" if not
      */
     private void writeUser(String[] strings) {
 
@@ -186,7 +185,7 @@ public class FileSourceConnector {
                 //set transfer settings
                 boolean worked = setTransferSettings();
                 //check if we're making a new user or not
-                if(strings[3] == "new") {
+                if(strings[2] == "new") {
                     ftpClient.makeDirectory(userDirectory);
                     ftpClient.changeWorkingDirectory(userDirectory);
                 }else {
