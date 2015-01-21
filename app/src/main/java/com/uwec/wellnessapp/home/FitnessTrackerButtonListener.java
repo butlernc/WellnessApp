@@ -31,8 +31,7 @@ public class FitnessTrackerButtonListener implements View.OnClickListener {
             currentButton.setText("Completed!");
 
             /* TODO: calculate points and save user data */
-            LoggingHelper loggingHelper = new LoggingHelper();
-            loggingHelper.setContext(context);
+            LoggingHelper loggingHelper = new LoggingHelper(context, isFitness);
             loggingHelper.start();
         }
     }

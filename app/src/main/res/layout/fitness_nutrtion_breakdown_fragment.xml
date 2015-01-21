@@ -58,7 +58,7 @@
                 android:textSize="70dp"
                 android:textStyle="bold"
                 android:gravity="center_horizontal"
-                android:id="@+id/fitness_points_textview">
+                android:id="@+id/fitness_points_tally">
 
             </TextView>
 
@@ -100,7 +100,7 @@
                 android:textSize="70dp"
                 android:textStyle="bold"
                 android:gravity="center_horizontal"
-                android:id="@+id/nutrition_points_textview">
+                android:id="@+id/nutrition_points_tally">
 
             </TextView>
         </LinearLayout>

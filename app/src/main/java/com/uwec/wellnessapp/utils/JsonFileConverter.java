@@ -22,7 +22,7 @@ public class JsonFileConverter {
 
     private static String json_value_names[] = {"email", "first_name", "last_name", "password", "total_score", "weekly_data"};
     private static String week_data_json_value_names[] = {"week", "physical_activity", "physical_activity_description", "pa_link_amount", "pa_links", "pa_days_per_week", "pa_strings", "nutrition_goal", "nutrition_goal_description", "ng_link_amount", "ng_links", "ng_days_per_week", "ng_strings", "supporting_evidence"};
-    private static String weeklyData_json_value_names[] = {"pa_points", "ng_points", "pa_amount", "ng_amount", "pa_checkOff", "pa_checkOffArray", "ng_checkOff", "ng_checkOffArray"};
+    private static String weeklyData_json_value_names[] = {"pa_points", "ng_points", "pa_amount", "ng_amount", "pa_checkOff", "pa_checkOffArray", "ng_checkOff", "ng_checkOffArray", "total_points", "weekly_points"};
 
     public UserData convertJSONToUser(JSONObject jsonObject) throws JSONException {
         UserData userData = new UserData();
@@ -113,6 +113,8 @@ public class JsonFileConverter {
             subJsonObject.put(weeklyData_json_value_names[1], single_weeklyData.getNutritionGoalPoints());
             subJsonObject.put(weeklyData_json_value_names[2], single_weeklyData.getPhysicalGoalCheckOffAmount());
             subJsonObject.put(weeklyData_json_value_names[3], single_weeklyData.getNutritionGoalCheckOffAmount());
+            subJsonObject.put(weeklyData_json_value_names[8], single_weeklyData.getSnapShotTotalScore());
+            subJsonObject.put(weeklyData_json_value_names[9], single_weeklyData.getSnapShotWeekScore());
 
             JSONObject pa_checkOffs_jsonObject = new JSONObject();
             for(int j = 0; j < single_weeklyData.getPhysicalGoalCheckOffs().size(); j++) {
@@ -159,6 +161,9 @@ public class JsonFileConverter {
                 nutritionGoalCheckOffs.add(ng_checkOffs_jsonObject.getBoolean(weeklyData_json_value_names[6] + j));
             }
             weeklyUserData.setNutritionGoalCheckOffs(nutritionGoalCheckOffs);
+
+            weeklyUserData.setSnapShotTotalScore(subJsonObject.getInt(weeklyData_json_value_names[8]));
+            weeklyUserData.setSnapShotWeekScore(subJsonObject.getInt(weeklyData_json_value_names[9]));
 
             weeklyUserDataList.add(weeklyUserData);
         }

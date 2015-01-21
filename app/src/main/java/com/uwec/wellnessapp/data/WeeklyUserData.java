@@ -17,6 +17,9 @@ public class WeeklyUserData {
     private int physicalGoalPoints;
     private int nutritionGoalPoints;
 
+    private int snapShotTotalScore;
+    private int snapShotWeekScore;
+
     public WeeklyUserData(int week) {
 
         /* assign the correct amount of check offs for the given goal for the week */
@@ -87,6 +90,22 @@ public class WeeklyUserData {
 
     public void setNutritionGoalPoints(int nutritionGoalPoints) {
         this.nutritionGoalPoints = nutritionGoalPoints;
+    }
+
+    public int getSnapShotTotalScore() {
+        return snapShotTotalScore;
+    }
+
+    public void setSnapShotTotalScore(int snapShotTotalScore) {
+        this.snapShotTotalScore = snapShotTotalScore;
+    }
+
+    public int getSnapShotWeekScore() {
+        return snapShotWeekScore;
+    }
+
+    public void setSnapShotWeekScore(int snapShotWeekScore) {
+        this.snapShotWeekScore = snapShotWeekScore;
     }
 }
 

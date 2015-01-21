@@ -13,38 +13,32 @@ import com.uwec.wellnessapp.utils.FileSourceConnector;
 public class LoggingHelper extends Thread{
 
     private Context context;
+    private boolean isPhysical;
+
+    public LoggingHelper(Context context, boolean isPhysical) {
+        this.context = context;
+        this.isPhysical = isPhysical;
+    }
 
     /**
      * Saves the current user data to the corresponding file in the database
      */
     public void run() {
-        /* TODO: calculate user weekly physical points points */
-        for(int i = 0; i < Statics.getUsersCurrentWeekData().getPhysicalGoalCheckOffs().size(); i++) {
-            if(Statics.getUsersCurrentWeekData().getPhysicalGoalCheckOffs().get(i)) {
-                int current = Statics.getUsersCurrentWeekData().getPhysicalGoalPoints();
-                Statics.getUsersCurrentWeekData().setPhysicalGoalPoints(current + 5);
-            }
-        }
 
-        /* TODO: calculate user weekly nutrition goal points */
-        for(int i = 0; i < Statics.getUsersCurrentWeekData().getNutritionGoalCheckOffs().size(); i++) {
-            if(Statics.getUsersCurrentWeekData().getNutritionGoalCheckOffs().get(i)) {
-                int current = Statics.getUsersCurrentWeekData().getNutritionGoalPoints();
-                Statics.getUsersCurrentWeekData().setNutritionGoalPoints(current + 5);
-            }
+        int current_temp;
+        if(isPhysical) {
+            current_temp = Statics.getUsersCurrentWeekData().getPhysicalGoalPoints();
+            Statics.getUsersCurrentWeekData().setPhysicalGoalPoints(current_temp + 5);
+        } else {
+            current_temp = Statics.getUsersCurrentWeekData().getNutritionGoalPoints();
+            Statics.getUsersCurrentWeekData().setNutritionGoalPoints(current_temp + 5);
         }
 
         /* TODO: add weeklytotal to each weeklyuserdata */
         Statics.globalUserData.setWeekly_score(Statics.getUsersCurrentWeekData().getNutritionGoalPoints() + Statics.getUsersCurrentWeekData().getPhysicalGoalPoints());
 
-        /* TODO: calculate users total points */
-        int temp_total = 0;
-        for(int i = 0; i < Statics.globalUserData.getWeeklyData().size(); i++) {
-            temp_total += Statics.globalUserData.getWeeklyData().get(i).getPhysicalGoalPoints();
-            temp_total += Statics.globalUserData.getWeeklyData().get(i).getNutritionGoalPoints();
-        }
-
-        Statics.globalUserData.setTotal_score(temp_total);
+        calculateWeekPoints();
+        calculateTotalPoints();
 
         FileSourceConnector fileSourceConnector = new FileSourceConnector();
         fileSourceConnector.setContext(context);
@@ -52,8 +46,73 @@ public class LoggingHelper extends Thread{
         Log.e("YUP", "SAVING USER DATA BITCHES");
     }
 
-    public void setContext(Context context) {
-        this.context = context;
+    public void calculateWeekPoints() {
+
+        int temp = 0;
+        for(int i = 0; i < Statics.getUsersCurrentWeekData().getPhysicalGoalCheckOffs().size(); i++) {
+            if(Statics.getUsersCurrentWeekData().getPhysicalGoalCheckOffs().get(i)) {
+                temp += 5;
+            }
+        }
+
+        for(int i = 0; i < Statics.getUsersCurrentWeekData().getNutritionGoalCheckOffs().size(); i++) {
+            if(Statics.getUsersCurrentWeekData().getNutritionGoalCheckOffs().get(i)) {
+                temp += 5;
+            }
+        }
+
+        Statics.globalUserData.setWeekly_score(temp);
+
     }
 
+    public void calculateTotalPoints() {
+        Statics.globalUserData.setTotal_score(0);
+        int total = 0;
+
+        for(int i = 0; i < Statics.globalUserData.getWeeklyData().size(); i++) {
+            int temp = 0;
+            for(int j = 0; j < Statics.globalUserData.getWeeklyData().get(i).getPhysicalGoalCheckOffs().size(); j++) {
+                if(Statics.globalUserData.getWeeklyData().get(i).getPhysicalGoalCheckOffs().get(j)) {
+                    temp += 5;
+                }
+            }
+            for(int j = 0; j < Statics.globalUserData.getWeeklyData().get(i).getNutritionGoalCheckOffs().size(); j++) {
+                if(Statics.globalUserData.getWeeklyData().get(i).getNutritionGoalCheckOffs().get(j)) {
+                    temp += 5;
+                }
+            }
+
+            total += temp;
+        }
+        Statics.globalUserData.setTotal_score(total);
+    }
+
+    public int tallyAllFitness() {
+
+        int temp = 0;
+
+        for(int i = 0; i < Statics.globalUserData.getWeeklyData().size(); i++) {
+            for(int j = 0; j < Statics.globalUserData.getWeeklyData().get(i).getPhysicalGoalCheckOffs().size(); j++) {
+                if(Statics.globalUserData.getWeeklyData().get(i).getPhysicalGoalCheckOffs().get(j)) {
+                    temp += 5;
+                }
+            }
+        }
+
+        return temp;
+    }
+
+    public int tallyAllNutrition() {
+        int temp = 0;
+
+        for(int i = 0; i < Statics.globalUserData.getWeeklyData().size(); i++) {
+            for(int j = 0; j < Statics.globalUserData.getWeeklyData().get(i).getNutritionGoalCheckOffs().size(); j++) {
+                if(Statics.globalUserData.getWeeklyData().get(i).getNutritionGoalCheckOffs().get(j)) {
+                    temp += 5;
+                }
+            }
+        }
+
+        return temp;
+    }
 }
