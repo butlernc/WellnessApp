@@ -1,11 +1,10 @@
 package com.uwec.wellnessapp.home;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +16,6 @@ import android.widget.Toast;
 import com.uwec.wellnessapp.R;
 import com.uwec.wellnessapp.start.MainNavActivity;
 import com.uwec.wellnessapp.statics.Statics;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -32,6 +29,8 @@ public class FitnessGoalFragment extends Fragment {
     TextView paDescTextView;
     TextView weekDisplayPhysical;
     TextView physicalActivity;
+
+    Button linksButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,6 +57,7 @@ public class FitnessGoalFragment extends Fragment {
         for(int i = 0; i < Statics.getUsersCurrentWeekData().getPhysicalGoalCheckOffAmount(); i++ ) {
             boolean current    = Statics.getUsersCurrentWeekData().getPhysicalGoalCheckOffs().get(i);
             String current_tag = Statics.getCurrentWeekData().getPa_strings().get(i);
+            Log.e("PA_STRING", "" + Statics.getCurrentWeekData().getWeek());
 
 
             if(current) {//already saved to be checked off
@@ -70,8 +70,24 @@ public class FitnessGoalFragment extends Fragment {
 
             checkOffButtons.get(i).setOnClickListener(new FitnessTrackerButtonListener(getActivity().getBaseContext(), i, true, checkOffButtons.get(i)));
 
-            linear_physical_buttons.addView(checkOffButtons.get(i), new ViewGroup.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            linear_physical_buttons.addView(checkOffButtons.get(i), new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         }
+
+        linksButton = (Button) rootView.findViewById(R.id.physical_activity_links_button);
+        linksButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(Statics.getCurrentWeekData().getPa_link_amount() > 0) {
+                    LinksFragment linksFragment = new LinksFragment();
+                    Bundle args = new Bundle();
+                    args.putBoolean("from_physical_activity", true);
+                    linksFragment.setArguments(args);
+                    FitnessGoalFragment.this.getActivity().getFragmentManager().beginTransaction().replace(R.id.main_nav_fragment, linksFragment).commit();
+                }else {
+                    Toast.makeText(getActivity().getBaseContext(), "No links to be displayed", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
 
         return rootView;
     }

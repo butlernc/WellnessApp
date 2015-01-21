@@ -23,7 +23,17 @@ import com.uwec.wellnessapp.utils.FileSourceConnector;
  * also includes a method that will start our register activity
  * easily.
  */
-public class RegisterHelper {
+public class RegisterHelper extends Thread{
+
+    private Activity activity;
+    private String[] input;
+    private boolean worked;
+    private boolean isDone;
+
+    public RegisterHelper(Activity activity, String...input) {
+        this.activity = activity;
+        this.input = input;
+    }
 
 
     /**
@@ -35,34 +45,43 @@ public class RegisterHelper {
         current.startActivity(intent);
     }
 
-    public void register(Activity activity, String...input) {
-        UserData userData = new UserData();
-        userData.setLast_name(input[0]);
-        userData.setFirst_name(input[1]);
-        userData.setEmail(input[2]);
-        userData.setPassword(input[3]);
-        userData.setTotal_score(0);
+    public void run() {
+        synchronized (this) {
+            isDone = false;
+            UserData userData = new UserData();
+            userData.setLast_name(input[0]);
+            userData.setFirst_name(input[1]);
+            userData.setEmail(input[2]);
+            userData.setPassword(input[3]);
+            userData.setTotal_score(0);
 
-        for(int i = 0; i < Statics.weeks.length; i++) {
-            userData.getWeeklyData().add(new WeeklyUserData(i));
+            for (int i = 0; i < Statics.weeks.length; i++) {
+                userData.getWeeklyData().add(new WeeklyUserData(i));
+            }
+
+            Statics.globalUserData = userData;
+
+            //create a FileSourceConnector, used to read and write to the server.
+            FileSourceConnector fileSourceConnector = new FileSourceConnector();
+            fileSourceConnector.queue("writeUser", userData.getEmail(), "new");
+            Log.e("REGISTER", "Return string: " + fileSourceConnector.getRETURN_STR());
+            if (fileSourceConnector.getRETURN_STR().contentEquals("GOOD")) {
+                worked = true;
+            } else if (fileSourceConnector.getRETURN_STR().contentEquals("NOGOOD")) {
+                worked = false;
+            }
+
+            isDone = true;
+            notify();
         }
+    }
 
-        Statics.globalUserData = userData;
-        //create a FileSourceConnector, used to read and write to the server.
-        FileSourceConnector fileSourceConnector = new FileSourceConnector();
-        //TODO: fix, needs to run off of the UI thread
-        fileSourceConnector.queue("writeUser", userData.getEmail(), "new");
-        /* TODO: Show progress */
-        Log.e("DONE", "Made it here");
+    public boolean worked() {
+        return worked;
+    }
 
-        if(fileSourceConnector.getRETURN_STR().contentEquals("GOOD")) {
-            Toast.makeText(activity, "Account creation successful!", Toast.LENGTH_LONG).show();
-            String[] extras = {"!load"};
-            LoginHelper.startLoginActivity(activity, extras);
-
-        }else if(fileSourceConnector.getRETURN_STR().contentEquals("NOGOOD")) {
-            //TODO: registering didn't work, write this code
-        }
+    public boolean isDone() {
+        return isDone;
     }
 
 

@@ -18,7 +18,8 @@ public class FitnessBreakDownFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         rootView = inflater.inflate(R.layout.links_and_suggested_workout_fragment, container, false);
-        getActivity().getActionBar().setTitle("Step It Up");
+        getActivity().getActionBar().setTitle("Fitness Points Breakdown");
+
 
 
         return rootView;

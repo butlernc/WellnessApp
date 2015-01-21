@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.uwec.wellnessapp.R;
+import com.uwec.wellnessapp.data.LoggingHelper;
 import com.uwec.wellnessapp.home.FitnessGoalFragment;
 import com.uwec.wellnessapp.home.NutritionGoalFragment;
 import com.uwec.wellnessapp.statics.Statics;
@@ -45,6 +46,11 @@ public class DefaultMainFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		
 		View rootView = inflater.inflate(R.layout.activity_main_fragment_default, container, false);
+
+        //calculate numbers for fragment
+        LoggingHelper loggingHelper = new LoggingHelper(getActivity().getBaseContext(), false);
+        loggingHelper.calculateTotalPoints();
+        loggingHelper.calculateWeekPoints();
 		
         // create button objects
         btnFitnessGoals = (Button) rootView.findViewById(R.id.btnFitnessGoals);

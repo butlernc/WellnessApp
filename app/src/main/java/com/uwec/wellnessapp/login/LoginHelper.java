@@ -28,6 +28,8 @@ public class LoginHelper extends Thread{
     String password;
     boolean rememberMe;
     boolean showLoading;
+    boolean worked;
+    boolean isDone;
 
     public LoginHelper(Activity activity, String email, String password, boolean rememberMe, boolean showLoading) {
         this.activity    = activity;
@@ -47,7 +49,7 @@ public class LoginHelper extends Thread{
     public void run() {
 
         synchronized (this) {
-
+            isDone = false;
             if(showLoading) {
                 /* TODO: make sure the loading activity is showing */
             }
@@ -79,17 +81,18 @@ public class LoginHelper extends Thread{
                 setLogged(true);
 
                 /* logged in successfully, switch to main activity */
-                Intent intent = new Intent(activity.getBaseContext(), MainNavActivity.class);
-                activity.startActivity(intent);
+                worked = true;
 
             } else if (fileSourceConnector.getRETURN_STR().contentEquals("NCP")) {
                 /* logged in unsuccessful, switch to login activity */
-                Intent intent = new Intent(activity.getBaseContext(), LoginActivity.class);
-                activity.startActivity(intent);
+                worked = false;
+                //Intent intent = new Intent(activity.getBaseContext(), LoginActivity.class);
+                //activity.startActivity(intent);
                 setLogged(false);
             }
 
             //finished logging in, notify the thread
+            isDone = true;
             notify();
         }
 
@@ -105,5 +108,13 @@ public class LoginHelper extends Thread{
         Intent intent = new Intent(current, LoginActivity.class);
         intent.putExtra("extras", extras);
         current.startActivity(intent);
+    }
+
+    public boolean worked() {
+        return worked;
+    }
+
+    public boolean isDone() {
+        return isDone;
     }
 }

@@ -3,12 +3,14 @@ package com.uwec.wellnessapp.register;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.uwec.wellnessapp.R;
+import com.uwec.wellnessapp.data.LoggingHelper;
 import com.uwec.wellnessapp.login.LoginActivity;
 import com.uwec.wellnessapp.login.LoginHelper;
 import com.uwec.wellnessapp.start.MainNavActivity;
@@ -43,7 +45,26 @@ public class RegisterActivity extends Activity{
                 EditText password = (EditText) findViewById(R.id.password_register);
                 params[3] = (password.getText().toString());
                 FileSourceConnector.setContext(RegisterActivity.this);
-                Statics.registerHelper.register(RegisterActivity.this, params);
+                RegisterHelper registerHelper = new RegisterHelper(RegisterActivity.this, params);
+                registerHelper.start();
+                synchronized (registerHelper) {
+                    while(!registerHelper.isDone()) {
+                        try {
+                            registerHelper.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                //TODO: complete a check if the register activity worked
+                Log.e("REGISTER", "Register worked?: " + registerHelper.worked());
+                if(registerHelper.worked()) {
+                    Toast.makeText(getBaseContext(), "Account creation was successful!", Toast.LENGTH_LONG).show();
+                    String[] extras = {"!load"};
+                    LoginHelper.startLoginActivity(RegisterActivity.this, extras);
+                }else {
+                    Toast.makeText(getBaseContext(), "There was an error creating the account, try again.", Toast.LENGTH_LONG).show();
+                }
             }
         });
 

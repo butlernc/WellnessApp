@@ -1,15 +1,18 @@
 package com.uwec.wellnessapp.login;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.uwec.wellnessapp.R;
 import com.uwec.wellnessapp.register.RegisterHelper;
+import com.uwec.wellnessapp.start.MainNavActivity;
 import com.uwec.wellnessapp.statics.Statics;
 
 /**
@@ -44,6 +47,25 @@ public class LoginActivity extends Activity {
                 Log.d("RememberMe", "Status: " + String.valueOf(rememberMe.isChecked()));
                 LoginHelper loginHelper = new LoginHelper(LoginActivity.this, email_input.getText().toString(), password_input.getText().toString(), rememberMe.isChecked(), true);
                 loginHelper.start();
+                synchronized (loginHelper) {
+                    while (!loginHelper.isDone()) {
+                        try {
+                            loginHelper.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                if(loginHelper.worked()) {
+                    Toast.makeText(LoginActivity.this.getBaseContext(), "Login was successful!", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(LoginActivity.this.getBaseContext(), MainNavActivity.class);
+                    LoginActivity.this.startActivity(intent);
+                }else {
+                    Toast.makeText(LoginActivity.this.getBaseContext(), "Wrong username/password, please try again.", Toast.LENGTH_LONG).show();
+                    email_input.setText("");
+                    password_input.setText("");
+                }
             }
 
         });

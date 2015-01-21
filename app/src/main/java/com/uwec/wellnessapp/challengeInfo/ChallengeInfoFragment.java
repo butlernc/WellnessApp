@@ -30,6 +30,7 @@ public class ChallengeInfoFragment extends Fragment {
 
     ChallengeListAdapter listAdapter;
     ExpandableListView expListView;
+    Button programInfoButton;
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
 

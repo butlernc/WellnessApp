@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="fill_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -22,7 +22,7 @@
         android:layout_marginTop="48dp" /> -->
     <TextView
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Nutrition Goal Week 1"
         android:id="@+id/week_display_nutrition"
@@ -44,7 +44,8 @@
         android:textColor="#EDAC1A"
         android:textStyle="bold"
         android:text="Drink 6-8 eight ounce cups of water per day (48-64 ounces total)"
-        android:layout_marginBottom="15dp">
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="10dp">
     </TextView>
 
 
@@ -64,96 +65,12 @@
 
 
         <LinearLayout
-            android:id="@+id/linearLayout1"
+            android:id="@+id/linear_nutrition_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp">
-
-
-
-            <Button
-                android:id="@+id/angry_btn"
-
-                android:text="Button"
-                android:textColor="#FFFFFF"
-                android:textSize="20dp"
-                android:textStyle="bold"
-
-                android:layout_width="100dp"
-                android:layout_height="50dp"
-                android:background="@drawable/buttonshape"
-                android:layout_marginRight="15dp"
-                />
-
-            <Button
-                android:id="@+id/angry_btn"
-
-                android:text="Button"
-                android:textColor="#FFFFFF"
-                android:textSize="20dp"
-                android:textStyle="bold"
-
-                android:layout_width="100dp"
-                android:layout_height="50dp"
-                android:background="@drawable/buttonshape"
-                android:layout_marginRight="15dp"
-                />
-
-            <Button
-                android:id="@+id/angry_btn"
-
-                android:text="Button"
-                android:textColor="#FFFFFF"
-                android:textSize="20dp"
-                android:textStyle="bold"
-
-                android:layout_width="100dp"
-                android:layout_height="50dp"
-                android:background="@drawable/buttonshape"
-                android:layout_marginRight="15dp"
-                />
-
-            <Button
-                android:id="@+id/angry_btn"
-
-                android:text="Button"
-                android:textColor="#FFFFFF"
-                android:textSize="20dp"
-                android:textStyle="bold"
-
-                android:layout_width="100dp"
-                android:layout_height="50dp"
-                android:background="@drawable/buttonshape"
-                android:layout_marginRight="15dp"
-                />
-
-            <Button
-                android:id="@+id/angry_btn"
-
-                android:text="Button"
-                android:textColor="#FFFFFF"
-                android:textSize="20dp"
-                android:textStyle="bold"
-
-                android:layout_width="100dp"
-                android:layout_height="50dp"
-                android:background="@drawable/buttonshape"
-                android:layout_marginRight="15dp"
-                />
-
-            <Button
-                android:id="@+id/angry_btn"
-
-                android:text="Button"
-                android:textColor="#FFFFFF"
-                android:textSize="20dp"
-                android:textStyle="bold"
-
-                android:layout_width="100dp"
-                android:layout_height="50dp"
-                android:background="@drawable/buttonshape"
-                android:layout_marginRight="15dp"
-                />
+            android:paddingBottom="10dp"
+            android:orientation="horizontal"
+            android:gravity="fill_horizontal">
 
         </LinearLayout>
     </HorizontalScrollView>
@@ -170,7 +87,7 @@
     <ScrollView
 
         android:layout_width="match_parent"
-        android:layout_height="260dp"
+        android:layout_height="wrap_content"
         android:id="@+id/scrollView">
 
         <LinearLayout
@@ -178,7 +95,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingBottom="10dp">
-
 
 
             <TextView
@@ -191,18 +107,18 @@
                 android:gravity="top"
                 android:paddingTop="5dp"/>
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Links"
+                android:textColor="#EDAC1A"
+                android:background="#22468a"
+                android:id="@+id/nutrition_goal_links_button"
+                android:layout_gravity="center_horizontal" />
+
 
         </LinearLayout>
     </ScrollView>
-
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Links"
-        android:textColor="#EDAC1A"
-        android:background="#22468a"
-        android:id="@+id/nutrition_goal_links_button"
-        android:layout_gravity="center_horizontal" />
 
 
 </LinearLayout>

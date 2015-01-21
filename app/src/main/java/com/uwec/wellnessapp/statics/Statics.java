@@ -23,8 +23,6 @@ public class Statics {
     public static ArrayList<WeekData> globalWeekDataList = new ArrayList<>();
     public static SessionData sessionData = new SessionData();
 
-    public static RegisterHelper registerHelper;
-
     public static Handler handler;
     public static Messenger messenger = new Messenger();
 
@@ -35,7 +33,7 @@ public class Statics {
      * @return
      */
     public static WeekData getCurrentWeekData() {
-        return globalWeekDataList.get(sessionData.getWeekNumber());
+        return globalWeekDataList.get(sessionData.getWeekNumber() - 1);
     }
 
     /**
@@ -43,6 +41,6 @@ public class Statics {
      * @return
      */
     public static WeeklyUserData getUsersCurrentWeekData() {
-        return globalUserData.getWeeklyData().get(sessionData.getWeekNumber());
+        return globalUserData.getWeeklyData().get(sessionData.getWeekNumber() - 1);
     }
 }

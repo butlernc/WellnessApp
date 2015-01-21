@@ -26,11 +26,21 @@ public class FitnessTrackerButtonListener implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        if(isFitness) {// we're in the physical goals fragment, hitting buttons
-            Statics.getUsersCurrentWeekData().getPhysicalGoalCheckOffs().add(index, true);
-            currentButton.setText("Completed!");
 
-            /* TODO: calculate points and save user data */
+        if(isFitness) {// we're in the physical goals fragment, hitting buttons
+            if(!Statics.getUsersCurrentWeekData().getPhysicalGoalCheckOffs().get(index)) {
+                Statics.getUsersCurrentWeekData().getPhysicalGoalCheckOffs().add(index, true);
+                currentButton.setText("Completed!");
+            }
+
+            LoggingHelper loggingHelper = new LoggingHelper(context, isFitness);
+            loggingHelper.start();
+        } else {
+            if(!Statics.getUsersCurrentWeekData().getNutritionGoalCheckOffs().get(index)) {
+                Statics.getUsersCurrentWeekData().getNutritionGoalCheckOffs().add(index, true);
+                currentButton.setText("Completed!");
+            }
+
             LoggingHelper loggingHelper = new LoggingHelper(context, isFitness);
             loggingHelper.start();
         }

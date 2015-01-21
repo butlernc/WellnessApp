@@ -98,7 +98,7 @@ public class JsonFileConverter {
         jsonObject.put(json_value_names[4], userData.getTotal_score());
         jsonObject.put(json_value_names[5], weeklyDataArrayToJson(userData.getWeeklyData()));
 
-        Log.e("JSON", "" + jsonObject.toString());
+        //Log.e("JSON", "" + jsonObject.toString());
 
         return jsonObject;
     }

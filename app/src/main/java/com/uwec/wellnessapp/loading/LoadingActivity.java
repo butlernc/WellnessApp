@@ -39,7 +39,6 @@ public class LoadingActivity extends Activity{
 
         loadingText = (TextView) findViewById(R.id.loading_text);
 
-        Statics.registerHelper = new RegisterHelper();
         Statics.globalWeekDataList = new ArrayList<>();
 
         /* used as a callback from threads that are doing work */

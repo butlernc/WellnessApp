@@ -268,8 +268,9 @@ public class SessionData {
                 }
 
                 notify();
+                isDone = true;
             }
-            isDone = true;
+
         }
     }
     public LoadStartWeekData createLoadStartWeekDataThread() {
@@ -357,8 +358,9 @@ public class SessionData {
 
                 Statics.messenger.sendMessage("Loaded all weekly data...");
                 notify();
+                isDone = true;
             }
-            isDone = true;
+
         }
     }
     public LoadWeekDataList createLoadWeekDataListThread() {
