@@ -21,17 +21,8 @@ public class UserData {
 
     private int total_score;
 
+    /* TODO: make sure this isn't being used incorrectly */
     private int weekly_score;
-
-    private int weekNum;
-
-    public int getWeekNum() {
-        return weekNum;
-    }
-
-    public void setWeekNum(int weekNum) {
-        this.weekNum = weekNum;
-    }
 
     /* this will hold all of the data for each week */
     private ArrayList<WeeklyUserData> weeklyData = new ArrayList<>();
