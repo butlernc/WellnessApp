@@ -22,7 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by butlernc on 1/14/2015.
+ * Created by Noah Butler on 1/14/2015.
+ * Displays a list that allows the user to navigate to a given week's challengeInfo.
  */
 public class ChallengeInfoFragment extends Fragment {
 
@@ -30,7 +31,6 @@ public class ChallengeInfoFragment extends Fragment {
 
     ChallengeListAdapter listAdapter;
     ExpandableListView expListView;
-    Button programInfoButton;
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
 
@@ -52,6 +52,14 @@ public class ChallengeInfoFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Used to load in the list data and populate an arraylist for the titles and then hashmaps
+     * for the sub lists.
+     *
+     * The hashmap's keys are the elements from the arraylist and the values are "Physical Activity"
+     * and "Nutrition Goal"
+     *
+     */
     private void prepareListData() {
         listDataHeader = new ArrayList<>();
         listDataChild = new HashMap<>();

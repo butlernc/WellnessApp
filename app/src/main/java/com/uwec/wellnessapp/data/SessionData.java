@@ -14,31 +14,49 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
- * Created by butlernc on 12/9/2014.
+ * Created by Noah Butler on 12/9/2014.
+ *
+ * Controls the data for the user's "session".
+ * Hold sub classes that all extend the Thread Class
+ *
+ * Basic functionality of the ParentClass (SessionData)
+ * is to control whether the user wants to auto login or not
+ * the next time they start the app.
  */
 public class SessionData {
 
     private static String SESSION_FILE_NAME = "session_file.txt";
 
+    /* helper object that will get the currentDay for us */
     private GregorianCalendar currentSessionDate;
+    /* used as the current day of the month */
     private int currentDay;
+    private int currentMonth;
+    /* TODO: figure out if we need this our not */
     private int lastSessionDay;
     private int lastSessionMonth;
 
+    /* known as the correct weekNumber and is used to select the correct data when
+    the week number is needed
+     */
     private int weekNumber;
+    /* TODO: make sure this used in the app */
     private int monthNumber;
 
     private boolean rememberMe;
+    /* TODO: probably could just pull this from the User object */
     private String Username;
     private String Password;
 
-    /** used to check if we need to create a new weekly data object for the user */
+    /* TODO: not sure if we need to check for new week, most likely not */
     private boolean newWeek;
+    /* TODO: check if this variable is being used at all */
     private boolean loadedWeekData = false;
 
     //TODO: finish session date saving/saves the date the user logged in on
@@ -188,11 +206,10 @@ public class SessionData {
     }
 
     /**
-     * Starts a Thread (FileSourceConnector) that loads the correct WeekData
-     * and then populates the WeekData object in the app
+     * Starts a thread that will load the dates that the weeks will start on.
+     * This allows the committee to change them whenever they want with the admin program.
      *
-     * Will be called when the app is in start up (loginActivity)
-     * Session data should already be loaded
+     * TODO: make sure the json for the week start data is correct
      */
     public class LoadStartWeekData extends Thread {
 
@@ -208,54 +225,56 @@ public class SessionData {
                 Log.d("WEEKDATA", "loading weekly data");
                 FileSourceConnector fileSourceConnector = new FileSourceConnector();
                 JSONObject startWeekDataJSON = null;
-                //TODO: fix
+                /* split up the the start dates by the months they are in, each month that has start
+                dates will have a respective JSONObject in this ArrayList
+                 */
+                ArrayList<JSONObject> months = new ArrayList<>();
+                /* load in the Parent JSON object that holds all of the months and the start dates
+                that are in those months.
+                 */
                 fileSourceConnector.queue("readWeekStartData");
                 String startWeekData = fileSourceConnector.getRETURN_STR();
-
                 try {
+                    /* create the json object from the loaded string */
                     startWeekDataJSON = new JSONObject(startWeekData);
 
-                    int startOfWeek = startWeekDataJSON.getInt(Statics.weeks[0]);
-                    int nextStartOfWeek = startWeekDataJSON.getInt(Statics.weeks[1]);
-
-                    if (startWeekDataJSON != null) {
-
-                        for (int i = 0; i < Statics.weeks.length; i++) {
-                            Log.d("Week", "Week start dates: Week " + i + ": " + startWeekDataJSON.getInt(Statics.weeks[i]));
-                        }
-
-                        //if(currentSessionDate.get(Calendar.MONTH) == startWeekDataJSON.getInt("MONTH_ONE")) {
-                    /* for testing purposes */
-                        if (currentSessionDate.get(Calendar.MONTH) == 0) {
-                            int index = 2;
-                            weekNumber = 1;
-                            while (!(currentDay >= startOfWeek && currentDay < nextStartOfWeek)) {
-                                startOfWeek = nextStartOfWeek;
-                                nextStartOfWeek = startWeekDataJSON.getInt(Statics.weeks[index]);
-                                index++;
-                                weekNumber++;
-                            }
-                            monthNumber = currentSessionDate.get(Calendar.MONTH);
-                        } else {
-
-                            int index = 2;
-                            weekNumber = 1;
-                            while (nextStartOfWeek > startOfWeek) {
-                                startOfWeek = nextStartOfWeek;
-                                nextStartOfWeek = startWeekDataJSON.getInt(Statics.weeks[index]);
-                                index++;
-                                weekNumber++;
-                            }
-                            while (!(currentDay >= startOfWeek && currentDay < nextStartOfWeek)) {
-                                startOfWeek = nextStartOfWeek;
-                                nextStartOfWeek = startWeekDataJSON.getInt(Statics.weeks[index]);
-                                index++;
-                                weekNumber++;
-                            }
-
-                            monthNumber = currentSessionDate.get(Calendar.MONTH);
-                        }
+                    /* populate our months array with JSONObjects that hold the start days of that month */
+                    for(int i = 0; i < startWeekDataJSON.getInt("month_amount"); i++) {
+                        months.add(startWeekDataJSON.getJSONObject("month_" + i));
                     }
+                    /* get the correct month */
+                    JSONObject currentMonthJSON;
+                    int monthIndex = 0;
+                    while(currentMonth > months.get(monthIndex).getInt("month")) {
+                        monthIndex++;
+                    }
+                    /* grap the correct json object out of our array so we can get the correct list
+                     * of start dates.
+                     */
+                    currentMonthJSON = months.get(monthIndex);
+
+                    int startOfWeek = currentMonthJSON.getInt("0");
+                    int nextStartOfWeek = startWeekDataJSON.getInt("1");
+
+                    for (int i = 0; i < Statics.weeks.length; i++) {
+                        Log.d("Week", "Length: " + Statics.weeks.length);
+                        Log.d("Week", "Week start dates: Week " + i + ": " + startWeekDataJSON.getInt(Statics.weeks[i]));
+                    }
+
+                    int index = 2;
+                    /* TODO: fix so the weekNumber is counted correctly, if we're in the second
+                    month, load add the amount of weeks that were in the first month.
+                     */
+                    weekNumber = 1;
+                    while (!(currentDay >= startOfWeek && currentDay < nextStartOfWeek)) {
+                        startOfWeek = nextStartOfWeek;
+                        nextStartOfWeek = startWeekDataJSON.getInt("" + index);
+                        index++;
+                        weekNumber++;
+                    }
+
+                    monthNumber = currentSessionDate.get(Calendar.MONTH);
+
 
                     Log.d("DATE", "weekNumber: " + weekNumber);
                     Log.d("DATE", "monthNumber: " + monthNumber);
@@ -277,6 +296,13 @@ public class SessionData {
         return new LoadStartWeekData();
     }
 
+    /**
+     * Starts a Thread that loads the correct WeekData (basically all of the challenge info.
+     * for that week) and adds it to an ArrayList<WeekData> which is located in the Statics Class.
+     *
+     * Will be called when the app is in start up (LoadingActivity)
+     * Session data should already be loaded since it relies on this.
+     */
     public class LoadWeekDataList extends Thread {
 
         public boolean isDone;

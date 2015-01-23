@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * Created by Noah Butler on 12/2/2014.
  * the global UserData object that will be used to store
- * the user's app data is stored in Statics
+ * the user's app. The object is stored in Statics
  */
 
 

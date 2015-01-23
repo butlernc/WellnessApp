@@ -16,7 +16,10 @@ import com.uwec.wellnessapp.start.MainNavActivity;
 import com.uwec.wellnessapp.statics.Statics;
 
 /**
- * Created by butlernc on 12/2/2014.
+ * Created by Noah on 12/2/2014.
+ *
+ * Starts an Activity that will give the user the option to login or start the register activity.
+ *
  */
 public class LoginActivity extends Activity {
 

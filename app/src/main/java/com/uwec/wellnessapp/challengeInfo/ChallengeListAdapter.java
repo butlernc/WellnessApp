@@ -18,7 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by butlernc on 1/14/2015.
+ * Created by Noah Butler on 1/14/2015.
+ * Used as the list adapter for the ChallengeInfoFragment
  */
 public class ChallengeListAdapter extends BaseExpandableListAdapter {
 
@@ -47,6 +48,16 @@ public class ChallengeListAdapter extends BaseExpandableListAdapter {
         return childPosition;
     }
 
+    /**
+     * Returns a single child item of the list. Adds a listener to it so that when clicked on
+     * the proper goal information is displayed on the next fragment.
+     * @param groupPosition
+     * @param childPosition
+     * @param isLastChild
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @Override
     public View getChildView(final int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
@@ -105,6 +116,14 @@ public class ChallengeListAdapter extends BaseExpandableListAdapter {
         return groupPosition;
     }
 
+    /**
+     * Displays the list of weeks in the challengeInfo fragment.
+     * @param groupPosition
+     * @param isExpanded
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {

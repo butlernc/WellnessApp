@@ -8,9 +8,14 @@ import com.uwec.wellnessapp.statics.Statics;
 import com.uwec.wellnessapp.utils.FileSourceConnector;
 
 /**
- * Created by butlernc on 1/20/2015.
+ * Created by Noah Butler on 1/20/2015.
+ * Used to calculate the users points and has all the functionality to
+ * spawn a thread that will save the userData to the server (to that you
+ * create a new object of this and start it, like a thread).
  */
 public class LoggingHelper extends Thread{
+
+    /* TODO: fix the way we calculate points so it matches the new version */
 
     private Context context;
     private boolean isPhysical;
@@ -34,7 +39,6 @@ public class LoggingHelper extends Thread{
             Statics.getUsersCurrentWeekData().setNutritionGoalPoints(current_temp + 5);
         }
 
-        /* TODO: add weeklytotal to each weeklyuserdata */
         Statics.globalUserData.setWeekly_score(Statics.getUsersCurrentWeekData().getNutritionGoalPoints() + Statics.getUsersCurrentWeekData().getPhysicalGoalPoints());
 
         calculateWeekPoints();
@@ -43,7 +47,6 @@ public class LoggingHelper extends Thread{
         FileSourceConnector fileSourceConnector = new FileSourceConnector();
         fileSourceConnector.setContext(context);
         fileSourceConnector.queue("writeUser", Statics.globalUserData.getEmail(), "old");
-        Log.e("YUP", "SAVING USER DATA BITCHES");
     }
 
     public void calculateWeekPoints() {

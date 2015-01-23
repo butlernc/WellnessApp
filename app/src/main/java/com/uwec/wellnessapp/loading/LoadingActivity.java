@@ -20,14 +20,21 @@ import java.util.ArrayList;
 
 /**
  * Created by Noah Butler on 1/14/2015.
+ *
+ * Used as the starting activity. This runs the threads that defined in the SessionData Class
+ * Basically just loads in all the data for the app, checks to see if the user wanted to auto login
+ * or not, and then either does that or takes the user to the login screen (LoginActivity).
+ *
+ * TODO: shut this activity down when it is completed.
  */
 public class LoadingActivity extends Activity{
 
-
+    /* TODO: check if this is needed */
     private boolean shouldLoad;
     /** text view from the loading fragment */
     private TextView loadingText;
 
+    /* all of the threads that will be started in this activity */
     SessionData.LoadLastSession lastSessionThread;
     SessionData.SetupSession setupSessionThread;
     SessionData.LoadWeekDataList loadWeekDataListThread;
@@ -38,7 +45,7 @@ public class LoadingActivity extends Activity{
         setContentView(R.layout.activity_loading);
 
         loadingText = (TextView) findViewById(R.id.loading_text);
-
+        /* instantiate our list of week data for the app */
         Statics.globalWeekDataList = new ArrayList<>();
 
         /* used as a callback from threads that are doing work */
@@ -66,7 +73,9 @@ public class LoadingActivity extends Activity{
             LoginHelper.startLoginActivity(this, null);
         }
     }
-
+    /**
+     * TODO: needs work, locking issues.
+     */
     private void load() {
         lastSessionThread = Statics.sessionData.createLoadLastSession(getBaseContext());
         lastSessionThread.start();

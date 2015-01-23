@@ -18,7 +18,12 @@ import com.uwec.wellnessapp.statics.Statics;
 import java.util.ArrayList;
 
 /**
- * Created by butlernc on 1/15/2015.
+ * Created by Noah Butler on 1/15/2015.
+ *
+ * Used to display the nutrition goal data for the current week and allows users to complete said
+ * goals.
+ *
+ * Basically the same thing as FitnessGoalFragment.
  */
 public class NutritionGoalFragment extends Fragment {
 

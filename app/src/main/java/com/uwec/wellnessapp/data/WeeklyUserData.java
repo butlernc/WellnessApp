@@ -5,19 +5,30 @@ import com.uwec.wellnessapp.statics.Statics;
 import java.util.ArrayList;
 
 /**
- * Created by butlernc on 1/9/2015.
+ * Created by Noah Butler on 1/9/2015.
+ * Used as a framework for the user's weekly data
+ * There is one of these object saved in the user's data
+ * on the server for each week of the program.
+ *
+ * The ArrayList that holds all of these objects is the UserData object.
  */
 public class WeeklyUserData {
 
     private int physicalGoalCheckOffAmount;
     private int nutritionGoalCheckOffAmount;
+    /* keeps track of the 5 fitness activities/goals that the user has completed for the given week */
     private ArrayList<Boolean> physicalGoalCheckOffs;
+    /* keeps track of the nutrition goals that the user has completed for the given week */
     private ArrayList<Boolean> nutritionGoalCheckOffs;
 
+    /* the amount of physical goal/activity points the user has gained for the given week */
     private int physicalGoalPoints;
+    /* the amount of nutrition goal points the user has gained for the given week */
     private int nutritionGoalPoints;
 
+    /* the user's total score of the program at the during and at the end of the given week */
     private int snapShotTotalScore;
+    /* the user's current score of that week only */
     private int snapShotWeekScore;
 
     public WeeklyUserData(int week) {
@@ -32,16 +43,17 @@ public class WeeklyUserData {
         physicalGoalCheckOffs  = new ArrayList<>();
         nutritionGoalCheckOffs = new ArrayList<>();
 
-            /* when the weekly data object is created, default all check offs to completed as false */
+        /* when the weekly data object is created, default all check offs to completed as false */
         for(int i = 0; i < physicalGoalCheckOffAmount; i++) {
             physicalGoalCheckOffs.add(false);
         }
 
+        /* same thing as above, just for nutrition goal now */
         for(int i = 0; i < nutritionGoalCheckOffAmount; i++) {
             nutritionGoalCheckOffs.add(false);
         }
     }
-
+    /* TODO: check how and if this is being used correctly */
     public WeeklyUserData() {}
 
     public int getPhysicalGoalCheckOffAmount() {
