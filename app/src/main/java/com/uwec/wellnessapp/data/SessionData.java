@@ -49,15 +49,10 @@ public class SessionData {
     /* TODO: make sure this used in the app */
     private int monthNumber;
 
-    private boolean rememberMe;
     /* TODO: probably could just pull this from the User object */
     private String Username;
     private String Password;
-
-    /* TODO: not sure if we need to check for new week, most likely not */
-    private boolean newWeek;
-    /* TODO: check if this variable is being used at all */
-    private boolean loadedWeekData = false;
+    private boolean firstTime;
 
     //TODO: finish session date saving/saves the date the user logged in on
     //TODO: System pulls WeekData off of the given date/write that method in here
@@ -110,15 +105,9 @@ public class SessionData {
                     data.put("month", currentSessionDate.get(Calendar.MONTH));
                     data.put("day", currentSessionDate.get(Calendar.DAY_OF_MONTH));
 
-                    if (rememberMe) {
-                        data.put("username", getUsername());
-                        data.put("password", getPassword());
-                        data.put("rememberMe", 1);
-                        Log.d("Save", "Login data will be saved for next login");
+                    data.put("username", getUsername());
+                    data.put("password", getPassword());
 
-                    } else {
-                        data.put("rememberMe", 0);
-                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -135,7 +124,6 @@ public class SessionData {
                     e.printStackTrace();
                 }
 
-                Statics.messenger.sendMessage("new session created...");
                 notify();
                 isDone = true;
             }
@@ -167,7 +155,7 @@ public class SessionData {
 
                 File file = new File(context.getFilesDir(), SESSION_FILE_NAME);
                 if (file.exists()) {
-
+                    firstTime = false;
                     try {
                         inputStream = context.openFileInput(SESSION_FILE_NAME);
                         BufferedReader dataReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -182,7 +170,6 @@ public class SessionData {
                         Statics.sessionData.lastSessionDay = data.getInt("day");
 
                         if (data.getInt("rememberMe") == 1) {
-                            shouldRememberMe(true);
                             setUsername(data.getString("username"));
                             setPassword(data.getString("password"));
                         }
@@ -191,10 +178,9 @@ public class SessionData {
                         e.printStackTrace();
 
                     }
+                }else{
+                    firstTime = true;
                 }
-
-                Statics.messenger.sendMessage("loaded old session data...");
-
                 notify();
                 isDone = true;
             }
@@ -214,29 +200,30 @@ public class SessionData {
     public class LoadStartWeekData extends Thread {
 
         public boolean isDone;
+        private Context context;
 
-        public LoadStartWeekData() {
+        public LoadStartWeekData(Context context) {
             isDone = false;
+            this.context = context;
         }
 
         @Override
         public void run() {
             synchronized (this) {
                 Log.d("WEEKDATA", "loading weekly data");
-                FileSourceConnector fileSourceConnector = new FileSourceConnector();
+                FileSourceConnector fileSourceConnector = new FileSourceConnector(context);
                 JSONObject startWeekDataJSON = null;
                 /* split up the the start dates by the months they are in, each month that has start
                 dates will have a respective JSONObject in this ArrayList
                  */
                 ArrayList<JSONObject> months = new ArrayList<>();
                 /* load in the Parent JSON object that holds all of the months and the start dates
-                that are in those months.
+                that are in those months. File name on FTP server: /wellnessappftp.eu.pn/weekData/new_week_info.txt
                  */
-                fileSourceConnector.queue("readWeekStartData");
-                String startWeekData = fileSourceConnector.getRETURN_STR();
+
                 try {
                     /* create the json object from the loaded string */
-                    startWeekDataJSON = new JSONObject(startWeekData);
+                    startWeekDataJSON = (JSONObject)fileSourceConnector.queue("readWeekStartData");
 
                     /* populate our months array with JSONObjects that hold the start days of that month */
                     for(int i = 0; i < startWeekDataJSON.getInt("month_amount"); i++) {
@@ -245,40 +232,31 @@ public class SessionData {
                     /* get the correct month */
                     JSONObject currentMonthJSON;
                     int monthIndex = 0;
+                    /* TODO: fix this */
                     while(currentMonth > months.get(monthIndex).getInt("month")) {
                         monthIndex++;
                     }
-                    /* grap the correct json object out of our array so we can get the correct list
+                    /* grab the correct json object out of our array so we can get the correct list
                      * of start dates.
                      */
                     currentMonthJSON = months.get(monthIndex);
+                    int weekIndex = 1;
+                    int startOfWeek = currentMonthJSON.getJSONObject(String.valueOf(weekIndex)).getInt("week_date");
+                    int nextStartOfWeek = currentMonthJSON.getJSONObject(String.valueOf(weekIndex)).getInt("week_date");
 
-                    int startOfWeek = currentMonthJSON.getInt("0");
-                    int nextStartOfWeek = startWeekDataJSON.getInt("1");
-
-                    for (int i = 0; i < Statics.weeks.length; i++) {
-                        Log.d("Week", "Length: " + Statics.weeks.length);
-                        Log.d("Week", "Week start dates: Week " + i + ": " + startWeekDataJSON.getInt(Statics.weeks[i]));
-                    }
-
-                    int index = 2;
-                    /* TODO: fix so the weekNumber is counted correctly, if we're in the second
-                    month, load add the amount of weeks that were in the first month.
-                     */
-                    weekNumber = 1;
-                    while (!(currentDay >= startOfWeek && currentDay < nextStartOfWeek)) {
+                    while (!(currentDay >= startOfWeek && currentDay < nextStartOfWeek) && weekIndex <= currentMonthJSON.getInt("week_amount")) {
                         startOfWeek = nextStartOfWeek;
-                        nextStartOfWeek = startWeekDataJSON.getInt("" + index);
-                        index++;
-                        weekNumber++;
+                        nextStartOfWeek = currentMonthJSON.getJSONObject(String.valueOf(weekIndex)).getInt("week_date");
+                        weekIndex++;
+
                     }
 
+                    weekNumber = currentMonthJSON.getJSONObject(String.valueOf(weekIndex - 1)).getInt("week_num");
                     monthNumber = currentSessionDate.get(Calendar.MONTH);
 
 
                     Log.d("DATE", "weekNumber: " + weekNumber);
                     Log.d("DATE", "monthNumber: " + monthNumber);
-                    loadedWeekData = true;
 
                     Statics.messenger.sendMessage("loaded weekly data...");
 
@@ -292,8 +270,8 @@ public class SessionData {
 
         }
     }
-    public LoadStartWeekData createLoadStartWeekDataThread() {
-        return new LoadStartWeekData();
+    public LoadStartWeekData createLoadStartWeekDataThread(Context context) {
+        return new LoadStartWeekData(context);
     }
 
     /**
@@ -306,99 +284,137 @@ public class SessionData {
     public class LoadWeekDataList extends Thread {
 
         public boolean isDone;
+        private Context context;
+        private double progressIncrease;
+        private ArrayList<Boolean> finished;
+        private boolean allFinished;
 
-        public LoadWeekDataList() {
+        public LoadWeekDataList(Context context) {
             isDone = false;
+            this.context = context;
+            progressIncrease = ((1/6.0) * 100);
+            allFinished = false;
+            finished = new ArrayList<>();
         }
 
         @Override
         public void run() {
-            synchronized (this) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
-                        loadWeekDataConnector.queue("readWeekData", "" + 1);
-                    }
-                }).start();
-                try {
-                    wait(300);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
-                        loadWeekDataConnector.queue("readWeekData", "" + 2);
-                    }
-                }).start();
-                try {
-                    wait(300);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
-                        loadWeekDataConnector.queue("readWeekData", "" + 3);
-                    }
-                }).start();
-                try {
-                    wait(300);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
-                        loadWeekDataConnector.queue("readWeekData", "" + 4);
-                    }
-                }).start();
-                try {
-                    wait(300);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
-                        loadWeekDataConnector.queue("readWeekData", "" + 5);
-                    }
-                }).start();
-                try {
-                    wait(300);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        FileSourceConnector loadWeekDataConnector = new FileSourceConnector();
-                        loadWeekDataConnector.queue("readWeekData", "" + 6);
-                    }
-                }).start();
 
-                Statics.messenger.sendMessage("Loaded all weekly data...");
-                notify();
-                isDone = true;
+            Statics.messenger.sendMessage("Loaded all weekly data...");
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    FileSourceConnector loadWeekDataConnector = new FileSourceConnector(context);
+                    finished.add((Boolean)loadWeekDataConnector.queue("readWeekData", "" + 1));
+                    Statics.messenger.sendProgress(progressIncrease);
+                }
+            }).start();
+
+            try{
+                Thread.sleep(1000);
+            }catch(InterruptedException e) {
+                e.printStackTrace();
             }
 
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    FileSourceConnector loadWeekDataConnector = new FileSourceConnector(context);
+                    finished.add((Boolean)loadWeekDataConnector.queue("readWeekData", "" + 2));
+                    Statics.messenger.sendProgress(progressIncrease);
+                }
+            }).start();
+
+            try{
+                Thread.sleep(1000);
+            }catch(InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    FileSourceConnector loadWeekDataConnector = new FileSourceConnector(context);
+                    finished.add((Boolean)loadWeekDataConnector.queue("readWeekData", "" + 3));
+                    Statics.messenger.sendProgress(progressIncrease);
+                }
+            }).start();
+
+            try{
+                Thread.sleep(1000);
+            }catch(InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    FileSourceConnector loadWeekDataConnector = new FileSourceConnector(context);
+                    finished.add((Boolean)loadWeekDataConnector.queue("readWeekData", "" + 4));
+                    Statics.messenger.sendProgress(progressIncrease);
+                }
+            }).start();
+
+            try{
+                Thread.sleep(1000);
+            }catch(InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    FileSourceConnector loadWeekDataConnector = new FileSourceConnector(context);
+                    finished.add((Boolean)loadWeekDataConnector.queue("readWeekData", "" + 5));
+                    Statics.messenger.sendProgress(progressIncrease);
+                }
+            }).start();
+
+            try{
+                Thread.sleep(1000);
+            }catch(InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    FileSourceConnector loadWeekDataConnector = new FileSourceConnector(context);
+                    finished.add((Boolean)loadWeekDataConnector.queue("readWeekData", "" + 6));
+                    Statics.messenger.sendProgress(progressIncrease);
+                }
+            }).start();
+
+            try{
+                Thread.sleep(1000);
+            }catch(InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            while(!allFinished) {
+                checkIfFinished(finished);
+            }
+            Statics.appLoaded = true;
+            LoadStartWeekData loadStartWeekDataThread = Statics.sessionData.createLoadStartWeekDataThread(context);
+            loadStartWeekDataThread.start();
+        }
+
+        private void checkIfFinished(ArrayList<Boolean> finished) {
+            int tally = 0;
+            for(int i = 0; i < finished.size(); i++) {
+                if(finished.get(i)) {
+                    tally++;
+                }
+            }
+
+            if(tally == finished.size()) {
+                allFinished = true;
+            }
         }
     }
-    public LoadWeekDataList createLoadWeekDataListThread() {
-        return new LoadWeekDataList();
-    }
-
-    public boolean rememberedMe() {
-        return rememberMe;
-    }
-
-    public void shouldRememberMe(boolean rememberMe) {
-        this.rememberMe = rememberMe;
+    public LoadWeekDataList createLoadWeekDataListThread(Context context) {
+        return new LoadWeekDataList(context);
     }
 
     public String getUsername() {
@@ -425,7 +441,7 @@ public class SessionData {
         return monthNumber;
     }
 
-    public boolean loadedWeekData() {
-        return loadedWeekData;
+    public boolean isFirstTime() {
+        return firstTime;
     }
 }

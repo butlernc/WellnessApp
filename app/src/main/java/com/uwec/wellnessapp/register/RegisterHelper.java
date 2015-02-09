@@ -62,7 +62,7 @@ public class RegisterHelper extends Thread{
             Statics.globalUserData = userData;
 
             //create a FileSourceConnector, used to read and write to the server.
-            FileSourceConnector fileSourceConnector = new FileSourceConnector();
+            FileSourceConnector fileSourceConnector = new FileSourceConnector(activity.getBaseContext());
             fileSourceConnector.queue("writeUser", userData.getEmail(), "new");
             Log.e("REGISTER", "Return string: " + fileSourceConnector.getRETURN_STR());
             if (fileSourceConnector.getRETURN_STR().contentEquals("GOOD")) {

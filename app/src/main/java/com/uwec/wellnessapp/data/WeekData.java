@@ -33,8 +33,14 @@ public class WeekData {
       * this will set the nutritionalGoalCheckOffAmount in the WeeklyData object in UserData */
     private int ng_days_per_week;
     private ArrayList<String> ng_strings;
-    /* TODO: take is this out */
-    private String supporting_evidence;
+
+    /** Link that directs users to a youtube for the current suggested workout of the current week */
+    private String suggestedWorkoutLink;
+    /** one word desc. of the suggested workout for the current week. */
+    private String suggestedWorkoutType;
+    /** Short string that holds the dates for the current week, format:"month start_date - end_date" */
+    private String weekDates;
+
 
     public String getWeek() {
         return week;
@@ -90,14 +96,6 @@ public class WeekData {
         this.nutrition_goal_description = nutrition_goal_description;
     }
 
-    public String getSupporting_evidence() {
-        return supporting_evidence;
-    }
-
-    public void setSupporting_evidence(String supporting_evidence) {
-        this.supporting_evidence = supporting_evidence;
-    }
-
     public ArrayList<String> getPa_strings() {
         return pa_strings;
     }
@@ -144,5 +142,29 @@ public class WeekData {
 
     public void setNg_link_amount(int ng_link_amount) {
         this.ng_link_amount = ng_link_amount;
+    }
+
+    public String getSuggestedWorkoutLink() {
+        return suggestedWorkoutLink;
+    }
+
+    public void setSuggestedWorkoutLink(String suggestedWorkoutLink) {
+        this.suggestedWorkoutLink = suggestedWorkoutLink;
+    }
+
+    public String getWeekDates() {
+        return weekDates;
+    }
+
+    public void setWeekDates(String weekDates) {
+        this.weekDates = weekDates;
+    }
+
+    public String getSuggestedWorkoutType() {
+        return suggestedWorkoutType;
+    }
+
+    public void setSuggestedWorkoutType(String suggestedWorkoutType) {
+        this.suggestedWorkoutType = suggestedWorkoutType;
     }
 }

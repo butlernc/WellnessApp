@@ -56,7 +56,7 @@ public class LoginHelper extends Thread{
 
             Log.d("LOGIN", "Start server setup");
             //create a FileSourceConnector, used to read and write to the server.
-            FileSourceConnector fileSourceConnector = new FileSourceConnector();
+            FileSourceConnector fileSourceConnector = new FileSourceConnector(activity.getBaseContext());
             fileSourceConnector.queue("readUser", email, password);
 
             Log.e("LOGIN", "Return: " + fileSourceConnector.getRETURN_STR());
@@ -104,9 +104,9 @@ public class LoginHelper extends Thread{
      * if there is any strings in extras
      * @param current activity
      */
-    public static void startLoginActivity(Activity current, String[] extras) {
+    public static void startLoginActivity(Activity current) {
         Intent intent = new Intent(current, LoginActivity.class);
-        intent.putExtra("extras", extras);
+        intent.putExtra("shouldNotHide", true);
         current.startActivity(intent);
     }
 

@@ -86,11 +86,7 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
             MenuItem sign_IO_button = menu.getItem(0);
             //set the option menu text for the sign in/out button
             String welcome = "Welcome, " + Statics.globalUserData.getFirst_name();
-            if(LoginHelper.isLogged()) {
-                sign_IO_button.setTitle(welcome);
-            }else{
-                sign_IO_button.setTitle(R.string.sign_in);
-            }
+            sign_IO_button.setTitle(welcome);
             restoreActionBar();
             return true;
         }
@@ -105,8 +101,7 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
         int id = item.getItemId();
         if (id == R.id.sign_IO) {
             //user clicked to sign out
-            String[] extras = {"!load"};
-            LoginHelper.startLoginActivity(this, extras);
+            LoginHelper.startLoginActivity(this);
             return true;
         }
         return super.onOptionsItemSelected(item);

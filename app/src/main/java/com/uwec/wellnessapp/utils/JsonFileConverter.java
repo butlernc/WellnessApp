@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class JsonFileConverter {
 
     private static String json_value_names[] = {"email", "first_name", "last_name", "password", "total_score", "weekly_data"};
-    private static String week_data_json_value_names[] = {"week", "physical_activity", "physical_activity_description", "pa_link_amount", "pa_links", "pa_days_per_week", "pa_strings", "nutrition_goal", "nutrition_goal_description", "ng_link_amount", "ng_links", "ng_days_per_week", "ng_strings", "supporting_evidence"};
+    private static String week_data_json_value_names[] = {"week", "physical_activity", "physical_activity_description", "pa_link_amount", "pa_links", "pa_days_per_week", "pa_strings", "nutrition_goal", "nutrition_goal_description", "ng_link_amount", "ng_links", "ng_days_per_week", "ng_strings", "suggested_workout_link", "suggested_workout_type", "week_dates"};
     private static String weeklyData_json_value_names[] = {"pa_points", "ng_points", "pa_amount", "ng_amount", "pa_checkOff", "pa_checkOffArray", "ng_checkOff", "ng_checkOffArray", "total_points", "weekly_points"};
 
     public UserData convertJSONToUser(JSONObject jsonObject) throws JSONException {
@@ -84,8 +84,9 @@ public class JsonFileConverter {
         }
         weekData.setNg_strings(ng_button_strings);
 
-        weekData.setSupporting_evidence(jsonObject.getString(week_data_json_value_names[13]));
-
+        weekData.setSuggestedWorkoutLink(jsonObject.getString(week_data_json_value_names[13]));
+        weekData.setSuggestedWorkoutType(jsonObject.getString(week_data_json_value_names[14]));
+        weekData.setWeekDates(week_data_json_value_names[15]);
         return weekData;
     }
 

@@ -10,7 +10,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.wellnessapp.login.LoginActivity"
-    android:background="#22468a" >
+    android:background="#22468a"
+    android:weightSum="1">
 
     <EditText
         android:id="@+id/login_input_email"
@@ -62,14 +63,25 @@
         android:textColor="#22468a"
         android:textSize="25dp"/>
 
-    <CheckBox
-        android:layout_marginTop="30dp"
-        android:button="@drawable/checkbox_selector"
+    <Space
+        android:layout_width="353dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.27" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="203dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/data_loading_progress_bar"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/remember_me"
-        android:id="@+id/remember_me_check_box"
-        android:layout_gravity="center_horizontal"
-        android:textSize="25dp"
-        android:textColor="#FFF" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Loading data..."
+        android:id="@+id/login_loading_text"
+        android:layout_gravity="center_horizontal" />
+
 </LinearLayout>

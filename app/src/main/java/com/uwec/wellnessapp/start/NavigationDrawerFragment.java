@@ -22,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.uwec.wellnessapp.R;
+import com.uwec.wellnessapp.statics.Statics;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation
@@ -240,6 +241,11 @@ public class NavigationDrawerFragment extends Fragment {
         // action bar.
         if (mDrawerLayout != null && isDrawerOpen()) {
             inflater.inflate(R.menu.main_nav, menu);
+            MenuItem sign_IO_button = menu.getItem(0);
+            //set the option menu text for the sign in/out button
+            String welcome = "Welcome, " + Statics.globalUserData.getFirst_name();
+            sign_IO_button.setTitle(welcome);
+
             showGlobalContextActionBar();
         }
         super.onCreateOptionsMenu(menu, inflater);

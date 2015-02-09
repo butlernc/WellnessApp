@@ -15,8 +15,6 @@ import com.uwec.wellnessapp.utils.FileSourceConnector;
  */
 public class LoggingHelper extends Thread{
 
-    /* TODO: fix the way we calculate points so it matches the new version */
-
     private Context context;
     private boolean isPhysical;
 
@@ -44,26 +42,27 @@ public class LoggingHelper extends Thread{
         calculateWeekPoints();
         calculateTotalPoints();
 
-        FileSourceConnector fileSourceConnector = new FileSourceConnector();
-        fileSourceConnector.setContext(context);
+        FileSourceConnector fileSourceConnector = new FileSourceConnector(context);
         fileSourceConnector.queue("writeUser", Statics.globalUserData.getEmail(), "old");
     }
 
     public void calculateWeekPoints() {
 
+        /* calculate weekly points for physical activities */
         int temp = 0;
         for(int i = 0; i < Statics.getUsersCurrentWeekData().getPhysicalGoalCheckOffs().size(); i++) {
             if(Statics.getUsersCurrentWeekData().getPhysicalGoalCheckOffs().get(i)) {
-                temp += 5;
+                temp += 2;
             }
         }
-
+        /* add on the nutrition points to the total weekly point tally */
         for(int i = 0; i < Statics.getUsersCurrentWeekData().getNutritionGoalCheckOffs().size(); i++) {
             if(Statics.getUsersCurrentWeekData().getNutritionGoalCheckOffs().get(i)) {
-                temp += 5;
+                temp += 1;
             }
         }
 
+        /* record what we calculated to the user's current week's weekly score */
         Statics.globalUserData.setWeekly_score(temp);
 
     }
@@ -72,16 +71,20 @@ public class LoggingHelper extends Thread{
         Statics.globalUserData.setTotal_score(0);
         int total = 0;
 
+        /* loop for each week */
         for(int i = 0; i < Statics.globalUserData.getWeeklyData().size(); i++) {
             int temp = 0;
+            /* loop through each week's physical activity points */
             for(int j = 0; j < Statics.globalUserData.getWeeklyData().get(i).getPhysicalGoalCheckOffs().size(); j++) {
                 if(Statics.globalUserData.getWeeklyData().get(i).getPhysicalGoalCheckOffs().get(j)) {
-                    temp += 5;
+                    temp += 2;
                 }
             }
+
+            /* loop through each week's nutrition points */
             for(int j = 0; j < Statics.globalUserData.getWeeklyData().get(i).getNutritionGoalCheckOffs().size(); j++) {
                 if(Statics.globalUserData.getWeeklyData().get(i).getNutritionGoalCheckOffs().get(j)) {
-                    temp += 5;
+                    temp += 1;
                 }
             }
 
@@ -94,10 +97,13 @@ public class LoggingHelper extends Thread{
 
         int temp = 0;
 
+        /* loop for each week */
         for(int i = 0; i < Statics.globalUserData.getWeeklyData().size(); i++) {
+
+            /* loop through each week's physical activity points */
             for(int j = 0; j < Statics.globalUserData.getWeeklyData().get(i).getPhysicalGoalCheckOffs().size(); j++) {
                 if(Statics.globalUserData.getWeeklyData().get(i).getPhysicalGoalCheckOffs().get(j)) {
-                    temp += 5;
+                    temp += 2;
                 }
             }
         }
@@ -108,10 +114,13 @@ public class LoggingHelper extends Thread{
     public int tallyAllNutrition() {
         int temp = 0;
 
+        /* loop through each week */
         for(int i = 0; i < Statics.globalUserData.getWeeklyData().size(); i++) {
+
+            /* loop through each week's nutrition points */
             for(int j = 0; j < Statics.globalUserData.getWeeklyData().get(i).getNutritionGoalCheckOffs().size(); j++) {
                 if(Statics.globalUserData.getWeeklyData().get(i).getNutritionGoalCheckOffs().get(j)) {
-                    temp += 5;
+                    temp += 1;
                 }
             }
         }

@@ -10,10 +10,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.uwec.wellnessapp.R;
 import com.uwec.wellnessapp.statics.Statics;
-
 import java.util.ArrayList;
 
 /**
@@ -29,6 +30,7 @@ public class LinksFragment extends Fragment {
      * where n is the number of links
      */
     ArrayList<String> link_names;
+    TextView suggestedWorkOutText;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +40,8 @@ public class LinksFragment extends Fragment {
         Bundle args = getArguments();
 
         ListView listView = (ListView) rootView.findViewById(R.id.link_list);
+        suggestedWorkOutText = (TextView) rootView.findViewById(R.id.suggested_workout_link);
+        suggestedWorkOutText.setText("Suggested Workout: " + Statics.getCurrentWeekData().getSuggestedWorkoutType());
 
         link_names = new ArrayList<>();
 
@@ -65,7 +69,16 @@ public class LinksFragment extends Fragment {
                 }
             });
 
-            /* TODO: add the video/suggested workout of the week */
+
+            suggestedWorkOutText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                    intent.setData(Uri.parse(Statics.getCurrentWeekData().getSuggestedWorkoutLink()));
+                }
+            });
 
         }else{// same thing as the if block, but this is for nutrition and has no suggested workout
             for(int i = 0; i < Statics.getCurrentWeekData().getNg_link_amount(); i++) {

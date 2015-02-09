@@ -53,7 +53,7 @@ public class WeeklyUserData {
             nutritionGoalCheckOffs.add(false);
         }
     }
-    /* TODO: check how and if this is being used correctly */
+
     public WeeklyUserData() {}
 
     public int getPhysicalGoalCheckOffAmount() {

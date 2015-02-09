@@ -11,11 +11,22 @@ import com.uwec.wellnessapp.statics.Statics;
 public class Messenger {
 
     Message message;
+    Bundle bundle;
+    private void init() {
+        message = new Message();
+        bundle = new Bundle();
+    }
 
     public void sendMessage(String string) {
-        message = new Message();
-        Bundle bundle = new Bundle();
+        init();
         bundle.putString("message", string);
+        message.setData(bundle);
+        Statics.handler.sendMessage(message);
+    }
+
+    public void sendProgress(double progress) {
+        init();
+        bundle.putDouble("progress", progress);
         message.setData(bundle);
         Statics.handler.sendMessage(message);
     }

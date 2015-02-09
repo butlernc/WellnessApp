@@ -1,6 +1,7 @@
 package com.uwec.wellnessapp.statics;
 
 import android.os.Handler;
+import android.util.Log;
 
 import com.uwec.wellnessapp.data.SessionData;
 import com.uwec.wellnessapp.data.WeekData;
@@ -11,6 +12,8 @@ import com.uwec.wellnessapp.register.RegisterHelper;
 import com.uwec.wellnessapp.utils.Messenger;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 /**
  * Created by Noah Butler on 12/23/2014.
@@ -19,9 +22,12 @@ import java.util.ArrayList;
  */
 public class Statics {
 
+    /* instantiated in Loading Activity */
     public static UserData globalUserData;
-    public static ArrayList<WeekData> globalWeekDataList = new ArrayList<>();
-    public static SessionData sessionData = new SessionData();
+    public static ArrayList<WeekData> globalWeekDataList;
+    public static SessionData sessionData;
+
+    public static boolean appLoaded;
 
     public static Handler handler;
     public static Messenger messenger = new Messenger();

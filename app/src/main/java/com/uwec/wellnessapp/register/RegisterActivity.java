@@ -44,7 +44,6 @@ public class RegisterActivity extends Activity{
                 params[2] = (email.getText().toString());
                 EditText password = (EditText) findViewById(R.id.password_register);
                 params[3] = (password.getText().toString());
-                FileSourceConnector.setContext(RegisterActivity.this);
                 RegisterHelper registerHelper = new RegisterHelper(RegisterActivity.this, params);
                 registerHelper.start();
                 synchronized (registerHelper) {
@@ -60,8 +59,7 @@ public class RegisterActivity extends Activity{
                 Log.e("REGISTER", "Register worked?: " + registerHelper.worked());
                 if(registerHelper.worked()) {
                     Toast.makeText(getBaseContext(), "Account creation was successful!", Toast.LENGTH_LONG).show();
-                    String[] extras = {"!load"};
-                    LoginHelper.startLoginActivity(RegisterActivity.this, extras);
+                    LoginHelper.startLoginActivity(RegisterActivity.this);
                 }else {
                     Toast.makeText(getBaseContext(), "There was an error creating the account, try again.", Toast.LENGTH_LONG).show();
                 }
