@@ -1,6 +1,7 @@
 package com.uwec.wellnessapp.login;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Looper;
 import android.util.Log;
@@ -23,20 +24,21 @@ public class LoginHelper extends Thread{
 
     SessionData.SaveLoginSession saveLoginSessionThread;
 
-    Activity activity;
+    Context context;
+    LoginActivity activity;
     String email;
     String password;
     boolean rememberMe;
-    boolean showLoading;
     boolean worked;
     boolean isDone;
+    boolean wasInvalid;
 
-    public LoginHelper(Activity activity, String email, String password, boolean rememberMe, boolean showLoading) {
-        this.activity    = activity;
-        this.email       = email;
-        this.password    = password;
-        this.rememberMe  = rememberMe;
-        this.showLoading = showLoading;
+    public LoginHelper(Context context, Activity activity, String email, String password, boolean rememberMe) {
+        this.context    = context;
+        this.activity   = (LoginActivity)activity;
+        this.email      = email;
+        this.password   = password;
+        this.rememberMe = rememberMe;
     }
 
     public static boolean isLogged() {return isLogged;}
@@ -50,9 +52,6 @@ public class LoginHelper extends Thread{
 
         synchronized (this) {
             isDone = false;
-            if(showLoading) {
-                /* TODO: make sure the loading activity is showing */
-            }
 
             Log.d("LOGIN", "Start server setup");
             //create a FileSourceConnector, used to read and write to the server.
@@ -62,10 +61,6 @@ public class LoginHelper extends Thread{
             Log.e("LOGIN", "Return: " + fileSourceConnector.getRETURN_STR());
             if (fileSourceConnector.getRETURN_STR().contentEquals("GOOD")) {
                 Log.d("login", "logging you in");
-                if (rememberMe) {
-                    Statics.sessionData.setUsername(email);
-                    Statics.sessionData.setPassword(password);
-                }
 
                 saveLoginSessionThread = Statics.sessionData.createSaveLoginSessionThread(activity.getBaseContext(), rememberMe);
                 saveLoginSessionThread.start();
@@ -78,22 +73,30 @@ public class LoginHelper extends Thread{
                         }
                     }
                 }
-                setLogged(true);
-
                 /* logged in successfully, switch to main activity */
                 worked = true;
-
+                setLogged(true);
             } else if (fileSourceConnector.getRETURN_STR().contentEquals("NCP")) {
-                /* logged in unsuccessful, switch to login activity */
                 worked = false;
-                //Intent intent = new Intent(activity.getBaseContext(), LoginActivity.class);
-                //activity.startActivity(intent);
+                wasInvalid = false;
+                setLogged(false);
+            } else if (fileSourceConnector.getRETURN_STR().contentEquals("INVALID")) {
+                worked = false;
+                wasInvalid = true;
                 setLogged(false);
             }
 
-            //finished logging in, notify the thread
+            if (worked) {
+                Statics.messenger.sendToastMessage("Login was successful!");
+                Intent intent = new Intent(context, MainNavActivity.class);
+                activity.startActivity(intent);
+            } else {
+                if(wasInvalid) {
+                    Statics.messenger.sendToastMessage("That email has not been registered!");
+                }
+                Statics.messenger.sendToastMessage("Wrong username/password, please try again.");
+            }
             isDone = true;
-            notify();
         }
 
 
@@ -106,13 +109,15 @@ public class LoginHelper extends Thread{
      */
     public static void startLoginActivity(Activity current) {
         Intent intent = new Intent(current, LoginActivity.class);
-        intent.putExtra("shouldNotHide", true);
+        intent.putExtra("!load", true);
         current.startActivity(intent);
     }
 
     public boolean worked() {
         return worked;
     }
+
+    public boolean wasInvalid() { return wasInvalid; }
 
     public boolean isDone() {
         return isDone;

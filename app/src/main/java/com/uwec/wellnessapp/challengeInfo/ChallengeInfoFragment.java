@@ -66,7 +66,7 @@ public class ChallengeInfoFragment extends Fragment {
 
         // Adding child data
         for(int i = 1; i <= 6; i++) {
-            listDataHeader.add("Week " + i + " ... " + Statics.getCurrentWeekData().getWeekDates());
+            listDataHeader.add("Week " + i + " ... " + Statics.globalWeekDataList.get(i - 1).getWeekDates());
         }
 
         // Adding child data

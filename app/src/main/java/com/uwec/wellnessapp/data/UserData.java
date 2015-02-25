@@ -3,6 +3,7 @@ package com.uwec.wellnessapp.data;
 import com.uwec.wellnessapp.statics.Statics;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Noah Butler on 12/2/2014.
@@ -20,6 +21,8 @@ public class UserData {
     private String password;
 
     private int total_score;
+
+    private HashMap<Integer, Boolean> oneTimeBonusPoints = new HashMap<>();
 
     /* TODO: make sure this isn't being used incorrectly */
     private int weekly_score;
@@ -79,4 +82,11 @@ public class UserData {
         this.weeklyData = weeklyData;
     }
 
+    public HashMap<Integer, Boolean> getOneTimeBonusPoints() {
+        return oneTimeBonusPoints;
+    }
+
+    public void setOneTimeBonusPoints(HashMap<Integer, Boolean> oneTimeBonusPoints) {
+        this.oneTimeBonusPoints = oneTimeBonusPoints;
+    }
 }

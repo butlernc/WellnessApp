@@ -3,18 +3,24 @@ package com.uwec.wellnessapp.start;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.uwec.wellnessapp.R;
 import com.uwec.wellnessapp.data.LoggingHelper;
+import com.uwec.wellnessapp.home.BonusActivityFragment;
 import com.uwec.wellnessapp.home.FitnessGoalFragment;
 import com.uwec.wellnessapp.home.NutritionGoalFragment;
 import com.uwec.wellnessapp.statics.Statics;
+import com.uwec.wellnessapp.utils.FileSourceConnector;
 
 /**
  * The Main Activity.
@@ -48,10 +54,9 @@ public class DefaultMainFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.activity_main_fragment_default, container, false);
 
         //calculate numbers for fragment
-        LoggingHelper loggingHelper = new LoggingHelper(getActivity().getBaseContext(), false);
+        LoggingHelper loggingHelper = new LoggingHelper(getActivity().getBaseContext(), getActivity(), 0);
         loggingHelper.calculateTotalPoints();
         loggingHelper.calculateWeekPoints();
-		
         // create button objects
         btnFitnessGoals = (Button) rootView.findViewById(R.id.btnFitnessGoals);
         btnNutritionGoals = (Button) rootView.findViewById(R.id.btnNutritionGoals);
@@ -61,7 +66,6 @@ public class DefaultMainFragment extends Fragment {
         total_point_display.setText("" + Statics.globalUserData.getTotal_score());
         weekly_point_display = (TextView) rootView.findViewById(R.id.weekly_points_textview);
         weekly_point_display.setText("" + Statics.globalUserData.getWeekly_score());
-
 				
         //Set the list's click listener
         /** Click Listener for Fitness Goals Button */
@@ -93,7 +97,7 @@ public class DefaultMainFragment extends Fragment {
 
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getActivity(), "Clicked All Bonus Events", Toast.LENGTH_SHORT).show();
+                    getActivity().getFragmentManager().beginTransaction().replace(R.id.main_nav_fragment, createFragmentFromButtonClick(2)).commit();
                 }
             });
         }
@@ -121,6 +125,7 @@ public class DefaultMainFragment extends Fragment {
                 fragment = new NutritionGoalFragment();
                 break;
             case 2:
+                fragment = new BonusActivityFragment();
                 break;
             default:
                 break;

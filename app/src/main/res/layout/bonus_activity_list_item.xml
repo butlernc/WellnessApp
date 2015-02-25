@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bonus_activity_list_item"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="20dp"
+    android:background="#22468a"
+    android:gravity="center_vertical|center_horizontal">
+
+    <LinearLayout
+        android:layout_width="164dp"
+        android:layout_height="200dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="@drawable/points_adder_background"
+        android:gravity="top|center_horizontal"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_gravity="left|top">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.2"
+            android:layout_gravity="left|top">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Daily Grateful Check"
+                android:textColor="#ffffff"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:gravity="top|center_horizontal"
+                android:id="@+id/bonus_activity_title_even"
+                android:layout_gravity="left"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="0dp"
+                android:layout_marginLeft="15dp" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:text="More Info"
+                android:id="@+id/more_info_button_even"
+                android:layout_gravity="center_horizontal"
+                android:textSize="10dp"
+                android:textStyle="italic"
+                android:textColor="#EDAC1A"
+                android:background="#2b3e85" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="2"
+            android:layout_gravity="top">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="12"
+                android:id="@+id/bonus_point_current_amount_even"
+                android:textAlignment="gravity"
+                android:textColor="#EDAC1A"
+                android:textStyle="bold"
+                android:textSize="13dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_weight="1"
+                android:layout_gravity="bottom" />
+
+            <ImageButton
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/overlay_button_add_point_even"
+                android:layout_weight="1.5"
+                android:background="@drawable/overlay" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="164dp"
+        android:layout_height="200dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="@drawable/points_adder_background"
+        android:gravity="top|center_horizontal"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_gravity="left|top">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.2"
+            android:layout_gravity="top">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Daily Grateful Check"
+                android:textColor="#ffffff"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:gravity="top|center_horizontal"
+                android:id="@+id/bonus_activity_title_odd"
+                android:layout_gravity="left"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="0dp"
+                android:layout_marginLeft="15dp" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:text="More Info"
+                android:id="@+id/more_info_button_odd"
+                android:layout_gravity="center_horizontal"
+                android:textSize="10dp"
+                android:textStyle="italic"
+                android:textColor="#EDAC1A"
+                android:background="#2b3e85" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="2"
+            android:layout_gravity="top">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="12"
+                android:id="@+id/bonus_point_current_amount_odd"
+                android:textAlignment="gravity"
+                android:textColor="#EDAC1A"
+                android:textStyle="bold"
+                android:textSize="13dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_weight="1"
+                android:layout_gravity="bottom" />
+
+            <ImageButton
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/overlay_button_add_point_odd"
+                android:layout_weight="1.5"
+                android:background="@drawable/overlay" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

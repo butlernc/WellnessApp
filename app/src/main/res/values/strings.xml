@@ -10,4 +10,7 @@
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
 
+    <string name="quiz_popup_desc">This is your first time logging in! Please take a moment to
+    fill out our pre-test before starting the program.</string>
+
 </resources>

@@ -30,7 +30,10 @@ public class WeeklyUserData {
     private int snapShotTotalScore;
     /* the user's current score of that week only */
     private int snapShotWeekScore;
+    /* bonus points held here for each week*/
+    private int[] bonusPoints;
 
+    /* this constructor is used when first creating the user, so we can zero all of their data */
     public WeeklyUserData(int week) {
 
         /* assign the correct amount of check offs for the given goal for the week */
@@ -51,6 +54,12 @@ public class WeeklyUserData {
         /* same thing as above, just for nutrition goal now */
         for(int i = 0; i < nutritionGoalCheckOffAmount; i++) {
             nutritionGoalCheckOffs.add(false);
+        }
+
+        /* bonus points holder */
+        bonusPoints = new int[12];
+        for(int i = 0; i < 12; i++) {
+            bonusPoints[i] = 0;
         }
     }
 
@@ -118,6 +127,14 @@ public class WeeklyUserData {
 
     public void setSnapShotWeekScore(int snapShotWeekScore) {
         this.snapShotWeekScore = snapShotWeekScore;
+    }
+
+    public int[] getBonusPoints() {
+        return bonusPoints;
+    }
+
+    public void setBonusPoints(int[] bonusPoints) {
+        this.bonusPoints = bonusPoints;
     }
 }
 

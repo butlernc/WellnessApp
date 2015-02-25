@@ -1,18 +1,25 @@
 package com.uwec.wellnessapp.home;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.uwec.wellnessapp.R;
+import com.uwec.wellnessapp.data.LoggingHelper;
 import com.uwec.wellnessapp.statics.Statics;
 
 import java.util.ArrayList;
@@ -33,65 +40,106 @@ public class NutritionGoalFragment extends Fragment {
     TextView nutritionGoal;
     TextView ngDescTextView;
 
-    Button linksButton;
+    TextView suggestedWorkOutText;
+    ArrayList<String> link_names;
+    TextView currentWeekNutritionPoints;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        rootView = inflater.inflate(R.layout.nutrition_goal_fragment, container, false);
-        getActivity().getActionBar().setTitle("Step It Up");
+        rootView = inflater.inflate(R.layout.goal_fragment, container, false);
+        getActivity().getActionBar().setTitle("Nutrition Goal");
 
-        ngDescTextView = (TextView) rootView.findViewById(R.id.nutrition_goal_desc);
-        ngDescTextView.setText(Statics.globalWeekDataList.get(Statics.sessionData.getWeekNumber() - 1).getNutrition_goal_description());
-
-        weekDisplayNutrition = (TextView) rootView.findViewById(R.id.week_display_nutrition);
+        /* grab the TextViews that will display our weekly info */
+        weekDisplayNutrition = (TextView) rootView.findViewById(R.id.week_display);
         weekDisplayNutrition.setText("Week " + Statics.sessionData.getWeekNumber() + ": Nutrition Goal");
 
-        nutritionGoal = (TextView) rootView.findViewById(R.id.nutrition_goal);
-        nutritionGoal.setText("Goal: " + Statics.globalWeekDataList.get(Statics.sessionData.getWeekNumber() - 1).getNutrition_goal());
+        nutritionGoal    = (TextView) rootView.findViewById(R.id.goal);
+        nutritionGoal.setText("Goal: " + Statics.getCurrentWeekData().getNutrition_goal());
 
-        LinearLayout linear_nutrition_buttons = (LinearLayout) rootView.findViewById(R.id.linear_nutrition_button);
-        ArrayList<Button> checkOffButtons = new ArrayList<>();
-        /* make the correct amount of buttons for this current week */
-        for(int i = 0; i < Statics.getCurrentWeekData().getNg_days_per_week(); i++) {
-            checkOffButtons.add(new Button(getActivity()));
+        createDescTextLinksList();
+
+        ngDescTextView      = (TextView) rootView.findViewById(R.id.goal_desc);
+        ngDescTextView.setText("More Info: \n" + Statics.globalWeekDataList.get(Statics.sessionData.getWeekNumber() - 1).getNutrition_goal_description());
+
+        currentWeekNutritionPoints = (TextView)rootView.findViewById(R.id.current_week_goal_points);
+        /* check if we need to display "completed!" or points earned so far */
+        Log.e("NU POINTS", "" + Statics.getUsersCurrentWeekData().getNutritionGoalPoints());
+        if(Statics.getUsersCurrentWeekData().getNutritionGoalPoints() < Statics.getCurrentWeekData().getNg_days_per_week()) {
+            currentWeekNutritionPoints.setTextSize(25);
+            currentWeekNutritionPoints.setText("" + Statics.getUsersCurrentWeekData().getNutritionGoalPoints());
+        }else{
+            currentWeekNutritionPoints.setTextSize(13);
+            currentWeekNutritionPoints.setText("Completed!");
         }
 
-        for(int i = 0; i < Statics.getUsersCurrentWeekData().getNutritionGoalCheckOffAmount(); i++ ) {
-            boolean current    = Statics.getUsersCurrentWeekData().getNutritionGoalCheckOffs().get(i);
-            Log.e("NG_STRING", "" + Statics.getCurrentWeekData().getWeek());
-            String current_tag = Statics.getCurrentWeekData().getNg_strings().get(i);
-
-
-            if(current) {//already saved to be checked off
-                checkOffButtons.get(i).setText("Completed!");
-            } else {//not saved to be checked off
-                checkOffButtons.get(i).setText(current_tag);
-            }
-            checkOffButtons.get(i).setBackgroundResource(R.drawable.completion_button);
-            checkOffButtons.get(i).setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
-
-            checkOffButtons.get(i).setOnClickListener(new FitnessTrackerButtonListener(getActivity().getBaseContext(), i, false, checkOffButtons.get(i)));
-
-            linear_nutrition_buttons.addView(checkOffButtons.get(i), new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        }
-
-        linksButton = (Button) rootView.findViewById(R.id.nutrition_goal_links_button);
-        linksButton.setOnClickListener(new View.OnClickListener() {
+        ImageButton addNutritionPointButton = (ImageButton)rootView.findViewById(R.id.add_point_button);
+        addNutritionPointButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if(Statics.getCurrentWeekData().getNg_link_amount() > 0) {
-                    LinksFragment linksFragment = new LinksFragment();
-                    Bundle args = new Bundle();
-                    args.putBoolean("from_physical_activity", false);
-                    linksFragment.setArguments(args);
-                    NutritionGoalFragment.this.getActivity().getFragmentManager().beginTransaction().replace(R.id.main_nav_fragment, linksFragment).commit();
+            public void onClick(View v) {
+                int currentProgress = 0;
+//              int currentProgress = Statics.getUsersCurrentWeekData().getPhysicalGoalPoints();
+                for(int i = 0; i < Statics.getUsersCurrentWeekData().getNutritionGoalCheckOffs().size(); i++) {
+                    if(Statics.getUsersCurrentWeekData().getNutritionGoalCheckOffs().get(i)) {
+                        currentProgress += 1;
+                    }
+                }
+                /*refresh text views */
+                if(currentProgress < Statics.getCurrentWeekData().getNg_days_per_week()) {
+                    Statics.getUsersCurrentWeekData().getNutritionGoalCheckOffs().add(currentProgress, true);
+
+                    LoggingHelper loggingHelper = new LoggingHelper(getActivity().getBaseContext(), getActivity(), 1);
+                    loggingHelper.logPoints();
+
+                    currentWeekNutritionPoints.setTextSize(25);
+                    currentWeekNutritionPoints.setText("" + Statics.getUsersCurrentWeekData().getNutritionGoalPoints());
+                    currentWeekNutritionPoints.invalidate();
                 }else {
-                    Toast.makeText(getActivity().getBaseContext(), "No links to be displayed", Toast.LENGTH_LONG).show();
+                    currentWeekNutritionPoints.setTextSize(13);
+                    currentWeekNutritionPoints.setText("Completed!");
                 }
             }
         });
 
+        TextView activityShortDesc = (TextView)rootView.findViewById(R.id.activity_short_desc);
+
+        String first  = Statics.getCurrentWeekData().getNg_strings().get(0);
+        activityShortDesc.setText(first);
+
         return rootView;
+    }
+
+    /**
+     * Called to set up the list of links from the desc text.
+     *
+     */
+    private void createDescTextLinksList() {
+        ListView listView = (ListView) rootView.findViewById(R.id.desc_text_links_list);
+        suggestedWorkOutText = (TextView) rootView.findViewById(R.id.suggested_workout_link);
+        suggestedWorkOutText.setVisibility(View.INVISIBLE);
+
+        link_names = new ArrayList<>();
+
+        if(Statics.getCurrentWeekData().getNg_link_amount() > 0) {
+
+            for (int i = 0; i < Statics.getCurrentWeekData().getNg_link_amount(); i++) {
+                link_names.add("Link " + (i + 1));
+            }
+
+            /* set the list view adapter to display the simple link names */
+            listView.setAdapter(new ArrayAdapter<>(getActivity().getBaseContext(), R.layout.link_list_text_layout, link_names));
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    /* open the current selected link in the browser */
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                    intent.setData(Uri.parse(Statics.getCurrentWeekData().getNg_links().get(i)));
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
 }

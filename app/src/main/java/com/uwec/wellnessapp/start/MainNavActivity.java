@@ -4,10 +4,26 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.uwec.wellnessapp.R;
 import com.uwec.wellnessapp.challengeInfo.ChallengeInfoFragment;
@@ -39,10 +55,34 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
     /** used in creating a new fragment as arg key*/
     final String ARG_SECTION_NUMBER = "section_number";
 
+    /** current root view */
+    View rootView;
+
+    FileSourceConnector fileSourceConnector;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /* used to write cached data to server when called */
+        Statics.handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                if(Statics.writeToServer) { //cached data has been written to the phone, save it to the server now
+                    fileSourceConnector = new FileSourceConnector(getBaseContext());
+                    Log.e("SERVER", "writing to the server");
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            fileSourceConnector.queue("writeCachedUserToServer", Statics.globalUserData.getEmail(), Statics.globalUserData.getPassword());
+                            Statics.writeToServer = false;
+                        }
+                    }).start();
+                    Toast.makeText(getBaseContext(), "Saving...", Toast.LENGTH_LONG).show();
+                }
+            }
+        };
 
         /** get fragment names */
         drawerListTitles = getResources().getStringArray(R.array.drawerListTitles);
@@ -56,6 +96,8 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
 
         // Set default Fragment
         getFragmentManager().beginTransaction().replace(R.id.main_nav_fragment, newFragment(0)).commit();
+
+
     }
 
     @Override
@@ -123,6 +165,7 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
         switch(sectionNumber) {
 
             case 0:
+
                 newFragment = new DefaultMainFragment();
                 break;
             case 1:
@@ -138,6 +181,23 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
 
         newFragment.setArguments(args);
         return newFragment;
+    }
+
+    private void quizPopUp(Activity activity) {
+
+        final PopupWindow quizPopup;
+        Log.d("POPUP", "should pop up?: " + String.valueOf(!Statics.sessionData.isFirstTime()));
+        if(!Statics.sessionData.isFirstTime()) {
+
+            /* initialize the popup's layout */
+            LinearLayout viewGroup = (LinearLayout)activity.findViewById(R.id.quiz_popup_layout);
+            LayoutInflater layoutInflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View layout = layoutInflater.inflate(R.layout.popup_layout, viewGroup);
+
+            /* set up the popup window */
+            quizPopup = new PopupWindow(layout, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+            quizPopup.showAtLocation(layout, Gravity.CENTER, 0, 0);
+        }
     }
 
 }

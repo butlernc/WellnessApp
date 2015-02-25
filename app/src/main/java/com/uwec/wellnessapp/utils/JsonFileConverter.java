@@ -2,15 +2,17 @@ package com.uwec.wellnessapp.utils;
 
 import android.util.Log;
 
+import com.uwec.wellnessapp.data.BonusData;
 import com.uwec.wellnessapp.data.WeekData;
 import com.uwec.wellnessapp.data.UserData;
 import com.uwec.wellnessapp.data.WeeklyUserData;
+import com.uwec.wellnessapp.statics.Statics;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Noah Butler on 12/5/2014.
@@ -20,24 +22,80 @@ import java.util.ArrayList;
  */
 public class JsonFileConverter {
 
-    private static String json_value_names[] = {"email", "first_name", "last_name", "password", "total_score", "weekly_data"};
-    private static String week_data_json_value_names[] = {"week", "physical_activity", "physical_activity_description", "pa_link_amount", "pa_links", "pa_days_per_week", "pa_strings", "nutrition_goal", "nutrition_goal_description", "ng_link_amount", "ng_links", "ng_days_per_week", "ng_strings", "suggested_workout_link", "suggested_workout_type", "week_dates"};
-    private static String weeklyData_json_value_names[] = {"pa_points", "ng_points", "pa_amount", "ng_amount", "pa_checkOff", "pa_checkOffArray", "ng_checkOff", "ng_checkOffArray", "total_points", "weekly_points"};
+    private static String week_data_json_value_names[]  = {"week", "physical_activity", "physical_activity_description", "pa_link_amount", "pa_links", "pa_days_per_week", "pa_strings", "nutrition_goal", "nutrition_goal_description", "ng_link_amount", "ng_links", "ng_days_per_week", "ng_strings", "suggested_workout_link", "suggested_workout_type", "week_dates"};
+    private static String bonusData_json_value_names[]  = {"amount", "titles", "links", "total_per_program", "complete_per_week", "per_completion", "once"};
 
-    public UserData convertJSONToUser(JSONObject jsonObject) throws JSONException {
-        UserData userData = new UserData();
-        userData.setEmail(jsonObject.getString(json_value_names[0]));
-        userData.setFirst_name(jsonObject.getString(json_value_names[1]));
-        userData.setLast_name(jsonObject.getString(json_value_names[2]));
-        userData.setPassword(jsonObject.getString(json_value_names[3]));
-        userData.setTotal_score(jsonObject.getInt(json_value_names[4]));
-        userData.setWeeklyData(jsonToWeeklyDataArray(jsonObject.getJSONObject(json_value_names[5])));
+    /**
+     * Convers the BonusData's json object to the BonusData object.
+     * @param jsonObject
+     * @return
+     * @throws JSONException
+     */
+    public BonusData convertBonusDataJSON(JSONObject jsonObject) throws JSONException {
+        BonusData bonusData = new BonusData();
 
-        return userData;
+        int amount = jsonObject.getInt(bonusData_json_value_names[0]);
+
+        /* get titles for bonus activities */
+        JSONObject jsonTitlesObject = jsonObject.getJSONObject(bonusData_json_value_names[1]);
+        bonusData.setTitles(getBonusActivityArrayData(jsonTitlesObject, amount, true));
+
+        /* get links for each title */
+        JSONObject jsonLinksObject = jsonObject.getJSONObject(bonusData_json_value_names[2]);
+        bonusData.setLinks(getBonusActivityArrayData(jsonLinksObject, amount, true));
+
+        /* get how many times/weeks they can complete the bonus activity */
+        JSONObject jsonTotalPerProgram = jsonObject.getJSONObject(bonusData_json_value_names[3]);
+        bonusData.setTotalPerProgram(getBonusActivityArrayData(jsonTotalPerProgram, amount));
+
+        /* get how many times the user may do this per week */
+        JSONObject jsonCompletePerWeek = jsonObject.getJSONObject(bonusData_json_value_names[4]);
+        bonusData.setCompletePerWeek(getBonusActivityArrayData(jsonCompletePerWeek, amount));
+
+        /* get how many points the user can get each time they complete a certain bonus activity */
+        JSONObject jsonPerCompletion = jsonObject.getJSONObject(bonusData_json_value_names[5]);
+        bonusData.setPerCompletion(getBonusActivityArrayData(jsonPerCompletion, amount));
+
+        /* get the indexes for bonus activities that can only be completed once */
+        JSONObject jsonCanCompleteOnce = jsonObject.getJSONObject(bonusData_json_value_names[6]);
+        bonusData.setCanCompleteOnce(getBonusActivityArrayData(jsonCanCompleteOnce, 6));
+
+        return bonusData;
     }
 
+    /**
+     * Helper methods for the convertBonusDataJSON method
+     * @param jsonObject
+     * @param arraySize
+     * @param placeholder
+     * @return
+     * @throws JSONException
+     */
+    private ArrayList<String> getBonusActivityArrayData(JSONObject jsonObject, int arraySize, boolean placeholder) throws JSONException{
+        ArrayList<String> outputArray = new ArrayList<>();
+        for(int i = 0; i < arraySize; i++) {
+            outputArray.add(jsonObject.getString("" + i));
+        }
+        return outputArray;
+    }
+
+    private ArrayList<Integer> getBonusActivityArrayData(JSONObject jsonObject, int arraySize) throws JSONException{
+        ArrayList<Integer> outputArray = new ArrayList<>();
+        for(int i = 0; i < arraySize; i++) {
+            outputArray.add(jsonObject.getInt("" + i));
+        }
+        return outputArray;
+    }
+
+    /**
+     * takes the static week data and converts it to a weekData object.
+     * @param jsonObject
+     * @return
+     * @throws JSONException
+     */
     public WeekData convertWeekDataJSON(JSONObject jsonObject) throws JSONException {
         WeekData weekData = new WeekData();
+        Log.d("WEEK", "week: " + jsonObject.getString("week"));
         weekData.setWeek(jsonObject.getString(week_data_json_value_names[0]));
         weekData.setPhysical_activity(jsonObject.getString(week_data_json_value_names[1]));
         weekData.setPhysical_activity_description(jsonObject.getString(week_data_json_value_names[2]));
@@ -86,89 +144,8 @@ public class JsonFileConverter {
 
         weekData.setSuggestedWorkoutLink(jsonObject.getString(week_data_json_value_names[13]));
         weekData.setSuggestedWorkoutType(jsonObject.getString(week_data_json_value_names[14]));
-        weekData.setWeekDates(week_data_json_value_names[15]);
+        weekData.setWeekDates(jsonObject.getString(week_data_json_value_names[15]));
         return weekData;
     }
 
-    public JSONObject convertUserToJSON(UserData userData) throws JSONException {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put(json_value_names[0], userData.getEmail());
-        jsonObject.put(json_value_names[1], userData.getFirst_name());
-        jsonObject.put(json_value_names[2], userData.getLast_name());
-        jsonObject.put(json_value_names[3], userData.getPassword());
-        jsonObject.put(json_value_names[4], userData.getTotal_score());
-        jsonObject.put(json_value_names[5], weeklyDataArrayToJson(userData.getWeeklyData()));
-
-        //Log.e("JSON", "" + jsonObject.toString());
-
-        return jsonObject;
-    }
-
-    public JSONObject weeklyDataArrayToJson(ArrayList<WeeklyUserData> weeklyData) throws JSONException {
-        JSONObject jsonObject = new JSONObject();
-
-        for(int i = 0; i < weeklyData.size(); i++) {
-            WeeklyUserData single_weeklyData = weeklyData.get(i);
-            JSONObject subJsonObject = new JSONObject();
-            subJsonObject.put(weeklyData_json_value_names[0], single_weeklyData.getPhysicalGoalPoints());
-            subJsonObject.put(weeklyData_json_value_names[1], single_weeklyData.getNutritionGoalPoints());
-            subJsonObject.put(weeklyData_json_value_names[2], single_weeklyData.getPhysicalGoalCheckOffAmount());
-            subJsonObject.put(weeklyData_json_value_names[3], single_weeklyData.getNutritionGoalCheckOffAmount());
-            subJsonObject.put(weeklyData_json_value_names[8], single_weeklyData.getSnapShotTotalScore());
-            subJsonObject.put(weeklyData_json_value_names[9], single_weeklyData.getSnapShotWeekScore());
-
-            JSONObject pa_checkOffs_jsonObject = new JSONObject();
-            for(int j = 0; j < single_weeklyData.getPhysicalGoalCheckOffs().size(); j++) {
-                pa_checkOffs_jsonObject.put(weeklyData_json_value_names[4] + j, single_weeklyData.getPhysicalGoalCheckOffs().get(j));
-            }
-            subJsonObject.put(weeklyData_json_value_names[5], pa_checkOffs_jsonObject);
-            subJsonObject.put("pa_checkOff_size", single_weeklyData.getPhysicalGoalCheckOffs().size());
-
-            JSONObject ng_checkOffs_jsonObject = new JSONObject();
-            for(int j = 0; j < single_weeklyData.getNutritionGoalCheckOffs().size(); j++) {
-                ng_checkOffs_jsonObject.put(weeklyData_json_value_names[6] + j, single_weeklyData.getNutritionGoalCheckOffs().get(j));
-            }
-            subJsonObject.put(weeklyData_json_value_names[7], ng_checkOffs_jsonObject);
-            subJsonObject.put("ng_checkOff_size", single_weeklyData.getNutritionGoalCheckOffs().size());
-
-            jsonObject.put("weeklyData" + i, subJsonObject);
-            jsonObject.put("size", weeklyData.size());
-        }
-
-        return jsonObject;
-    }
-
-    public ArrayList<WeeklyUserData> jsonToWeeklyDataArray(JSONObject baseJsonObject) throws JSONException{
-        ArrayList<WeeklyUserData> weeklyUserDataList = new ArrayList<>();
-        for(int i = 0; i < baseJsonObject.getInt("size"); i++) {
-            WeeklyUserData weeklyUserData = new WeeklyUserData();
-            JSONObject subJsonObject = baseJsonObject.getJSONObject("weeklyData" + i);
-
-            weeklyUserData.setPhysicalGoalPoints(subJsonObject.getInt(weeklyData_json_value_names[0]));
-            weeklyUserData.setNutritionGoalPoints(subJsonObject.getInt(weeklyData_json_value_names[1]));
-            weeklyUserData.setPhysicalGoalCheckOffAmount(subJsonObject.getInt(weeklyData_json_value_names[2]));
-            weeklyUserData.setNutritionGoalCheckOffAmount(subJsonObject.getInt(weeklyData_json_value_names[3]));
-
-            JSONObject pa_checkOffs_jsonObject = subJsonObject.getJSONObject(weeklyData_json_value_names[5]);
-            ArrayList<Boolean> physicalGoalCheckOffs = new ArrayList<>();
-            for(int j = 0; j < subJsonObject.getInt("pa_checkOff_size"); j++) {
-                physicalGoalCheckOffs.add(pa_checkOffs_jsonObject.getBoolean(weeklyData_json_value_names[4] + j));
-            }
-            weeklyUserData.setPhysicalGoalCheckOffs(physicalGoalCheckOffs);
-
-            JSONObject ng_checkOffs_jsonObject = subJsonObject.getJSONObject(weeklyData_json_value_names[7]);
-            ArrayList<Boolean> nutritionGoalCheckOffs = new ArrayList<>();
-            for(int j = 0; j < subJsonObject.getInt("ng_checkOff_size"); j++) {
-                nutritionGoalCheckOffs.add(ng_checkOffs_jsonObject.getBoolean(weeklyData_json_value_names[6] + j));
-            }
-            weeklyUserData.setNutritionGoalCheckOffs(nutritionGoalCheckOffs);
-
-            weeklyUserData.setSnapShotTotalScore(subJsonObject.getInt(weeklyData_json_value_names[8]));
-            weeklyUserData.setSnapShotWeekScore(subJsonObject.getInt(weeklyData_json_value_names[9]));
-
-            weeklyUserDataList.add(weeklyUserData);
-        }
-
-        return weeklyUserDataList;
-    }
 }

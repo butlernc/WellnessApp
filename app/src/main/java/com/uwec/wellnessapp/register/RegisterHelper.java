@@ -1,7 +1,9 @@
 package com.uwec.wellnessapp.register;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -25,13 +27,17 @@ import com.uwec.wellnessapp.utils.FileSourceConnector;
  */
 public class RegisterHelper extends Thread{
 
-    private Activity activity;
+    private RegisterActivity activity;
+    private Context context;
+
     private String[] input;
     private boolean worked;
     private boolean isDone;
+    private boolean notConfirmedP;
 
-    public RegisterHelper(Activity activity, String...input) {
-        this.activity = activity;
+    public RegisterHelper(Context context, Activity activity, String...input) {
+        this.activity = (RegisterActivity)activity;
+        this.context = context;
         this.input = input;
     }
 
@@ -45,9 +51,13 @@ public class RegisterHelper extends Thread{
         current.startActivity(intent);
     }
 
+    @Override
     public void run() {
-        synchronized (this) {
-            isDone = false;
+        Statics.registrationIsComplete = false;
+        isDone = false;
+        String confirmP = input[4];
+        String password = input[3];
+        if (confirmP.contentEquals(password)) {
             UserData userData = new UserData();
             userData.setLast_name(input[0]);
             userData.setFirst_name(input[1]);
@@ -59,30 +69,55 @@ public class RegisterHelper extends Thread{
                 userData.getWeeklyData().add(new WeeklyUserData(i));
             }
 
+            for(int i = 6; i < 12; i++) {
+                userData.getOneTimeBonusPoints().put(i, false);
+            }
+
             Statics.globalUserData = userData;
 
             //create a FileSourceConnector, used to read and write to the server.
+            Statics.messenger.registering("Creating New User File...");
             FileSourceConnector fileSourceConnector = new FileSourceConnector(activity.getBaseContext());
-            fileSourceConnector.queue("writeUser", userData.getEmail(), "new");
+            fileSourceConnector.queue("writeUser", userData.getEmail(), userData.getPassword());
             Log.e("REGISTER", "Return string: " + fileSourceConnector.getRETURN_STR());
             if (fileSourceConnector.getRETURN_STR().contentEquals("GOOD")) {
                 worked = true;
+                Statics.messenger.registering("Finishing...");
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             } else if (fileSourceConnector.getRETURN_STR().contentEquals("NOGOOD")) {
                 worked = false;
+                notConfirmedP = false;
             }
 
             isDone = true;
-            notify();
+            Statics.registrationIsComplete = true;
+        }else{
+            notConfirmedP = true;
+            worked = false;
+        }
+
+        finish();
+
+        Log.e("REGISTER", "Register worked?: " + worked);
+    }
+
+    private void finish() {
+        if(worked) {
+            Looper.prepare();
+            Statics.messenger.sendToastMessage("Account creation was successful!");
+            LoginHelper.startLoginActivity(activity);
+        }else {
+            if(notConfirmedP) {
+                Statics.messenger.sendToastMessage("Your passwords do not match, please retry.");
+            }else{
+                Statics.messenger.sendToastMessage("There was an error creating the account, try again.");
+            }
+
         }
     }
-
-    public boolean worked() {
-        return worked;
-    }
-
-    public boolean isDone() {
-        return isDone;
-    }
-
 
 }

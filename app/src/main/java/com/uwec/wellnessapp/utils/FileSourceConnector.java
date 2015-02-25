@@ -3,10 +3,12 @@ package com.uwec.wellnessapp.utils;
 import android.content.Context;
 import android.util.Log;
 
+import com.uwec.wellnessapp.R;
 import com.uwec.wellnessapp.statics.Statics;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,7 +16,9 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
@@ -34,12 +38,6 @@ public class FileSourceConnector {
     private static final String FTP_PASSWORD = "android4us";
     private static final String FTP_PATH = "wellnessappftp.eu.pn";
 
-    private static final String USER_DATA_FILE_NAME = "userfile.txt";
-
-    private static final String WEEK_FILE_NAME_TRUNC = "week_data_";
-    private static final String WEEK_DATA_DIRECTORY = "weekData";
-    private static final String WEEK_DATA_FILE_NAME = "new_week_data.txt";
-
     private Context currentContext;
 
     private JsonFileConverter jsonFileConverter;
@@ -55,15 +53,27 @@ public class FileSourceConnector {
         ftpClient = new FTPClient();
         jsonFileConverter = new JsonFileConverter();
 
-        if(strings[0].contentEquals("readUser")) {
-            readUser(strings);
-        }else if(strings[0].contentEquals("writeUser")) {
-            writeUser(strings);
+        if (strings[0].contentEquals("readUser")) {
+            readFullUserFromServer(strings);
+        } else if (strings[0].contentEquals("writeUser")) {
+            writeFullUserToServer(strings);
+        } else if(strings[0].contentEquals("writePaPointsCache")) {
+            writePaPointsCache();
+        }else if(strings[0].contentEquals("writeNgPointsCache")) {
+            writeNgPointsCache();
+        }else if(strings[0].contentEquals("writeBonusPointsCache")) {
+            writeBonusPointsCache();
+        }else if(strings[0].contentEquals("writeUserInfoCache")) {
+            writeUserInfoCache();
+        }else if(strings[0].contentEquals("writeCachedUserToServer")) {
+            writeCachedUserToServer(strings);
         }else if(strings[0].contentEquals("readWeekStartData")) {
             return readWeekStartData();
         } else if(strings[0].contentEquals("readWeekData")) {
             return readWeekData(strings);
-        }else {
+        } else if(strings[0].contentEquals("readBonusData")) {
+            return readBonusData();
+        } else {
             Log.d("line~65", "Not a recognized task");
         }
         return null;
@@ -76,8 +86,19 @@ public class FileSourceConnector {
      * @throws IOException
      */
     private boolean connectToFTP() throws IOException {
-        ftpClient.connect(InetAddress.getByName(FTP_HOSTNAME));
+        ftpClient.setConnectTimeout(10 * 1000);
+        ftpClient.connect(FTP_HOSTNAME);
         return ftpClient.login(FTP_USERNAME, FTP_PASSWORD);
+    }
+
+    /**
+     * Used to close the connection to the FTP Server
+     *
+     * @throws java.io.IOException
+     */
+    private void disconnectFromFTP() throws IOException {
+        ftpClient.logout();
+        ftpClient.disconnect();
     }
 
     /**
@@ -95,187 +116,140 @@ public class FileSourceConnector {
     }
 
     /**
-     * Returns a json object of the given
-     * file name on the server
-     *
-     * @param absoluteFilePath: where the file is located (ending with the file name included)
-     * @return json object made from the file on the FTP Server.
+     * The following methods are used to call the UserIO objects methods to read and write
+     * the user's data.
      */
-    private JSONObject readFromServer(String absoluteFilePath) {
-        ftpClient.setConnectTimeout(10 * 1000);
-        Log.d("F", "Filename: " + absoluteFilePath);
-        //create our return object
-        JSONObject jsonObject = null;
 
+    /**
+     * Used to set the userData object at startup
+     * string[1]: user's email
+     * string[2]: user's password
+     */
+    private void readFullUserFromServer(String[] strings) {
+        UserIO userIO = new UserIO(strings[1], strings[2]);
+        userIO.constructUserObject();
+
+    }
+
+    private void writeFullUserToServer(String[] strings) {
+        UserIO userIO = new UserIO(strings[1], strings[2]);
+        userIO.writeNewUserObjectToServer();
+    }
+
+    /**
+     * Used to write all the user data that is saved on the phone to the database.
+     * @param strings
+     */
+    private void writeCachedUserToServer(String[] strings) {
+        UserIO userIO = new UserIO(strings[1], strings[2]);
+        userIO.writeCachedUserObject();
+    }
+
+    /**
+     * the following methods are used to quickly save data to the phone instead of the server
+     */
+    private void writePaPointsCache() {
         try {
-
-            /* attempt to connect to the FTP server. */
-            boolean notConnectedToFTP = true;
-            do {
-                notConnectedToFTP = !connectToFTP();
-            } while (notConnectedToFTP);
-
-        /* check if logged in correctly */
-            if (FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {
-
-            /* We should be connected to the FTP server now, set the transfer settings. */
-                if (setTransferSettings()) {
-
-                    BufferedReader dataReader = new BufferedReader(new InputStreamReader(ftpClient.retrieveFileStream(absoluteFilePath)));
-
-                    //helper objects
-                    StringBuilder sb = new StringBuilder();
-                    String line;
-
-                    //loop over the data file
-                    while ((line = dataReader.readLine()) != null) {
-                        sb.append(line);
-                    }
-
-                    //close the buffered reader
-                    dataReader.close();
-
-                    //get file data from string builder and put it into a json object
-                    jsonObject = new JSONObject(sb.toString());
-                }
-            }
-
-            ftpClient.disconnect();
+            UserIO userIO = new UserIO(Statics.globalUserData.getEmail(), Statics.globalUserData.getPassword());
+            userIO.writePhysicalPoints(false, true);
         }catch(IOException | JSONException e) {
             e.printStackTrace();
-            //String error = "{\"error\":\"Failed to connect, please restart the application.\"}";
-            //jsonObject = new JSONObject(error);
         }
-
-        return jsonObject;
     }
-
-    /**
-     * Used to create a json temp file that
-     * will be transferred to the FTP server
-     *
-     * @param filename
-     * @return local file to push to server
-     * @throws JSONException
-     * @throws IOException
-     */
-    public File createTempFile(String filename) throws JSONException, IOException{
-        //make json object
-        JSONObject jsonObject;
-        String rawData;
-
-        jsonObject = jsonFileConverter.convertUserToJSON(Statics.globalUserData);
-        rawData = jsonObject.toString();
-
-        FileOutputStream tempFile = currentContext.openFileOutput(filename, Context.MODE_PRIVATE);
-        tempFile.write(rawData.getBytes());
-        tempFile.close();
-
-        return new File(currentContext.getFilesDir(), filename);
-    }
-
-    /**
-     * Used to write the user data and user password
-     * @param strings
-     *
-     * strings[0]: "writeUser"
-     * strings[1]: user email
-     * strings[2]: "new" if registering, "old" if not
-     */
-    private void writeUser(String[] strings) {
-
-        ftpClient.setConnectTimeout(10 * 1000);
+    private void writeNgPointsCache() {
         try {
-            //try to connect to the server
-            connectToFTP();
-            //check if logged in correctly
-            if (FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {
-                //set transfer settings
-                boolean worked = setTransferSettings();
-                //check if we're making a new user or not
-                if(strings[2] == "new") {
-                    ftpClient.makeDirectory(strings[1]);
-                    ftpClient.changeWorkingDirectory(strings[1]);
-                }else {
-                    ftpClient.changeWorkingDirectory(strings[1]);
-                }
-
-                //create the user data temp file
-                File userDataSourceFile = createTempFile(USER_DATA_FILE_NAME);
-                //save our temp file to the server
-                ftpClient.storeFile(USER_DATA_FILE_NAME, new FileInputStream(userDataSourceFile));
-
-                //close connection
-                ftpClient.disconnect();
-
-                Statics.messenger.sendMessage("Created new user...");
-                RETURN_STR = "GOOD";
-            }
-        } catch (IOException e) {
-            RETURN_STR = "NOGOOD";
+            UserIO userIO = new UserIO(Statics.globalUserData.getEmail(), Statics.globalUserData.getPassword());
+            userIO.writeNutritionPoints(false, true);
+        }catch(IOException | JSONException e) {
             e.printStackTrace();
-        } catch (JSONException e) {
-            RETURN_STR = "NOGOOD";
+        }
+    }
+    private void writeBonusPointsCache() {
+        try {
+            UserIO userIO = new UserIO(Statics.globalUserData.getEmail(), Statics.globalUserData.getPassword());
+            userIO.writeBonusPoints(false, true);
+        }catch(IOException | JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    private void writeUserInfoCache() {
+        try {
+            UserIO userIO = new UserIO(Statics.globalUserData.getEmail(), Statics.globalUserData.getPassword());
+            userIO.writeUserInfo(false, true);
+        }catch(IOException | JSONException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * Used when logging in
-     *
-     * Assigns the static user data object
-     * with the data object created from the file
-     * read in from the server.
-     * @param strings
-     *
-     * strings[0]: user directory/user email
-     * strings[1]: user password
-     * strings[2]: "readUser"
+     * Reads in a file contained in the project files. Mostly used for getting the week data,
+     * the bonus data, and the start week data.
      */
-    private void readUser(String[] strings) {
-
-        //get password that is saved on the server
-        String absolutePath = strings[1] + "/" + USER_DATA_FILE_NAME;
-        JSONObject jsonObject = readFromServer(absolutePath);
+    private JSONObject readFromFile(int id) {
 
         try {
-            /* grab their password */
-            String expected = jsonObject.getString("password");
-            /* check password with entered password */
-            if (expected.compareTo(strings[2]) == 0) {
-                Log.e("here", "password is correct");
-                RETURN_STR = "GOOD";
-                /* password is correct, get user data set the application's userData object. */
-                Statics.globalUserData = jsonFileConverter.convertJSONToUser(jsonObject);
-                Log.d("STR", "RETURN STRING: " + RETURN_STR);
-            } else {
-                /* return that the user entered in the wrong password */
-                RETURN_STR = "NCP";
-                Log.d("STR", "should not be here");
+            BufferedReader dataReader = new BufferedReader(new InputStreamReader(currentContext.getResources().openRawResource(id)));
+
+            //helper objects
+            StringBuilder sb = new StringBuilder();
+            String line;
+
+            //loop over the data file
+            while ((line = dataReader.readLine()) != null) {
+                sb.append(line);
             }
-        }catch (JSONException e) {
+
+            //close the buffered reader
+            dataReader.close();
+
+            return new JSONObject(sb.toString());
+
+        }catch(IOException | JSONException e) {
             e.printStackTrace();
-            RETURN_STR = "NCP";
         }
+
+        return null;
+
     }
 
     /**
      * Used to read files from the goal directory
      * @param strings
-     * strings[0]: current week #
+     * strings[1]: current week #
      *
      */
     private Object readWeekData(String[] strings) {
-
-        String absoluteFilePath = WEEK_DATA_DIRECTORY + "/" + WEEK_FILE_NAME_TRUNC + strings[1] + ".txt";
-        Log.e("DATA", "" + absoluteFilePath);
-        JSONObject jsonObject = readFromServer(absoluteFilePath);
+        int id = 0;
+        switch(Integer.parseInt(strings[1])) {
+            case 1:
+                id = R.raw.week_data_1;
+                break;
+            case 2:
+                id = R.raw.week_data_2;
+                break;
+            case 3:
+                id = R.raw.week_data_3;
+                break;
+            case 4:
+                id = R.raw.week_data_4;
+                break;
+            case 5:
+                id = R.raw.week_data_5;
+                break;
+            case 6:
+                id = R.raw.week_data_6;
+                break;
+        }
+        JSONObject jsonObject = readFromFile(id);
         try {
-            Statics.globalWeekDataList.add(jsonFileConverter.convertWeekDataJSON(jsonObject));
+            if(jsonObject.has("error")) {
+                return jsonObject.getString("error");
+            }else {
+                Statics.globalWeekDataList.add(jsonFileConverter.convertWeekDataJSON(jsonObject));
+            }
         }catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.e("DATA", "get it");
         return true;
     }
 
@@ -283,16 +257,317 @@ public class FileSourceConnector {
      * Reads the file that saves the weeks' start dates.
      */
     private Object readWeekStartData() {
-        String absoluteFilePath = WEEK_DATA_DIRECTORY + "/" + WEEK_DATA_FILE_NAME;
-        JSONObject jsonObject = readFromServer(absoluteFilePath);
+        JSONObject jsonObject = readFromFile(R.raw.new_week_data);
         return jsonObject;
     }
 
+    /**
+     * Reads in all of the data for the bonus
+     * activities the user can complete.
+     */
+    private Object readBonusData() {
+        JSONObject jsonObject = readFromFile(R.raw.bonus_data);
+        try {
+            if(jsonObject.has("error")) {
+                return jsonObject.getString("error");
+            }else {
+                Statics.globalBonusData = jsonFileConverter.convertBonusDataJSON(jsonObject);
+            }
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return true;
+
+
+    }
     /**
      * used as a callback method
      * @return return_string
      */
     public String getRETURN_STR() {
         return RETURN_STR;
+    }
+
+    public class UserIO{
+
+        private static final String PA_POINTS_FILE = "user_pa_points.txt";
+        private static final String BONUS_POINTS_FILE = "user_bonus_points.txt";
+        private static final String NG_POINTS_FILE = "user_ng_points.txt";
+        private static final String USER_INFO_FILE = "user_data.txt";
+
+        private UserJsonFileConverter userJsonFileConverter;
+        private String userName;
+        private String userPassword;
+
+        public UserIO(String userName, String userPassword) {
+            this.userName = userName;
+            this.userPassword = userPassword;
+            userJsonFileConverter = new UserJsonFileConverter();
+        }
+
+        public void writeNewUserObjectToServer() {
+            try {
+                Statics.messenger.registering("Creating User File...");
+                writePhysicalPoints(true, true);
+                writeNutritionPoints(true, true);
+                writeBonusPoints(true, true);
+                Statics.messenger.registering("Completing Registration...");
+                writeUserInfo(true, true);
+                RETURN_STR = "GOOD";
+            }catch (IOException | JSONException e) {
+                e.printStackTrace();
+                RETURN_STR = "NOGOOD";
+            }
+        }
+
+        public void writeCachedUserObject() {
+            try {
+                writePhysicalPoints(true, false);
+                writeNutritionPoints(true, false);
+                writeBonusPoints(true, false);
+                writeUserInfo(true, false);
+                RETURN_STR = "GOOD";
+            }catch (IOException | JSONException e) {
+                e.printStackTrace();
+                RETURN_STR = "NOGOOD";
+            }
+        }
+
+        /**
+         * Used to write the user's physical points to the server
+         * @throws JSONException
+         * @throws IOException
+         */
+        public void writePhysicalPoints(boolean toServer, boolean toTemp) throws JSONException, IOException{
+            String rawData;
+
+            rawData = userJsonFileConverter.convertUserPAPointsToJSON(Statics.globalUserData).toString();
+            if(toTemp) {
+                writeTempFile(rawData, PA_POINTS_FILE);
+            }
+            if(toServer) {
+                writeToServer(PA_POINTS_FILE, new File(currentContext.getFilesDir(), PA_POINTS_FILE));
+            }
+        }
+
+        /**
+         * The following two methods are used to read/write the bonus points for a user.
+         * @return
+         * @throws JSONException
+         * @throws IOException
+         */
+        public void writeNutritionPoints(boolean toServer, boolean toTemp) throws JSONException, IOException{
+            String rawData;
+
+            rawData = userJsonFileConverter.convertUserNGPointsToJSON(Statics.globalUserData).toString();
+            if(toTemp) {
+                writeTempFile(rawData, NG_POINTS_FILE);
+            }
+            if(toServer) {
+                writeToServer(NG_POINTS_FILE, new File(currentContext.getFilesDir(), NG_POINTS_FILE));
+            }
+        }
+
+        /**
+         * The following two methods are used to read/write the bonus points for a user.
+         * @return
+         * @throws JSONException
+         * @throws IOException
+         */
+        public void writeBonusPoints(boolean toServer, boolean toTemp) throws JSONException, IOException {
+            String rawData;
+
+            rawData = userJsonFileConverter.convertUserBonusPointsToJSON(Statics.globalUserData).toString();
+            if(toTemp) {
+                writeTempFile(rawData, BONUS_POINTS_FILE);
+            }
+            if (toServer) {
+                writeToServer(BONUS_POINTS_FILE, new File(currentContext.getFilesDir(), BONUS_POINTS_FILE));
+            }
+        }
+
+        /**
+         * The following read/writes the user info data
+         * @return
+         * @throws JSONException
+         * @throws IOException
+         */
+        public void writeUserInfo(boolean toServer, boolean toTemp) throws JSONException, IOException {
+            String rawData;
+
+            rawData = userJsonFileConverter.convertUserInfoToJSON(Statics.globalUserData).toString();
+            if(toTemp) {
+                writeTempFile(rawData, USER_INFO_FILE);
+            }
+            if (toServer) {
+                writeToServer(USER_INFO_FILE, new File(currentContext.getFilesDir(), USER_INFO_FILE));
+            }
+        }
+
+        /**
+         * Used to construct the Statics.globalUserData object, called by readFullUserFromServer()
+         */
+        public void constructUserObject() {
+            try {
+            /* call all read methods, use the userJsonFileConverter.userData object when setting the Statics.globalUserData object */
+                JSONObject userInfoJSON = readUserInfo();
+                Log.d("UserInfo", userInfoJSON.toString(1));
+                Statics.messenger.loggingIn("Checking Password...");
+                if (userInfoJSON != null) {
+                    if(userInfoJSON.getString("password").contentEquals(userPassword)) {
+                        userJsonFileConverter.convertJSONToUserInfo(userInfoJSON);
+                        Statics.messenger.loggingIn("Loading Your Data...");
+                        userJsonFileConverter.convertJSONToUserPAPoints(readPhysicalPoints());
+                        userJsonFileConverter.convertJSONToUserNGPoints(readNutritionPoints());
+                        userJsonFileConverter.convertJSONToUserBPoints(readBonusPoints());
+                        RETURN_STR = "GOOD";
+                    }else{
+                        RETURN_STR = "NCP";
+                    }
+
+                    Statics.globalUserData = userJsonFileConverter.userData;
+                }else{
+                    RETURN_STR = "INVALID";
+                }
+
+            }catch(IOException | JSONException e){
+                e.printStackTrace();
+            }
+        }
+
+        private JSONObject readPhysicalPoints() throws JSONException, IOException {
+            return readFromServer(PA_POINTS_FILE);
+        }
+        private JSONObject readNutritionPoints() throws JSONException, IOException {
+            return readFromServer(NG_POINTS_FILE);
+        }
+        private JSONObject readBonusPoints() {
+            return readFromServer(BONUS_POINTS_FILE);
+        }
+        private JSONObject readUserInfo() throws JSONException, IOException{
+            return readFromServer(USER_INFO_FILE);
+        }
+
+        /**
+         * The following methods are used as helper methods for this object
+         * @param rawData
+         * @param filename
+         * @throws JSONException
+         * @throws IOException
+         */
+
+        private void writeTempFile(String rawData, String filename) throws JSONException, IOException{
+            FileOutputStream tempFile = currentContext.openFileOutput(filename, Context.MODE_PRIVATE);
+            tempFile.write(rawData.getBytes());
+            tempFile.close();
+        }
+
+        private void writeToServer(String staticFileName, File fileToWrite) {
+            ftpClient.setConnectTimeout(10 * 1000);
+            try {
+                //try to connect to the server
+                connectToFTP();
+                //check if logged in correctly
+                if (FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {
+                    //set transfer settings
+                    boolean worked = setTransferSettings();
+                    //check if we're making a new user or not
+
+                    //save our temp file to the server
+                    changeWorkDirectory();
+                    Log.e("SERVER", "dir: " + ftpClient.printWorkingDirectory());
+                    FileReader f = new FileReader(fileToWrite);
+                    Log.e("SERVER", "f: " + f.read());
+                    ftpClient.storeFile(staticFileName, new FileInputStream(fileToWrite));
+
+                    //close connection
+                    disconnectFromFTP();
+
+                    RETURN_STR = "GOOD";
+                }
+            } catch (IOException e) {
+                RETURN_STR = "NOGOOD";
+                e.printStackTrace();
+            }
+        }
+
+        private JSONObject readFromServer(String filename) {
+            //create our return object
+            JSONObject jsonObject = null;
+
+            try {
+
+                connectToFTP();
+
+                /* check if logged in correctly */
+                if (FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {
+
+                    /* We should be connected to the FTP server now, set the transfer settings. */
+                    if (setTransferSettings()) {
+                        boolean registered = false;
+                        FTPFile[] userFiles = ftpClient.listFiles();
+                        for (FTPFile userFile : userFiles) {
+                            if (userName.contentEquals(userFile.getName())) {
+                                registered = true;
+                            }
+                        }
+
+                        if (!registered) {
+                            return null;
+                        }
+
+
+                        ftpClient.changeWorkingDirectory(userName);
+                        BufferedReader dataReader = new BufferedReader(new InputStreamReader(ftpClient.retrieveFileStream(filename)));
+
+                        //helper objects
+                        StringBuilder sb = new StringBuilder();
+                        String line;
+
+                        //loop over the data file
+                        while ((line = dataReader.readLine()) != null) {
+                            sb.append(line);
+                        }
+
+                        //close the buffered reader
+                        dataReader.close();
+
+                        //get file data from string builder and put it into a json object
+                        jsonObject = new JSONObject(sb.toString());
+                    }
+                }
+
+                disconnectFromFTP();
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+                String error = "{\"error\":\"Failed to connect, please restart the application.\"}";
+                try {
+                    jsonObject = new JSONObject(error);
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+            return jsonObject;
+        }
+
+        private void changeWorkDirectory() throws IOException{
+            boolean isCreated = false;
+            FTPFile[] files = ftpClient.listFiles();
+            for(FTPFile file : files) {
+                if(file.getName().contentEquals(userName)) {
+                    isCreated = true;
+                    break;
+                }
+            }
+
+            if(isCreated) {
+                ftpClient.changeWorkingDirectory(userName);
+            }else {
+                ftpClient.makeDirectory(userName);
+                ftpClient.changeWorkingDirectory(userName);
+            }
+        }
+
     }
 }

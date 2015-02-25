@@ -1,0 +1,16 @@
+{"month_amount":2,
+	"month_0":{
+		"month":2,
+		"week_amount":4,
+		"1":{"week_date":1,"week_num":1},
+		"2":{"week_date":8,"week_num":2},
+		"3":{"week_date":15,"week_num":3},
+		"4":{"week_date":29,"week_num":4}
+	},
+	"month_1":{
+		"month":3,
+		"week_amount":2,
+		"1":{"week_date":5,"week_num":5},
+		"2":{"week_date":12,"week_num":6}
+	}
+}
