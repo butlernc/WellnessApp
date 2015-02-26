@@ -55,8 +55,8 @@ public class DefaultMainFragment extends Fragment {
 
         //calculate numbers for fragment
         LoggingHelper loggingHelper = new LoggingHelper(getActivity().getBaseContext(), getActivity(), 0);
+        loggingHelper.calculateSnapShotWeekScore();
         loggingHelper.calculateTotalPoints();
-        loggingHelper.calculateWeekPoints();
         // create button objects
         btnFitnessGoals = (Button) rootView.findViewById(R.id.btnFitnessGoals);
         btnNutritionGoals = (Button) rootView.findViewById(R.id.btnNutritionGoals);

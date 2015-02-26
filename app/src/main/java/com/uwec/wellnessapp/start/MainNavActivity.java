@@ -31,6 +31,7 @@ import com.uwec.wellnessapp.login.LoginHelper;
 import com.uwec.wellnessapp.pointsbreakdown.PointsBreakDownFragment;
 import com.uwec.wellnessapp.statics.Statics;
 import com.uwec.wellnessapp.utils.FileSourceConnector;
+import com.uwec.wellnessapp.utils.Messenger;
 
 import java.io.File;
 
@@ -59,7 +60,7 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
     View rootView;
 
     FileSourceConnector fileSourceConnector;
-
+    String queueMessage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,18 +70,22 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
         Statics.handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                if(Statics.writeToServer) { //cached data has been written to the phone, save it to the server now
-                    fileSourceConnector = new FileSourceConnector(getBaseContext());
-                    Log.e("SERVER", "writing to the server");
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            fileSourceConnector.queue("writeCachedUserToServer", Statics.globalUserData.getEmail(), Statics.globalUserData.getPassword());
-                            Statics.writeToServer = false;
-                        }
-                    }).start();
-                    Toast.makeText(getBaseContext(), "Saving...", Toast.LENGTH_LONG).show();
-                }
+                fileSourceConnector = new FileSourceConnector(getBaseContext());
+                Log.e("SERVER", "writing to the server");
+
+                queueMessage = msg.getData().getString(Messenger.keys[2]);
+                Log.e("MESS", "Message: " + queueMessage);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        fileSourceConnector.queue(queueMessage, Statics.globalUserData.getEmail(), Statics.globalUserData.getPassword());
+                        fileSourceConnector.queue("writeUserInfoToServer", Statics.globalUserData.getEmail(), Statics.globalUserData.getPassword());
+                        Statics.writeToServer = false;
+                    }
+                }).start();
+
+                /* let the user know were saving */
+                Toast.makeText(getBaseContext(), "Saving...", Toast.LENGTH_LONG).show();
             }
         };
 
@@ -97,6 +102,8 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
         // Set default Fragment
         getFragmentManager().beginTransaction().replace(R.id.main_nav_fragment, newFragment(0)).commit();
 
+        /* for testing */
+        Log.i("TEST", Statics.printUserData());
 
     }
 
@@ -133,6 +140,7 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
             return true;
         }
         return super.onCreateOptionsMenu(menu);
+
     }
 
     @Override
@@ -157,7 +165,7 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
      * */
     public Fragment newFragment(int sectionNumber) {
 
-        Fragment newFragment;
+        Fragment newFragment = new Fragment();
 
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
@@ -165,7 +173,6 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
         switch(sectionNumber) {
 
             case 0:
-
                 newFragment = new DefaultMainFragment();
                 break;
             case 1:
@@ -173,6 +180,12 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
                 break;
             case 2:
                 newFragment = new PointsBreakDownFragment();
+                break;
+            case 3:
+                drawerLinks("");
+                break;
+            case 4:
+                drawerLinks("http://www.uwec.edu/Recreation/activities/wellness/StepItUp/prizes.htm");
                 break;
             default:
                 newFragment = new DefaultMainFragment();
@@ -198,6 +211,14 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
             quizPopup = new PopupWindow(layout, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
             quizPopup.showAtLocation(layout, Gravity.CENTER, 0, 0);
         }
+    }
+
+    private void drawerLinks(String link) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        intent.setData(Uri.parse(link));
+        MainNavActivity.this.startActivity(intent);
     }
 
 }

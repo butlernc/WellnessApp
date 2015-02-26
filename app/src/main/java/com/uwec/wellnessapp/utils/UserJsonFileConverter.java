@@ -17,7 +17,19 @@ import java.util.HashMap;
  */
 public class UserJsonFileConverter {
 
-    private static String weeklyData_json_value_names[] = {"pa_points", "ng_points", "pa_amount", "ng_amount", "pa_checkOff", "pa_checkOffArray", "ng_checkOff", "ng_checkOffArray", "total_points", "weekly_points", "bonus_points"};
+    private static String weeklyData_json_value_names[] = {
+            "pa_points",//0
+            "ng_points",//1
+            "pa_amount",//2
+            "ng_amount",//3
+            "pa_checkOff",//4
+            "pa_checkOffArray",//5
+            "ng_checkOff",//6
+            "ng_checkOffArray",//7
+            "total_points",//8
+            "weekly_points",//9
+            "bonus_points"//10
+    };
     private static String json_value_names[]            = {"email", "first_name", "last_name", "password", "total_score", "weekly_data", "once"};
 
     UserData userData;
@@ -58,7 +70,9 @@ public class UserJsonFileConverter {
 
                 /* stored here, didn't feel like having another file just for these two values per week */
             allPaPointsJSON.put(weeklyData_json_value_names[8] + i, single_weeklyData.getSnapShotTotalScore());
+            Log.d("SNAP", "WEEK " + i + ": " + single_weeklyData.getSnapShotWeekScore());
             allPaPointsJSON.put(weeklyData_json_value_names[9] + i, single_weeklyData.getSnapShotWeekScore());
+            Log.d("SNAP", "WEEK " + i + ": " + single_weeklyData.getSnapShotTotalScore());
         }
 
         return allPaPointsJSON;

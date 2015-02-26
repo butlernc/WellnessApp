@@ -89,4 +89,19 @@ public class UserData {
     public void setOneTimeBonusPoints(HashMap<Integer, Boolean> oneTimeBonusPoints) {
         this.oneTimeBonusPoints = oneTimeBonusPoints;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("User: " + email + "\n \n");
+        sb.append("-Total Score: " + total_score + "\n \n");
+        for(int i = 0; i < weeklyData.size(); i++) {
+            sb.append("  - Week Data: " + i + "\n");
+            sb.append(weeklyData.get(i).toString());
+        }
+
+        return sb.toString();
+    }
+
+
 }

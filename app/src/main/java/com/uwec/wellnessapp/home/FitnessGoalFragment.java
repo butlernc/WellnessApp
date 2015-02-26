@@ -67,6 +67,7 @@ public class FitnessGoalFragment extends Fragment {
         paDescTextView.setText("More Info: \n" + Statics.globalWeekDataList.get(Statics.sessionData.getWeekNumber() - 1).getPhysical_activity_description());
 
         currentWeekPhysicalPoints = (TextView)rootView.findViewById(R.id.current_week_goal_points);
+
         /* check if we need to display "completed!" or points earned so far */
         if(Statics.getUsersCurrentWeekData().getPhysicalGoalPoints() < 10) {
             currentWeekPhysicalPoints.setTextSize(25);
@@ -81,23 +82,22 @@ public class FitnessGoalFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int currentProgress = Statics.getUsersCurrentWeekData().getPhysicalGoalPoints();
-                /*refresh text views */
+                /*refresh text views, must be so it doesn't show 10 after they click at 8 */
                 if(currentProgress < 10) {
-                    Statics.getUsersCurrentWeekData().getPhysicalGoalCheckOffs().add(currentProgress / 2, true);
+                    Statics.getUsersCurrentWeekData().getPhysicalGoalCheckOffs().set(currentProgress / 2, true);
 
                     LoggingHelper loggingHelper = new LoggingHelper(getActivity().getBaseContext(), getActivity(), 0);
                     loggingHelper.logPoints();
 
                     currentWeekPhysicalPoints.setTextSize(25);
                     currentWeekPhysicalPoints.setText("" + Statics.getUsersCurrentWeekData().getPhysicalGoalPoints());
-
+                    currentWeekPhysicalPoints.invalidate();
                 }else {
                     currentWeekPhysicalPoints.setTextSize(13);
                     currentWeekPhysicalPoints.setText("Completed!");
                 }
 
-                currentWeekPhysicalPoints.invalidate();
-                Log.e("TEST", "Test run");
+
             }
         });
 

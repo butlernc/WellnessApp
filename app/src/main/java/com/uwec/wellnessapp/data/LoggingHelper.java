@@ -68,27 +68,25 @@ public class LoggingHelper {
 
         Statics.globalUserData.setWeekly_score(Statics.getUsersCurrentWeekData().getNutritionGoalPoints() + Statics.getUsersCurrentWeekData().getPhysicalGoalPoints() + currentBonusPoints);
 
-        calculateWeekPoints();
+        calculateSnapShotWeekScore();
         calculateTotalPoints();
 
-        /* save data to phone, where it waits to written to the server */
-        FileSourceConnector fileSourceConnector = new FileSourceConnector(context);
         switch (option) {
             case 0:
-                fileSourceConnector.queue("writePaPointsCache");
+                Statics.messenger.sendMessage("writePaPointsToServer");
                 break;
             case 1:
-                fileSourceConnector.queue("writeNgPointsCache");
+                Statics.messenger.sendMessage("writeNgPointsToServer");
                 break;
             case 2:
-                fileSourceConnector.queue("writeBonusPointsCache");
+                Statics.messenger.sendMessage("writeBonusPointsToServer");
                 break;
-        }
 
-        Statics.messenger.sendMessage("SaveToServer");
+
+        }
     }
 
-    public void calculateWeekPoints() {
+    public void calculateSnapShotWeekScore() {
 
         /* calculate weekly points for physical activities */
         int temp = 0;
@@ -110,40 +108,29 @@ public class LoggingHelper {
 
         /* record what we calculated to the user's current week's weekly score */
         Statics.globalUserData.setWeekly_score(temp);
+        Statics.getUsersCurrentWeekData().setSnapShotWeekScore(temp);
 
     }
 
+    /**
+     * Used to set the users running total score
+     */
     public void calculateTotalPoints() {
         Statics.globalUserData.setTotal_score(0);
         int total = 0;
 
-        /* loop for each week */
-        for(int i = 0; i < Statics.globalUserData.getWeeklyData().size(); i++) {
-            int temp = 0;
-            /* loop through each week's physical activity points */
-            for(int j = 0; j < Statics.globalUserData.getWeeklyData().get(i).getPhysicalGoalCheckOffs().size(); j++) {
-                if(Statics.globalUserData.getWeeklyData().get(i).getPhysicalGoalCheckOffs().get(j)) {
-                    temp += 2;
-                }
-            }
+        total += tallyAllFitness();
+        total += tallyAllNutrition();
+        total += tallyAllBonusPoints();
 
-            /* loop through each week's nutrition points */
-            for(int j = 0; j < Statics.globalUserData.getWeeklyData().get(i).getNutritionGoalCheckOffs().size(); j++) {
-                if(Statics.globalUserData.getWeeklyData().get(i).getNutritionGoalCheckOffs().get(j)) {
-                    temp += 1;
-                }
-            }
-
-            /* loop through bonus points */
-            for(int j = 0; j < Statics.globalUserData.getWeeklyData().get(i).getBonusPoints().length; j++) {
-                temp += Statics.globalUserData.getWeeklyData().get(i).getBonusPoints()[j];
-            }
-
-            total += temp;
-        }
         Statics.globalUserData.setTotal_score(total);
+        Statics.getUsersCurrentWeekData().setSnapShotTotalScore(total);
     }
 
+    /**
+     * Used in point breakdown
+     * @return
+     */
     public int tallyAllFitness() {
 
         int temp = 0;
@@ -162,6 +149,10 @@ public class LoggingHelper {
         return temp;
     }
 
+    /**
+     * Used in point breakdown
+     * @return
+     */
     public int tallyAllNutrition() {
         int temp = 0;
 
@@ -179,6 +170,10 @@ public class LoggingHelper {
         return temp;
     }
 
+    /**
+     * Used in point breakdown
+     * @return
+     */
     public int tallyAllBonusPoints() {
         int temp = 0;
 

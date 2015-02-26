@@ -63,8 +63,8 @@ public class NutritionGoalFragment extends Fragment {
         ngDescTextView.setText("More Info: \n" + Statics.globalWeekDataList.get(Statics.sessionData.getWeekNumber() - 1).getNutrition_goal_description());
 
         currentWeekNutritionPoints = (TextView)rootView.findViewById(R.id.current_week_goal_points);
+
         /* check if we need to display "completed!" or points earned so far */
-        Log.e("NU POINTS", "" + Statics.getUsersCurrentWeekData().getNutritionGoalPoints());
         if(Statics.getUsersCurrentWeekData().getNutritionGoalPoints() < Statics.getCurrentWeekData().getNg_days_per_week()) {
             currentWeekNutritionPoints.setTextSize(25);
             currentWeekNutritionPoints.setText("" + Statics.getUsersCurrentWeekData().getNutritionGoalPoints());
@@ -77,16 +77,12 @@ public class NutritionGoalFragment extends Fragment {
         addNutritionPointButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int currentProgress = 0;
-//              int currentProgress = Statics.getUsersCurrentWeekData().getPhysicalGoalPoints();
-                for(int i = 0; i < Statics.getUsersCurrentWeekData().getNutritionGoalCheckOffs().size(); i++) {
-                    if(Statics.getUsersCurrentWeekData().getNutritionGoalCheckOffs().get(i)) {
-                        currentProgress += 1;
-                    }
-                }
+                Log.d("Here!", "Here");
+                int currentProgress = Statics.getUsersCurrentWeekData().getNutritionGoalPoints();
+
                 /*refresh text views */
                 if(currentProgress < Statics.getCurrentWeekData().getNg_days_per_week()) {
-                    Statics.getUsersCurrentWeekData().getNutritionGoalCheckOffs().add(currentProgress, true);
+                    Statics.getUsersCurrentWeekData().getNutritionGoalCheckOffs().set(currentProgress, true);
 
                     LoggingHelper loggingHelper = new LoggingHelper(getActivity().getBaseContext(), getActivity(), 1);
                     loggingHelper.logPoints();

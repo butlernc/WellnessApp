@@ -1,5 +1,7 @@
 package com.uwec.wellnessapp.data;
 
+import android.util.Log;
+
 import com.uwec.wellnessapp.statics.Statics;
 
 import java.util.ArrayList;
@@ -32,6 +34,8 @@ public class WeeklyUserData {
     private int snapShotWeekScore;
     /* bonus points held here for each week*/
     private int[] bonusPoints;
+    /*week associated with, held for testing */
+    private int week;
 
     /* this constructor is used when first creating the user, so we can zero all of their data */
     public WeeklyUserData(int week) {
@@ -126,6 +130,7 @@ public class WeeklyUserData {
     }
 
     public void setSnapShotWeekScore(int snapShotWeekScore) {
+        Log.d("SETTING", "Week Snap: " + snapShotWeekScore);
         this.snapShotWeekScore = snapShotWeekScore;
     }
 
@@ -135,6 +140,37 @@ public class WeeklyUserData {
 
     public void setBonusPoints(int[] bonusPoints) {
         this.bonusPoints = bonusPoints;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(" -Current Total Points: " + getSnapShotTotalScore() + "\n");
+        sb.append(" -Current Week Score: " + getSnapShotWeekScore() + "\n");
+        sb.append(" -Current Physical Points: " + getPhysicalGoalPoints() + "\n");
+        sb.append(" -Current Nutritional Points: " + getNutritionGoalPoints() + "\n");
+
+        sb.append("  - Bonus Points: [");
+        for (int j = 0; j < getBonusPoints().length; j++) {
+            sb.append(getBonusPoints()[j] + ",");
+        }
+        sb.append("] \n");
+
+        sb.append("  - Fitness Points: [");
+        for (int j = 0; j < getPhysicalGoalCheckOffs().size(); j++) {
+            sb.append(getPhysicalGoalCheckOffs().get(j) + ",");
+        }
+        sb.append("] \n");
+
+        sb.append("  - Nutrition Points: [");
+        for (int j = 0; j < getNutritionGoalCheckOffs().size(); j++) {
+            sb.append(getNutritionGoalCheckOffs().get(j) + ",");
+        }
+        sb.append("] \n");
+        sb.append("END OF WEEK: " + week);
+        sb.append("\n \n");
+
+        return sb.toString();
     }
 }
 

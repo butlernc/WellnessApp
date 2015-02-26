@@ -62,4 +62,50 @@ public class Statics {
     public static WeeklyUserData getUsersCurrentWeekData() {
         return globalUserData.getWeeklyData().get(sessionData.getWeekNumber() - 1);
     }
+
+    public static String printTests() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("STATIC WEEK DATA: [" + "\n");
+        for(int i = 0; i < weeks.length; i++) {
+            sb.append(globalWeekDataList.get(i).toString());
+        }
+        sb.append("] \n \n \n");
+        sb.append("STATIC BONUS DATA: [");
+        sb.append(globalBonusData.toString());
+        sb.append("] \n \n \n");
+        sb.append("USER DATA: [");
+        sb.append(globalUserData.toString());
+        sb.append("] \n \n \n");
+        sb.append("SESSION DATA: [");
+        sb.append(sessionData.toString());
+        sb.append("] \n \n \n");
+
+        return sb.toString();
+    }
+
+    public static String printWeekData() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("STATIC WEEK DATA: [" + "\n");
+        for(int i = 0; i < weeks.length; i++) {
+            sb.append(globalWeekDataList.get(i).toString());
+        }
+        sb.append("] \n \n \n");
+        return sb.toString();
+    }
+
+    public static String printUserData() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("USER DATA: [");
+        sb.append(globalUserData.toString());
+        sb.append("] \n \n \n");
+        return sb.toString();
+    }
+
+    public static String printSessionData() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SESSION DATA: [");
+        sb.append(sessionData.toString());
+        sb.append("] \n \n \n");
+        return sb.toString();
+    }
 }

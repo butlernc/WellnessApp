@@ -167,4 +167,40 @@ public class WeekData {
     public void setSuggestedWorkoutType(String suggestedWorkoutType) {
         this.suggestedWorkoutType = suggestedWorkoutType;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Week: " + week);
+        sb.append("  - Physical Activity: " + physical_activity + "\n");
+        sb.append("  - Physical Activity Link Amount: " + pa_link_amount + "\n");
+        sb.append("  - Links: [");
+        for(int i = 0; i < pa_links.size(); i++) {
+            sb.append("Link " + i + ": " + pa_links.get(i) + ", ");
+        }
+        sb.append("]\n");
+        sb.append("  - Physical Activities per week: " + getPa_days_per_week() +"\n");
+        sb.append("  - Activity Strings: [");
+        for(int i = 0; i < pa_strings.size(); i++) {
+            sb.append(pa_strings.get(i) + ", ");
+        }
+        sb.append("]\n");
+        sb.append("  - Nutrition Goal: " + nutrition_goal + "\n");
+        sb.append("  - Nutrition Goal Link Amount: " + pa_link_amount + "\n");
+        sb.append("  - Links: [");
+        for(int i = 0; i < ng_links.size(); i++) {
+            sb.append("Link " + i + ": " + ng_links.get(i) + ", ");
+        }
+        sb.append("]\n");
+        sb.append("  - Nutrition Goals per week: " + getNg_days_per_week() +"\n");
+        sb.append("  - Goal Strings: [");
+        for(int i = 0; i < ng_strings.size(); i++) {
+            sb.append(ng_strings.get(i) + ", ");
+        }
+        sb.append("]\n");
+        sb.append("Suggested Workout: " + suggestedWorkoutType + "\n");
+        sb.append("Suggested Workout Link: " + suggestedWorkoutLink + "\n");
+        sb.append("END OF WEEK: " + week + "\n \n \n");
+        return sb.toString();
+    }
 }

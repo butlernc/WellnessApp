@@ -452,4 +452,15 @@ public class SessionData {
         return firstTime;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("  - Current Day: " + currentDay + "\n");
+        sb.append("  - Current Month: " + currentMonth + "\n");
+        sb.append("  - Week Number: " + weekNumber + "\n");
+        sb.append("  - Month Number: " + monthNumber + "\n");
+
+        return sb.toString();
+    }
+
 }

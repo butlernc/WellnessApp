@@ -57,6 +57,8 @@ public class FileSourceConnector {
             readFullUserFromServer(strings);
         } else if (strings[0].contentEquals("writeUser")) {
             writeFullUserToServer(strings);
+
+
         } else if(strings[0].contentEquals("writePaPointsCache")) {
             writePaPointsCache();
         }else if(strings[0].contentEquals("writeNgPointsCache")) {
@@ -65,8 +67,22 @@ public class FileSourceConnector {
             writeBonusPointsCache();
         }else if(strings[0].contentEquals("writeUserInfoCache")) {
             writeUserInfoCache();
+
+
+        }else if(strings[0].contentEquals("writePaPointsToServer")) {
+            writePaPointsToServer();
+        }else if(strings[0].contentEquals("writeNgPointsToServer")) {
+            writeNgPointsToServer();
+        }else if(strings[0].contentEquals("writeBonusPointsToServer")) {
+            writeBonusPointsToServer();
+        }else if(strings[0].contentEquals("writeUserInfoToServer")) {
+            writeUserInfoToServer();
+
+
         }else if(strings[0].contentEquals("writeCachedUserToServer")) {
             writeCachedUserToServer(strings);
+
+
         }else if(strings[0].contentEquals("readWeekStartData")) {
             return readWeekStartData();
         } else if(strings[0].contentEquals("readWeekData")) {
@@ -176,6 +192,42 @@ public class FileSourceConnector {
         try {
             UserIO userIO = new UserIO(Statics.globalUserData.getEmail(), Statics.globalUserData.getPassword());
             userIO.writeUserInfo(false, true);
+        }catch(IOException | JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * The following methods are used to write the cached data to the server
+     */
+    private void writePaPointsToServer() {
+        try {
+            UserIO userIO = new UserIO(Statics.globalUserData.getEmail(), Statics.globalUserData.getPassword());
+            userIO.writePhysicalPoints(true, true);
+        }catch(IOException | JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    private void writeNgPointsToServer() {
+        try {
+            UserIO userIO = new UserIO(Statics.globalUserData.getEmail(), Statics.globalUserData.getPassword());
+            userIO.writeNutritionPoints(true, true);
+        }catch(IOException | JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    private void writeBonusPointsToServer() {
+        try {
+            UserIO userIO = new UserIO(Statics.globalUserData.getEmail(), Statics.globalUserData.getPassword());
+            userIO.writeBonusPoints(true, true);
+        }catch(IOException | JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    private void writeUserInfoToServer() {
+        try {
+            UserIO userIO = new UserIO(Statics.globalUserData.getEmail(), Statics.globalUserData.getPassword());
+            userIO.writeUserInfo(true, true);
         }catch(IOException | JSONException e) {
             e.printStackTrace();
         }
@@ -369,7 +421,7 @@ public class FileSourceConnector {
         }
 
         /**
-         * The following two methods are used to read/write the bonus points for a user.
+         * The following method is used to write the bonus points for a user.
          * @return
          * @throws JSONException
          * @throws IOException
@@ -411,7 +463,6 @@ public class FileSourceConnector {
             try {
             /* call all read methods, use the userJsonFileConverter.userData object when setting the Statics.globalUserData object */
                 JSONObject userInfoJSON = readUserInfo();
-                Log.d("UserInfo", userInfoJSON.toString(1));
                 Statics.messenger.loggingIn("Checking Password...");
                 if (userInfoJSON != null) {
                     if(userInfoJSON.getString("password").contentEquals(userPassword)) {
@@ -475,9 +526,6 @@ public class FileSourceConnector {
 
                     //save our temp file to the server
                     changeWorkDirectory();
-                    Log.e("SERVER", "dir: " + ftpClient.printWorkingDirectory());
-                    FileReader f = new FileReader(fileToWrite);
-                    Log.e("SERVER", "f: " + f.read());
                     ftpClient.storeFile(staticFileName, new FileInputStream(fileToWrite));
 
                     //close connection

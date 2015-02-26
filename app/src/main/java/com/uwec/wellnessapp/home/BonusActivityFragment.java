@@ -91,7 +91,8 @@ public class BonusActivityFragment extends Fragment {
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
                     intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                    intent.setData(Uri.parse(bonusData.getLinks().get((position*2))));
+                    intent.setData(Uri.parse("http://www.uwec.edu/Recreation/activities/wellness/StepItUp/bonusactivities.htm"));
+                    //intent.setData(Uri.parse(bonusData.getLinks().get((position*2))));
                     activity.startActivity(intent);
                 }
             });
@@ -103,12 +104,13 @@ public class BonusActivityFragment extends Fragment {
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
                     intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                    intent.setData(Uri.parse(bonusData.getLinks().get((position*2)+1)));
+                    intent.setData(Uri.parse("http://www.uwec.edu/Recreation/activities/wellness/StepItUp/bonusactivities.htm"));
+                    //intent.setData(Uri.parse(bonusData.getLinks().get((position*2)+1)));
                     activity.startActivity(intent);
                 }
             });
 
-            /* number that shows how many that person has in that bonus activity */
+            /* number that shows how many points the user has in that bonus activity */
             bonusPointCurrentAmountEven = (TextView)rowView.findViewById(R.id.bonus_point_current_amount_even);
             bonusPointCurrentAmountOdd = (TextView)rowView.findViewById(R.id.bonus_point_current_amount_odd);
 
@@ -147,7 +149,7 @@ public class BonusActivityFragment extends Fragment {
                 public void onClick(View v) {
                     int index = (position*2) + 1;
                     check(index);
-
+                    Log.d("Clicked", "Clicked Position: " + position + " Clicked index: " + index);
                     updateText(rowView, position, index);
 
                 }
@@ -175,7 +177,7 @@ public class BonusActivityFragment extends Fragment {
             if(!canOnlyOnce && currentStat < Statics.globalBonusData.getCompletePerWeek().get(index)) {
                 LoggingHelper loggingHelper = new LoggingHelper(getActivity().getBaseContext(), getActivity(), 2);
                 loggingHelper.logPoints();
-                Statics.getUsersCurrentWeekData().getBonusPoints()[index] = (currentStat + 1);
+                Statics.getUsersCurrentWeekData().getBonusPoints()[index] = (currentStat + Statics.globalBonusData.getPerCompletion().get(index));
             }
         }
 
@@ -190,21 +192,9 @@ public class BonusActivityFragment extends Fragment {
             /* update text for bonus activities that can only be completed once */
             for(int i = 0; i < Statics.globalBonusData.getCanCompleteOnce().size(); i++) {
                 if(Statics.globalBonusData.getCanCompleteOnce().get(i) == index) { // we have one that can only be checked off once
-                    if(Statics.globalUserData.getOneTimeBonusPoints().get(index)) { //has been check off, show as completed
-                        if((index % 2) == 0) {
-                            bonusPointCurrentAmountEven.setText("Completed!");
-                        }else{
-                            bonusPointCurrentAmountOdd.setText("Completed!");
-                        }
-                    } else { //hasn't been completed, show as 0
-                        if((index % 2) == 0) {
-                            bonusPointCurrentAmountEven.setText("0/1");
-                        }else{
-                            bonusPointCurrentAmountOdd.setText("0/1");
-                        }
+                    if (Statics.globalUserData.getOneTimeBonusPoints().get(index)) { //has been check off, show as completed
+
                     }
-                    canOnlyOnce = true;
-                    break;
                 }
             }
 
@@ -228,6 +218,10 @@ public class BonusActivityFragment extends Fragment {
             bonusPointCurrentAmountOdd.invalidate();
 
         }
+
+    }
+
+    private void updateScoreEven(String score) {
 
     }
 
