@@ -182,9 +182,6 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
                 newFragment = new PointsBreakDownFragment();
                 break;
             case 3:
-                drawerLinks("");
-                break;
-            case 4:
                 drawerLinks("http://www.uwec.edu/Recreation/activities/wellness/StepItUp/prizes.htm");
                 break;
             default:
