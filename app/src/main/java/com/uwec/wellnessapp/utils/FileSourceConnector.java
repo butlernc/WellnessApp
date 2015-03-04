@@ -16,12 +16,9 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
 
 /**
  * Created by Noah Butler on 12/3/2014.
@@ -33,10 +30,14 @@ public class FileSourceConnector {
     /** link to FTP site variables */
     private FTPClient ftpClient;
 
-    private static final String FTP_HOSTNAME = "f13-preview.freehostingeu.com";
-    private static final String FTP_USERNAME = "1769350_uwecwellnessapp";
-    private static final String FTP_PASSWORD = "android4us";
-    private static final String FTP_PATH = "wellnessappftp.eu.pn";
+    private static final String FTP_HOSTNAME = "headphones4us.square7.ch";
+    private static final String OLD_HOSTNAME = "f13-preview.freehostingeu.com";
+    private static final String FTP_USERNAME = "headphones4us";
+    private static final String OLD_USERNAME = "1769350_uwecwellnessapp";
+    private static final String FTP_PASSWORD = "headphones4us";
+    private static final String OLD_PASSWORD = "android4us";
+    private static final String FTP_PATH = "/";
+    private static final String OLD_PATH = "wellnessappftp.eu.pn";
 
     private Context currentContext;
 

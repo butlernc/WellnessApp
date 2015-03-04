@@ -238,7 +238,7 @@ public class SessionData {
                     }
                     if(currentMonthJSON != null) {
                         /* get the correct week number by comparing the currentDay with the currentMonthJSON start dates. */
-                        for(int i = currentMonthJSON.getInt("week_amount"); i >= 1; i++) {
+                        for(int i = currentMonthJSON.getInt("week_amount"); i >= 1; i--) {
                             if(currentDay >= currentMonthJSON.getJSONObject(""+i).getInt("week_date")){
                                 weekNumber = currentMonthJSON.getJSONObject(""+i).getInt("week_num");
                                 break;

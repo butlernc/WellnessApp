@@ -1,31 +1,29 @@
-{"amount":12,
+{"amount":11,
 	"titles":{
-		"0":"Daily Grateful Check",
-		"1":"Suggested Workout",
-		"2":"Attend any Group Ex Class",
-		"3":"Try the featured food",
-		"4":"Use the swimming pool",
-		"5":"Use the climbing wall",
-		"6":"Attend Yoga",
-		"7":"Meet with the Floor Supervisor",
-		"8":"Snowshoe",
-		"9":"Cooking Chiropractor Presentation",
-		"10":"Student Wellness Workshop",
-		"11":"Attend the Shamrock Shuffle"
+		"0":"Suggested Workout",
+		"1":"Attend any Group Ex Class",
+		"2":"Try the featured food",
+		"3":"Use the swimming pool",
+		"4":"Use the climbing wall",
+		"5":"Attend Yoga",
+		"6":"Meet with the Floor Supervisor",
+		"7":"Snowshoe",
+		"8":"Cooking Chiropractor Presentation",
+		"9":"Student Wellness Workshop",
+		"10":"Attend the Shamrock Shuffle"
 	},
 	"links":{
-		"0":"",
-		"1":"",
-		"2":"",
-		"3":"",
-		"4":"",
-		"5":"",
-		"6":"",
-		"7":"",
-		"8":"",
-		"9":"",
-		"10":"",
-		"11":""	
+		"0":"placeholder",
+		"1":"placeholder",
+		"2":"placeholder",
+		"3":"placeholder",
+		"4":"placeholder",
+		"5":"placeholder",
+		"6":"placeholder",
+		"7":"placeholder",
+		"8":"placeholder",
+		"9":"placeholder",
+		"10":"placeholder"
 	},
 	"total_per_program":{
 		"0":6,
@@ -33,16 +31,15 @@
 		"2":6,
 		"3":6,
 		"4":6,
-		"5":6,
+		"5":1,
 		"6":1,
 		"7":1,
 		"8":1,
 		"9":1,
-		"10":1,
-		"11":1
+		"10":1
 	},
 	"complete_per_week":{
-		"0":5,
+		"0":1,
 		"1":1,
 		"2":1,
 		"3":1,
@@ -52,29 +49,27 @@
 		"7":1,
 		"8":1,
 		"9":1,
-		"10":1,
-		"11":1
+		"10":1
 	},
 	"per_completion":{
-		"0":1,
+		"0":5,
 		"1":5,
 		"2":5,
 		"3":5,
 		"4":5,
-		"5":5,
+		"5":10,
 		"6":10,
 		"7":10,
 		"8":15,
 		"9":15,
-		"10":15,
-		"11":20
+		"10":20
 	},
 	"once":{
-		"0":6,
-		"1":7,
-		"2":8,
-		"3":9,
-		"4":10,
-		"5":11
+		"0":5,
+		"1":6,
+		"2":7,
+		"3":8,
+		"4":9,
+		"5":10
 	}
 }

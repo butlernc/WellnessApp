@@ -59,6 +59,8 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
     /** current root view */
     View rootView;
 
+    final int SPONSORS_ID = 5;
+
     FileSourceConnector fileSourceConnector;
     String queueMessage;
     @Override
@@ -103,7 +105,7 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
         getFragmentManager().beginTransaction().replace(R.id.main_nav_fragment, newFragment(0)).commit();
 
         /* for testing */
-        Log.i("TEST", Statics.printUserData());
+        //Log.i("TEST", Statics.printUserData());
 
     }
 
@@ -165,6 +167,8 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
      * */
     public Fragment newFragment(int sectionNumber) {
 
+
+
         Fragment newFragment = new Fragment();
 
         Bundle args = new Bundle();
@@ -182,10 +186,13 @@ public class MainNavActivity extends Activity implements NavigationDrawerFragmen
                 newFragment = new PointsBreakDownFragment();
                 break;
             case 3:
-                drawerLinks("http://www.uwec.edu/Recreation/activities/wellness/StepItUp/prizes.htm");
+                drawerLinks("http://www.uwec.edu/Recreation/fitness/Stepitup/bonusactivities.htm");
                 break;
-            default:
+            case 4:
                 newFragment = new DefaultMainFragment();
+
+            case SPONSORS_ID:
+                drawerLinks("http://www.uwec.edu/Recreation/fitness/Stepitup/prizes.htm");
                 break;
         }
 

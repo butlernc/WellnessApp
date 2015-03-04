@@ -13,9 +13,9 @@
         <item>Home</item>
         <item>Challenge Information</item>
         <item>Point Breakdown</item>
-        <item>Suggested Workout and Prizes</item>
+        <item>Suggested Workout</item>
         <item>Campus Health and Fitness Resources</item>
-        <item>Sponsors</item>
+        <item>Prizes, Sponsors and Coupons</item>
     </string-array>
     
 	<string name="drawer_opened">Drawer Opened</string>
